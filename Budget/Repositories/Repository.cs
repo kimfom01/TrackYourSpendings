@@ -1,5 +1,5 @@
 using System.Linq.Expressions;
-using Budget.Data;
+using Budget.Context;
 using Microsoft.EntityFrameworkCore;
 
 namespace Budget.Repositories;
