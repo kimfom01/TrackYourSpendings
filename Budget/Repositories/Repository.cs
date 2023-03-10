@@ -1,5 +1,5 @@
 using System.Linq.Expressions;
-using Budget.Data;
+using Budget.Context;
 using Microsoft.EntityFrameworkCore;
 
 namespace Budget.Repositories;
@@ -7,26 +7,26 @@ namespace Budget.Repositories;
 public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity : class
 {
     private readonly BudgetDbContext _budgetDbContext;
-    private readonly DbSet<TEntity> _dbEntitySet;
+    protected DbSet<TEntity> DbEntitySet { get; }
 
     protected Repository(BudgetDbContext budgetDbContext)
     {
         _budgetDbContext = budgetDbContext;
-        _dbEntitySet = budgetDbContext.Set<TEntity>();
+        DbEntitySet = budgetDbContext.Set<TEntity>();
     }
 
     public async Task AddEntity(TEntity entity)
     {
-        await _dbEntitySet.AddAsync(entity);
+        await DbEntitySet.AddAsync(entity);
     }
 
     public async Task RemoveEntity(int id)
     {
-        var entity = await _dbEntitySet.FindAsync(id);
+        var entity = await DbEntitySet.FindAsync(id);
 
         if (entity is not null)
         {
-            _dbEntitySet.Remove(entity);
+            DbEntitySet.Remove(entity);
         }
     }
 
@@ -36,7 +36,7 @@ public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity :
 
         if (exists)
         {
-            _dbEntitySet.Entry(entity).State = EntityState.Modified;
+            DbEntitySet.Entry(entity).State = EntityState.Modified;
         }
     }
 
@@ -47,21 +47,21 @@ public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity :
 
     public async Task<IEnumerable<TEntity>?> GetEntities(Expression<Func<TEntity, bool>> predicate)
     {
-        var entities = _dbEntitySet.Where(predicate).AsNoTracking();
+        var entities = DbEntitySet.Where(predicate).AsNoTracking();
 
         return await entities.ToListAsync();
     }
 
     public async Task<TEntity?> GetEntity(int id)
     {
-        var entity = await _dbEntitySet.FindAsync(id);
+        var entity = await DbEntitySet.FindAsync(id);
 
         return entity;
     }
 
     private async Task<bool> CheckIfExists(int id)
     {
-        var entity = await _dbEntitySet.FindAsync(id);
+        var entity = await DbEntitySet.FindAsync(id);
 
         return entity is not null;
     }

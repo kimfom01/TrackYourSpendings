@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Budget.Migrations
 {
     [DbContext(typeof(BudgetDbContext))]
-    [Migration("20230227163624_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20230310055005_ConnectTransactionsToSpecificWallet")]
+    partial class ConnectTransactionsToSpecificWallet
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -53,6 +53,9 @@ namespace Budget.Migrations
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
+                    b.Property<decimal>("Cost")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<DateTime>("TransactionDate")
                         .HasColumnType("datetime2");
 
@@ -64,11 +67,46 @@ namespace Budget.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("WalletId")
+                        .HasColumnType("int");
+
                     b.HasKey("TransactionId");
 
                     b.HasIndex("CategoryId");
 
+                    b.HasIndex("WalletId");
+
                     b.ToTable("Transactions");
+                });
+
+            modelBuilder.Entity("Budget.Models.Wallet", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("Balance")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("Expenditure")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("Income")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Month")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Wallets");
                 });
 
             modelBuilder.Entity("Budget.Models.Transaction", b =>
@@ -79,10 +117,23 @@ namespace Budget.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Budget.Models.Wallet", "Wallet")
+                        .WithMany("Transactions")
+                        .HasForeignKey("WalletId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Category");
+
+                    b.Navigation("Wallet");
                 });
 
             modelBuilder.Entity("Budget.Models.Category", b =>
+                {
+                    b.Navigation("Transactions");
+                });
+
+            modelBuilder.Entity("Budget.Models.Wallet", b =>
                 {
                     b.Navigation("Transactions");
                 });

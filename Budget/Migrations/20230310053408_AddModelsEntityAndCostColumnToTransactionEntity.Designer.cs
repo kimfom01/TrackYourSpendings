@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Budget.Migrations
 {
     [DbContext(typeof(BudgetDbContext))]
-    [Migration("20230227163624_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20230310053408_AddModelsEntityAndCostColumnToTransactionEntity")]
+    partial class AddModelsEntityAndCostColumnToTransactionEntity
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -53,6 +53,9 @@ namespace Budget.Migrations
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
+                    b.Property<decimal>("Cost")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<DateTime>("TransactionDate")
                         .HasColumnType("datetime2");
 
@@ -69,6 +72,36 @@ namespace Budget.Migrations
                     b.HasIndex("CategoryId");
 
                     b.ToTable("Transactions");
+                });
+
+            modelBuilder.Entity("Budget.Models.Wallet", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("Balance")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("Expenditure")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("Income")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Month")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Wallets");
                 });
 
             modelBuilder.Entity("Budget.Models.Transaction", b =>
