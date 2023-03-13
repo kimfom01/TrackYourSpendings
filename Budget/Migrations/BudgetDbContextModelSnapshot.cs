@@ -34,7 +34,12 @@ namespace Budget.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("WalletId")
+                        .HasColumnType("int");
+
                     b.HasKey("CategoryId");
+
+                    b.HasIndex("WalletId");
 
                     b.ToTable("Categories");
                 });
@@ -64,14 +69,9 @@ namespace Budget.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("WalletId")
-                        .HasColumnType("int");
-
                     b.HasKey("TransactionId");
 
                     b.HasIndex("CategoryId");
-
-                    b.HasIndex("WalletId");
 
                     b.ToTable("Transactions");
                 });
@@ -94,7 +94,6 @@ namespace Budget.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Month")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
@@ -106,6 +105,17 @@ namespace Budget.Migrations
                     b.ToTable("Wallets");
                 });
 
+            modelBuilder.Entity("Budget.Models.Category", b =>
+                {
+                    b.HasOne("Budget.Models.Wallet", "Wallet")
+                        .WithMany("Categories")
+                        .HasForeignKey("WalletId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Wallet");
+                });
+
             modelBuilder.Entity("Budget.Models.Transaction", b =>
                 {
                     b.HasOne("Budget.Models.Category", "Category")
@@ -114,15 +124,7 @@ namespace Budget.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Budget.Models.Wallet", "Wallet")
-                        .WithMany("Transactions")
-                        .HasForeignKey("WalletId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Category");
-
-                    b.Navigation("Wallet");
                 });
 
             modelBuilder.Entity("Budget.Models.Category", b =>
@@ -132,7 +134,7 @@ namespace Budget.Migrations
 
             modelBuilder.Entity("Budget.Models.Wallet", b =>
                 {
-                    b.Navigation("Transactions");
+                    b.Navigation("Categories");
                 });
 #pragma warning restore 612, 618
         }

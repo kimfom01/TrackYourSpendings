@@ -11,10 +11,12 @@ public class WalletRepository : Repository<Wallet>, IWalletRepository
     }
 
 
-    public IEnumerable<Wallet> GetWalletWithTransactions()
+    public IEnumerable<Wallet> GetWalletWithCategories()
     {
-        var walletsWithTransactions = DbEntitySet.Include(w => w.Transactions);
-
+        var walletsWithTransactions = DbEntitySet
+            .Include(w => w.Categories)!
+            .ThenInclude(c => c.Transactions);
+        
         return walletsWithTransactions;
     }
 }
