@@ -9,8 +9,7 @@ builder.Services.AddDbContext<BudgetDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("BudgetDb"));
 });
-builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
-builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 var app = builder.Build();
 
