@@ -10,7 +10,4 @@ public class Transaction
 
     public int CategoryId { get; set; }
     public Category? Category { get; set; }
-
-    public int WalletId { get; set; }
-    public Wallet? Wallet { get; set; }
 }
