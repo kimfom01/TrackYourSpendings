@@ -19,7 +19,6 @@ html {
 
 body {
     margin-bottom: 60px;
-    color: #13610C;
 }
 
 nav, footer {
@@ -41,4 +40,13 @@ nav, footer {
     width: 100%;
     height: 2.5rem;
     padding: 5px 0;
+}
+
+h4 {
+    border-bottom: 5px solid #198754;
+    padding-bottom: 1rem;
+}
+
+div.modal-content{
+    background-color: #EDF4F2;
 }
