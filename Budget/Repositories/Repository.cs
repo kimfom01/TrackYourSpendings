@@ -52,7 +52,7 @@ public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity :
         return await entities.ToListAsync();
     }
 
-    public async Task<TEntity?> GetEntity(int id)
+    public async Task<TEntity?> GetEntity(int? id)
     {
         var entity = await DbEntitySet.FindAsync(id);
 
