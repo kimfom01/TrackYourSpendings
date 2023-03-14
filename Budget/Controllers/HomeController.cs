@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Budget.Models;
 using Budget.Repositories;
@@ -11,28 +10,57 @@ public class HomeController : Controller
 {
     private readonly IUnitOfWork _unitOfWork;
 
-    public HomeController(IUnitOfWork unitOfWork, IMapper mapper)
+    public HomeController(IUnitOfWork unitOfWork)
     {
         _unitOfWork = unitOfWork;
     }
 
-    public IActionResult Index()
+    public async Task<IActionResult> Index(int? id)
     {
-        var wallets =  _unitOfWork.Wallets.GetWalletWithCategories();
+        WalletCategoryTransactionViewModel viewModel;
 
-        ViewBag.Wallets = new SelectList(wallets, "Id", "Name");
-        
-        ViewBag.Categories = new SelectList(wallets.First().Categories, "CategoryId", "CategoryName");
+        if (id == null)
+        {
+            var wallets = await _unitOfWork.Wallets.GetEntities(_ => true);
 
-        return View(wallets);
+            viewModel = new WalletCategoryTransactionViewModel { Wallets = new SelectList(wallets, "Id", "Name") };
+        }
+        else
+        {
+            var wallets = await _unitOfWork.Wallets.GetEntities(_ => true);
+
+            var wallet = await _unitOfWork.Wallets.GetEntity(id);
+
+            var categories = await _unitOfWork.Categories.GetEntities(c => c.WalletId == wallet.Id);
+
+            viewModel = new WalletCategoryTransactionViewModel
+            {
+                Wallets = new SelectList(wallets, "Id", "Name"), Wallet = wallet,
+                CategoriesSelectList = new SelectList(categories, "CategoryId", "CategoryName")
+            };
+        }
+
+        return View(viewModel);
     }
 
     [HttpPost]
-    public async Task<IActionResult> Index(int id)
+    public async Task<IActionResult> Index(int id, int categoryId)
     {
+        var wallets = await _unitOfWork.Wallets.GetEntities(_ => true);
+
         var wallet = await _unitOfWork.Wallets.GetEntity(id);
 
-        return View();
+        var categories = await _unitOfWork.Categories.GetEntities(c => c.WalletId == wallet.Id);
+
+        var viewModel = new WalletCategoryTransactionViewModel
+        {
+            Wallets = new SelectList(wallets, "Id", "Name"), Wallet = wallet,
+            CategoriesSelectList = new SelectList(categories, "CategoryId", "CategoryName")
+        };
+
+        // var transactions = _unitOfWork.Transactions.GetEntities(t => t.CategoryId == categories.Id);
+
+        return View(viewModel);
     }
 
     public IActionResult Privacy()
