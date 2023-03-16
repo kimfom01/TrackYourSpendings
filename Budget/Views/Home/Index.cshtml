@@ -1,4 +1,5 @@
 ﻿@model WalletCategoryTransactionViewModel
+@using Budget.Models
 @{
     ViewData["Title"] = "Home Page";
 }
@@ -18,6 +19,9 @@
                 </select>
             </div>
             <button type="submit" class="btn btn-success">Select</button>
+            <input class="btn btn-success" type="button" data-bs-toggle="modal"
+                   data-bs-target="#addWalletModal"
+                   value="New"/>
         </form>
     </div>
 </div>
@@ -26,13 +30,16 @@
 {
     <div class="card shadow">
         <div class="card-body fw-bold">
+            <div class="card-title">
+                <p class="text-center text-success fs-5">@Model.Wallet.Name</p>
+            </div>
             <div class="d-flex justify-content-between">
                 <p class="card-text">Income:</p>
                 <p class="card-text">$@Model.Wallet.Income</p>
             </div>
             <div class="d-flex justify-content-between">
                 <p class="card-text">Expenditure:</p>
-                <p class="card-text">$@Model.Wallet.Expenditure</p>
+                <p class="card-text">$@Model.Wallet.Expenses</p>
             </div>
             <div class="d-flex justify-content-between">
                 <p class="card-text">Balance:</p>
@@ -68,40 +75,77 @@ else
     <p class="text-center">There are no wallets set up yet</p>
 }
 
-<div class="modal fade" id="addTransactionModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<!-- Add Transaction Modal -->
+
+@* <div class="modal fade" id="addTransactionModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"> *@
+@*     <div class="modal-dialog modal-dialog-centered"> *@
+@*         <div class="modal-content"> *@
+@*             <div class="modal-header"> *@
+@*                 <h4 class="modal-title fs-5" id="exampleModalLabel">Add a Transaction</h4> *@
+@*                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> *@
+@*             </div> *@
+@*             <div class="modal-body"> *@
+@*                 <form id="addTransactionForm"> *@
+@*                     <input type="hidden" asp-for="@Model.Wallet.Id"/> *@
+@*                     <div class="mb-3"> *@
+@*                         <label for="transactionName" class="form-label">Transaction</label> *@
+@*                         <input type="text" class="form-control" placeholder="Enter Name of Transaction" id="transactionName"> *@
+@*                     </div> *@
+@*                     <div class="mb-3"> *@
+@*                         <label for="transactionDescription" class="form-label">Description</label> *@
+@*                         <input type="text" class="form-control" placeholder="Enter the Description" id="transactionDescription"> *@
+@*                     </div> *@
+@*                     <div class="mb-3"> *@
+@*                         <label for="transactionCost" class="form-label">Cost</label> *@
+@*                         $<input type="number" class="form-control" placeholder="0.00" id="transactionCost"> *@
+@*                     </div> *@
+@*                     <div class="form-label"> *@
+@*                         <label asp-for="Transaction.Month" class="form-label">Select a Month</label> *@
+@*                         <select asp-for="Transaction.Month" asp-items="Html.GetEnumSelectList<Month>()" class="form-select"> *@
+@*                             <option value="">-- Choose a Month --</option> *@
+@*                         </select> *@
+@*                     </div> *@
+@*                     <div class="form-label"> *@
+@*                         <label class="form-label">Select a Category</label> *@
+@*                         <select id="CategoryList" asp-items="Model.CategoriesSelectList" class="form-select"> *@
+@*                             <option value="-1">-- Choose a Category --</option> *@
+@*                         </select> *@
+@*                     </div> *@
+@*                 </form> *@
+@*             </div> *@
+@*             <div class="modal-footer"> *@
+@*                 <button type="submit" class="text-success btn btn-light">Add</button> *@
+@*                 <button type="button" class="btn btn-success" data-bs-dismiss="modal">Cancel</button> *@
+@*             </div> *@
+@*         </div> *@
+@*     </div> *@
+@* </div> *@
+
+<!-- Add Wallet Modal -->
+
+<div class="modal fade" id="addWalletModal" tabindex="-1" aria-labelledby="addModalModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title fs-5" id="exampleModalLabel">Add a Transaction</h4>
+                <h4 class="modal-title fs-5" id="addModalModalLabel">Add a Wallet</h4>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                <form>
-                    <input type="hidden" asp-for="@Model.Wallet.Id"/>
+            <form id="addWalletForm">
+                <div class="modal-body">
                     <div class="mb-3">
-                        <label for="transactionName" class="form-label">Transaction</label>
-                        <input type="text" class="form-control" placeholder="Enter Name of Transaction" id="transactionName">
-                    </div>
-                    <div class="mb-3">
-                        <label for="transactionDescription" class="form-label">Description</label>
-                        <input type="text" class="form-control" placeholder="Enter the Description" id="transactionDescription">
+                        <label for="walletName" class="form-label">Wallet</label>
+                        <input type="text" name="name" class="form-control" placeholder="Enter Name of Wallet" id="walletName">
                     </div>
                     <div class="mb-3">
-                        <label for="transactionCost" class="form-label">Cost</label>
-                        $<input type="number" class="form-control" placeholder="0.00" id="transactionCost">
+                        <label for="walletIncome" class="form-label">Income</label>
+                        $<input type="number" name="income" class="form-control" placeholder="0.00" id="walletIncome">
                     </div>
-                    <div class="form-label">
-                        <label class="form-label">Select a Category</label>
-                        <select id="CategoryList" asp-items="Model.CategoriesSelectList" class="form-select">
-                            <option value="-1">-- Choose a Category --</option>
-                        </select>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="submit" class="text-success btn btn-light">Add</button>
-                <button type="button" class="btn btn-success" data-bs-dismiss="modal">Cancel</button>
-            </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" onclick="addEventListener('submit', addWallet)" class="text-success btn btn-light">Add</button>
+                    <button type="button" class="btn btn-success" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

@@ -25,7 +25,7 @@ public class HomeController : Controller
 
             viewModel = new WalletCategoryTransactionViewModel { Wallets = new SelectList(wallets, "Id", "Name") };
         }
-        else
+        else if (id != -1)
         {
             var wallets = await _unitOfWork.Wallets.GetEntities(_ => true);
 
@@ -39,27 +39,50 @@ public class HomeController : Controller
                 CategoriesSelectList = new SelectList(categories, "CategoryId", "CategoryName")
             };
         }
+        else
+        {
+            viewModel = new WalletCategoryTransactionViewModel();
+        }
 
         return View(viewModel);
     }
+    //
+    // [HttpPost]
+    // public async Task<IActionResult> Index(int id, int categoryId)
+    // {
+    //     var wallets = await _unitOfWork.Wallets.GetEntities(_ => true);
+    //
+    //     var wallet = await _unitOfWork.Wallets.GetEntity(id);
+    //
+    //     var categories = await _unitOfWork.Categories.GetEntities(c => c.WalletId == wallet.Id);
+    //
+    //     var viewModel = new WalletCategoryTransactionViewModel
+    //     {
+    //         Wallets = new SelectList(wallets, "Id", "Name"), Wallet = wallet,
+    //         CategoriesSelectList = new SelectList(categories, "CategoryId", "CategoryName")
+    //     };
+    //
+    //     // var transactions = _unitOfWork.Transactions.GetEntities(t => t.CategoryId == categories.Id);
+    //
+    //     return View(viewModel);
+    // }
 
-    [HttpPost]
-    public async Task<IActionResult> Index(int id, int categoryId)
+    [HttpPost("addWallet")]
+    public async Task<IActionResult> Index(string name, string income)
     {
-        var wallets = await _unitOfWork.Wallets.GetEntities(_ => true);
-
-        var wallet = await _unitOfWork.Wallets.GetEntity(id);
-
-        var categories = await _unitOfWork.Categories.GetEntities(c => c.WalletId == wallet.Id);
-
-        var viewModel = new WalletCategoryTransactionViewModel
+        var wallet = new Wallet
         {
-            Wallets = new SelectList(wallets, "Id", "Name"), Wallet = wallet,
-            CategoriesSelectList = new SelectList(categories, "CategoryId", "CategoryName")
+            Name = name,
+            Income = decimal.Parse(income)
         };
-
-        // var transactions = _unitOfWork.Transactions.GetEntities(t => t.CategoryId == categories.Id);
-
+        
+        await _unitOfWork.Wallets.AddEntity(wallet);
+        await _unitOfWork.SaveChanges();
+    
+        var wallets = await _unitOfWork.Wallets.GetEntities(_ => true);
+    
+        var viewModel = new WalletCategoryTransactionViewModel { Wallets = new SelectList(wallets, "Id", "Name") };
+        
         return View(viewModel);
     }
 
