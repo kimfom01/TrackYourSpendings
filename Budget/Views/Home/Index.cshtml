@@ -1,5 +1,4 @@
 ﻿@model WalletCategoryTransactionViewModel
-@using Budget.Models
 @{
     ViewData["Title"] = "Home Page";
 }
@@ -58,13 +57,12 @@
                        value="Add New Transaction"/>
             </div>
             <br/>
-            <p>No store type was specified for the decimal property 'Expenditure' on entity type 'Wallet'.</p>
             @if (Model.Transactions is not null)
             {
                 @foreach (var transaction in Model.Transactions)
                 {
-                    <p class="card-text">Transaction: @transaction.TransactionName</p>
-                    <p class="card-text">Description: @transaction.TransactionDescription</p>
+                    <p class="card-text">Transaction: @transaction.Name</p>
+                    <p class="card-text">Description: @transaction.Description</p>
                 }
             }
         </div>
@@ -72,54 +70,54 @@
 }
 else
 {
-    <p class="text-center">There are no wallets set up yet</p>
+    <p class="text-center">Choose a wallet to view transactions</p>
 }
 
 <!-- Add Transaction Modal -->
 
-@* <div class="modal fade" id="addTransactionModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"> *@
-@*     <div class="modal-dialog modal-dialog-centered"> *@
-@*         <div class="modal-content"> *@
-@*             <div class="modal-header"> *@
-@*                 <h4 class="modal-title fs-5" id="exampleModalLabel">Add a Transaction</h4> *@
-@*                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> *@
-@*             </div> *@
-@*             <div class="modal-body"> *@
-@*                 <form id="addTransactionForm"> *@
-@*                     <input type="hidden" asp-for="@Model.Wallet.Id"/> *@
-@*                     <div class="mb-3"> *@
-@*                         <label for="transactionName" class="form-label">Transaction</label> *@
-@*                         <input type="text" class="form-control" placeholder="Enter Name of Transaction" id="transactionName"> *@
-@*                     </div> *@
-@*                     <div class="mb-3"> *@
-@*                         <label for="transactionDescription" class="form-label">Description</label> *@
-@*                         <input type="text" class="form-control" placeholder="Enter the Description" id="transactionDescription"> *@
-@*                     </div> *@
-@*                     <div class="mb-3"> *@
-@*                         <label for="transactionCost" class="form-label">Cost</label> *@
-@*                         $<input type="number" class="form-control" placeholder="0.00" id="transactionCost"> *@
-@*                     </div> *@
-@*                     <div class="form-label"> *@
-@*                         <label asp-for="Transaction.Month" class="form-label">Select a Month</label> *@
-@*                         <select asp-for="Transaction.Month" asp-items="Html.GetEnumSelectList<Month>()" class="form-select"> *@
-@*                             <option value="">-- Choose a Month --</option> *@
-@*                         </select> *@
-@*                     </div> *@
-@*                     <div class="form-label"> *@
-@*                         <label class="form-label">Select a Category</label> *@
-@*                         <select id="CategoryList" asp-items="Model.CategoriesSelectList" class="form-select"> *@
-@*                             <option value="-1">-- Choose a Category --</option> *@
-@*                         </select> *@
-@*                     </div> *@
-@*                 </form> *@
-@*             </div> *@
-@*             <div class="modal-footer"> *@
-@*                 <button type="submit" class="text-success btn btn-light">Add</button> *@
-@*                 <button type="button" class="btn btn-success" data-bs-dismiss="modal">Cancel</button> *@
-@*             </div> *@
-@*         </div> *@
-@*     </div> *@
-@* </div> *@
+<div class="modal fade" id="addTransactionModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title fs-5" id="exampleModalLabel">Add a Transaction</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="addTransactionForm" method="post" asp-action="AddTransaction">
+                <div class="modal-body">
+                    @* <input type="hidden" asp-for="@Model.Wallet.Id"/> *@
+                    <div class="mb-3 form-label">
+                        <label for="transactionName" class="form-label">Transaction</label>
+                        <input type="text" class="form-control" placeholder="Enter Name of Transaction" id="transactionName">
+                    </div>
+                    <div class="mb-3 form-label">
+                        <label for="transactionDescription" class="form-label">Description</label>
+                        <input type="text" class="form-control" placeholder="Enter the Description" id="transactionDescription">
+                    </div>
+                    <div class="mb-3 form-label">
+                        <label for="transactionCost" class="form-label">Cost</label>
+                        $<input type="number" class="form-control" placeholder="0.00" id="transactionCost">
+                    </div>
+                    <div class="form-label">
+                        <label for="transactionMonth" class="form-label">Select a Month</label>
+                        <select id="transactionMonth" asp-items="Html.GetEnumSelectList<Month>()" class="form-select">
+                            <option value="">-- Choose a Month --</option>
+                        </select>
+                    </div>
+                    <div class="form-label">
+                        <label for="categoryId" class="form-label">Select a Category</label>
+                        <select id="categoryId" asp-items="Model.CategoriesSelectList" class="form-select">
+                            <option value="-1">-- Choose a Category --</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" onclick="addTransaction()" class="text-success btn btn-light">Add</button>
+                    <button type="button" class="btn btn-success" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 <!-- Add Wallet Modal -->
 
@@ -130,7 +128,7 @@ else
                 <h4 class="modal-title fs-5" id="addModalModalLabel">Add a Wallet</h4>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form id="addWalletForm">
+            <form id="addWalletForm" method="post" asp-action="AddWallet">
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="walletName" class="form-label">Wallet</label>
@@ -142,7 +140,7 @@ else
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" onclick="addEventListener('submit', addWallet)" class="text-success btn btn-light">Add</button>
+                    <button type="submit" onclick="addWallet()" class="text-success btn btn-light">Add</button>
                     <button type="button" class="btn btn-success" data-bs-dismiss="modal">Cancel</button>
                 </div>
             </form>
