@@ -61,7 +61,7 @@ public class HomeController : Controller
 
     [HttpPost]
     // [IgnoreAntiforgeryToken]
-    public async Task<IActionResult> AddTransaction([FromBody] Transaction transaction)
+    public async Task<IActionResult> AddTransaction(Transaction transaction)
     {
         transaction.Date = DateTime.Now;
         
