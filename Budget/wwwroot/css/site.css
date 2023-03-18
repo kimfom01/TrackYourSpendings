@@ -21,7 +21,7 @@ body {
     margin-bottom: 60px;
 }
 
-nav, footer {
+nav, footer, .transaction-list-row {
     background-color: #EDF4F2;
 }
 
