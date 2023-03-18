@@ -58,16 +58,25 @@ public class HomeController : Controller
         
         return RedirectToAction("Index");
     }
+    
+    // TODO: Link transactions directly to wallet and disconnect categories from other tables, fill database with predefined categories list
+    // TODO: Set default expenses and balance in wallet class to 0 
 
     [HttpPost]
-    // [IgnoreAntiforgeryToken]
     public async Task<IActionResult> AddTransaction(Transaction transaction)
     {
         transaction.Date = DateTime.Now;
         
         await _unitOfWork.Transactions.AddEntity(transaction);
-        await _unitOfWork.SaveChanges();
 
+        var category = await _unitOfWork.Categories.GetEntity(transaction.CategoryId);
+        var wallet = await _unitOfWork.Wallets.GetEntity(category.WalletId);
+
+        wallet.Expenses += transaction.Cost;
+        wallet.Balance -= transaction.Cost;
+        
+        await _unitOfWork.SaveChanges();
+        
         return RedirectToAction("Index");
     }
 
