@@ -9,12 +9,12 @@ public class Wallet
     
     [Precision(10, 2)]
     public decimal Income { get; set; }
+
+    [Precision(10, 2)]
+    public decimal? Expenses { get; set; } = 0M;
     
     [Precision(10, 2)]
-    public decimal? Expenses { get; set; }
-    
-    [Precision(10, 2)]
-    public decimal? Balance { get; set; }
-    
-    public IEnumerable<Category>? Categories { get; set; }
+    public decimal? Balance { get; set; } = 0M;
+
+    public IEnumerable<Transaction>? Transactions { get; set; }
 }

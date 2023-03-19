@@ -6,7 +6,7 @@ public class WalletCategoryTransactionViewModel
 {
     public SelectList? Wallets { get; set; }
     public SelectList? CategoriesSelectList { get; set; }
-    public IEnumerable<Category> Categories { get; set; }
+    //public IEnumerable<Category> Categories { get; set; }
     public IEnumerable<Transaction>? Transactions { get; set; }
 
     public Wallet? Wallet { get; set; }
