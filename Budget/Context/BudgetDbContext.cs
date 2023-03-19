@@ -17,53 +17,114 @@ public class BudgetDbContext : DbContext
     {
         modelBuilder.Entity<Wallet>()
             .HasData(new Wallet
-                {
-                    Id = 1,
-                    Name = "Test Wallet",
-                    Income = 1500.00M,
-                    Expenses = 650M,
-                    Balance = 850M
-                },
-                new Wallet
-                {
-                    Id = 2,
-                    Name = "Main Wallet",
-                    Income = 1500.00M,
-                    Expenses = 0,
-                    Balance = 1500M
-                });
+            {
+                Id = 1,
+                Name = "Test Wallet",
+                Income = 5000.00M,
+                Expenses = 800M,
+                Balance = 4200M
+            },
+            new Wallet
+            {
+                Id = 2,
+                Name = "Main Wallet",
+                Income = 5000.00M,
+                Expenses = 300M,
+                Balance = 4700.00M
+            });
 
         modelBuilder.Entity<Category>()
             .HasData(new Category
-                {
-                    CategoryId = 1,
-                    WalletId = 1,
-                    CategoryName = "Gadgets"
-                }, new Category
-                {
-                    CategoryId = 2,
-                    WalletId = 1,
-                    CategoryName = "Groceries"
-                });
+            {
+                Id = 1,
+                Name = "Housing"
+            },
+            new Category
+            {
+                Id = 2,
+                Name = "Transportation"
+            },
+            new Category
+            {
+                Id = 3,
+                Name = "Food"
+            },
+            new Category
+            {
+                Id = 4,
+                Name = "Utilities"
+            },
+            new Category
+            {
+                Id = 5,
+                Name = "Insurance"
+            },
+            new Category
+            {
+                Id = 6,
+                Name = "Medical & Healthcare"
+            },
+            new Category
+            {
+                Id = 7,
+                Name = "Saving, Investing & Dept Payments"
+            },
+            new Category
+            {
+                Id = 8,
+                Name = "Personal Spending"
+            },
+            new Category
+            {
+                Id = 9,
+                Name = "Recreation & Entertainment"
+            },
+            new Category
+            {
+                Id = 10,
+                Name = "Miscellaneous"
+            });
 
         modelBuilder.Entity<Transaction>()
             .HasData(new Transaction
-                {
-                    Id = 1,
-                    Name = "Computer Accessories",
-                    Description = "I bought a new laptop, external keyboard and mouse",
-                    Date = DateTime.Now,
-                    Cost = 500.00M,
-                    CategoryId = 1
-                },
-                new Transaction
-                {
-                    Id = 2,
-                    Name = "Weekly fruit stocking",
-                    Description = "I bought a bunch of bananas, grapes and 7 oranges",
-                    Date = DateTime.Now,
-                    Cost = 150.00M,
-                    CategoryId = 2
-                });
+            {
+                Id = 1,
+                Name = "Computer Accessories",
+                Description = "I bought a new laptop, external keyboard and mouse",
+                Date = DateTime.Now,
+                Cost = 500.00M,
+                WalletId = 1,
+                CategoryId = 4
+            },
+            new Transaction
+            {
+                Id = 2,
+                Name = "Weekly fruit stocking",
+                Description = "I bought a bunch of bananas, grapes and 7 oranges",
+                Date = DateTime.Now,
+                Cost = 150.00M,
+                WalletId = 1,
+                CategoryId = 3
+            },
+            new Transaction
+            {
+                Id = 3,
+                Name = "Trip to Belgorod",
+                Description = "Went to assist Dominion in her cake business",
+                Date = DateTime.Now,
+                Cost = 150.00M,
+                WalletId = 1,
+                CategoryId = 2
+            },
+            new Transaction
+            {
+                Id = 4,
+                Name = "Annual Health Insurance",
+                Description = "Paid Annual Health Insurance",
+                Date = DateTime.Now,
+                Cost = 300.00M,
+                WalletId = 2,
+                CategoryId = 5
+            });
     }
 }
