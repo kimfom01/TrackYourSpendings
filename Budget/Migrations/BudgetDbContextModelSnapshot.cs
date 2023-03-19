@@ -24,37 +24,70 @@ namespace Budget.Migrations
 
             modelBuilder.Entity("Budget.Models.Category", b =>
                 {
-                    b.Property<int>("CategoryId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CategoryId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("CategoryName")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("WalletId")
-                        .HasColumnType("int");
-
-                    b.HasKey("CategoryId");
-
-                    b.HasIndex("WalletId");
+                    b.HasKey("Id");
 
                     b.ToTable("Categories");
 
                     b.HasData(
                         new
                         {
-                            CategoryId = 1,
-                            CategoryName = "Gadgets",
-                            WalletId = 1
+                            Id = 1,
+                            Name = "Housing"
                         },
                         new
                         {
-                            CategoryId = 2,
-                            CategoryName = "Groceries",
-                            WalletId = 1
+                            Id = 2,
+                            Name = "Transportation"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Food"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Utilities"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "Insurance"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Name = "Medical & Healthcare"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Name = "Saving, Investing & Dept Payments"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Name = "Personal Spending"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Name = "Recreation & Entertainment"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Name = "Miscellaneous"
                         });
                 });
 
@@ -86,9 +119,14 @@ namespace Budget.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("WalletId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
+
+                    b.HasIndex("WalletId");
 
                     b.ToTable("Transactions");
 
@@ -96,20 +134,42 @@ namespace Budget.Migrations
                         new
                         {
                             Id = 1,
-                            CategoryId = 1,
+                            CategoryId = 4,
                             Cost = 500.00m,
-                            Date = new DateTime(2023, 3, 18, 9, 27, 56, 888, DateTimeKind.Local).AddTicks(6420),
+                            Date = new DateTime(2023, 3, 19, 23, 15, 43, 934, DateTimeKind.Local).AddTicks(7723),
                             Description = "I bought a new laptop, external keyboard and mouse",
-                            Name = "Computer Accessories"
+                            Name = "Computer Accessories",
+                            WalletId = 1
                         },
                         new
                         {
                             Id = 2,
+                            CategoryId = 3,
+                            Cost = 150.00m,
+                            Date = new DateTime(2023, 3, 19, 23, 15, 43, 934, DateTimeKind.Local).AddTicks(7734),
+                            Description = "I bought a bunch of bananas, grapes and 7 oranges",
+                            Name = "Weekly fruit stocking",
+                            WalletId = 1
+                        },
+                        new
+                        {
+                            Id = 3,
                             CategoryId = 2,
                             Cost = 150.00m,
-                            Date = new DateTime(2023, 3, 18, 9, 27, 56, 888, DateTimeKind.Local).AddTicks(6468),
-                            Description = "I bought a bunch of bananas, grapes and 7 oranges",
-                            Name = "Weekly fruit stocking"
+                            Date = new DateTime(2023, 3, 19, 23, 15, 43, 934, DateTimeKind.Local).AddTicks(7736),
+                            Description = "Went to assist Dominion in her cake business",
+                            Name = "Trip to Belgorod",
+                            WalletId = 1
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CategoryId = 5,
+                            Cost = 300.00m,
+                            Date = new DateTime(2023, 3, 19, 23, 15, 43, 934, DateTimeKind.Local).AddTicks(7738),
+                            Description = "Paid Annual Health Insurance",
+                            Name = "Annual Health Insurance",
+                            WalletId = 2
                         });
                 });
 
@@ -145,30 +205,19 @@ namespace Budget.Migrations
                         new
                         {
                             Id = 1,
-                            Balance = 850m,
-                            Expenses = 650m,
-                            Income = 1500.00m,
+                            Balance = 4200m,
+                            Expenses = 800m,
+                            Income = 5000.00m,
                             Name = "Test Wallet"
                         },
                         new
                         {
                             Id = 2,
-                            Balance = 1500m,
-                            Expenses = 0m,
-                            Income = 1500.00m,
+                            Balance = 4700.00m,
+                            Expenses = 300m,
+                            Income = 5000.00m,
                             Name = "Main Wallet"
                         });
-                });
-
-            modelBuilder.Entity("Budget.Models.Category", b =>
-                {
-                    b.HasOne("Budget.Models.Wallet", "Wallet")
-                        .WithMany("Categories")
-                        .HasForeignKey("WalletId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Wallet");
                 });
 
             modelBuilder.Entity("Budget.Models.Transaction", b =>
@@ -179,7 +228,15 @@ namespace Budget.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Budget.Models.Wallet", "Wallet")
+                        .WithMany("Transactions")
+                        .HasForeignKey("WalletId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Category");
+
+                    b.Navigation("Wallet");
                 });
 
             modelBuilder.Entity("Budget.Models.Category", b =>
@@ -189,7 +246,7 @@ namespace Budget.Migrations
 
             modelBuilder.Entity("Budget.Models.Wallet", b =>
                 {
-                    b.Navigation("Categories");
+                    b.Navigation("Transactions");
                 });
 #pragma warning restore 612, 618
         }
