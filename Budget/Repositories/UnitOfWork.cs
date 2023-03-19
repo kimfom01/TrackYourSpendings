@@ -17,10 +17,14 @@ public class UnitOfWork : IUnitOfWork
     public ICategoryRepository Categories { get; }
     public ITransactionRepository Transactions { get; }
     public IWalletRepository Wallets { get; }
-    
-    
+
     public async Task<int> SaveChanges()
     {
         return await _dbContext.SaveChangesAsync();
+    }
+
+    public void Dispose()
+    {
+        _dbContext.Dispose();
     }
 }

@@ -1,6 +1,6 @@
 namespace Budget.Repositories;
 
-public interface IUnitOfWork
+public interface IUnitOfWork : IDisposable
 {
     public ICategoryRepository Categories { get; }
     public ITransactionRepository Transactions { get; }
