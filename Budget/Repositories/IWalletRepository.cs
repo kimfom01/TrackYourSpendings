@@ -4,5 +4,4 @@ namespace Budget.Repositories;
 
 public interface IWalletRepository : IRepository<Wallet>
 {
-    public IEnumerable<Wallet> GetWalletWithCategories();
 }
