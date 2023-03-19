@@ -19,13 +19,13 @@ public class HomeController : Controller
     {
         WalletCategoryTransactionViewModel viewModel;
 
-        if (id == null)
+        if (id is null or -1)
         {
             var wallets = await _unitOfWork.Wallets.GetEntities(_ => true);
 
             viewModel = new WalletCategoryTransactionViewModel { Wallets = new SelectList(wallets, "Id", "Name") };
         }
-        else if (id != -1)
+        else
         {
             var wallets = await _unitOfWork.Wallets.GetEntities(_ => true);
 
@@ -37,14 +37,12 @@ public class HomeController : Controller
 
             viewModel = new WalletCategoryTransactionViewModel
             {
-                Wallets = new SelectList(wallets, "Id", "Name"), Wallet = wallet,
+                Wallets = new SelectList(wallets, "Id", "Name"), 
+                Wallet = wallet,
+                WalletId = wallet.Id,
                 CategoriesSelectList = new SelectList(categories, "Id", "Name"),
                 Transactions = transactions
             };
-        }
-        else
-        {
-            viewModel = new WalletCategoryTransactionViewModel();
         }
 
         return View(viewModel);
@@ -60,13 +58,14 @@ public class HomeController : Controller
     }
     
     [HttpPost]
-    public async Task<IActionResult> AddTransaction(Transaction transaction)
+    public async Task<IActionResult> AddTransaction(Transaction transaction, int walletId)
     {
         transaction.Date = DateTime.Now;
+        transaction.WalletId = walletId;
         
         await _unitOfWork.Transactions.AddEntity(transaction);
 
-        var wallet = await _unitOfWork.Wallets.GetEntity(transaction.WalletId);
+        var wallet = await _unitOfWork.Wallets.GetEntity(walletId);
 
         wallet.Expenses += transaction.Cost;
         wallet.Balance -= transaction.Cost;
@@ -75,6 +74,23 @@ public class HomeController : Controller
         
         return RedirectToAction("Index");
     }
+    
+    // [HttpPost]
+    // public async Task<IActionResult> UpdateTransaction(Transaction transaction, int walletId)
+    // {
+    //     transaction.Date = DateTime.Now;
+    //     
+    //     await _unitOfWork.Transactions.Update(transaction.Id, transaction);
+    //
+    //     var wallet = await _unitOfWork.Wallets.GetEntity(walletId);
+    //
+    //     wallet.Expenses += transaction.Cost;
+    //     wallet.Balance -= transaction.Cost;
+    //     
+    //     await _unitOfWork.SaveChanges();
+    //     
+    //     return RedirectToAction("Index");
+    // }
 
     public IActionResult Privacy()
     {
