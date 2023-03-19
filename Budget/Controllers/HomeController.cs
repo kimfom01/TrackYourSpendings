@@ -31,14 +31,14 @@ public class HomeController : Controller
 
             var wallet = await _unitOfWork.Wallets.GetEntity(id);
 
-            var categories = await _unitOfWork.Categories.GetEntities(c => c.WalletId == wallet.Id);
+            var transactions = await _unitOfWork.Transactions.GetEntities(tr => tr.WalletId == wallet.Id);
 
-            var transactions = await _unitOfWork.Transactions.GetEntities(_ => true);
+            var categories = await _unitOfWork.Categories.GetEntities(_ => true);
 
             viewModel = new WalletCategoryTransactionViewModel
             {
                 Wallets = new SelectList(wallets, "Id", "Name"), Wallet = wallet,
-                CategoriesSelectList = new SelectList(categories, "CategoryId", "CategoryName"),
+                CategoriesSelectList = new SelectList(categories, "Id", "Name"),
                 Transactions = transactions
             };
         }
@@ -59,9 +59,6 @@ public class HomeController : Controller
         return RedirectToAction("Index");
     }
     
-    // TODO: Link transactions directly to wallet and disconnect categories from other tables, fill database with predefined categories list
-    // TODO: Set default expenses and balance in wallet class to 0 
-
     [HttpPost]
     public async Task<IActionResult> AddTransaction(Transaction transaction)
     {
@@ -69,8 +66,7 @@ public class HomeController : Controller
         
         await _unitOfWork.Transactions.AddEntity(transaction);
 
-        var category = await _unitOfWork.Categories.GetEntity(transaction.CategoryId);
-        var wallet = await _unitOfWork.Wallets.GetEntity(category.WalletId);
+        var wallet = await _unitOfWork.Wallets.GetEntity(transaction.WalletId);
 
         wallet.Expenses += transaction.Cost;
         wallet.Balance -= transaction.Cost;
