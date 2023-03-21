@@ -57,6 +57,8 @@
                        value="Add New Transaction"/>
             </div>
             <br/>
+            @* TODO: Move list of transactions to a table for more structured data *@
+            @* TODO: Table should of course have a heading of columns (Transactions, Date, Amount, Actions) *@
             @if (Model.Transactions is not null)
             {
                 @foreach (var transaction in Model.Transactions)
