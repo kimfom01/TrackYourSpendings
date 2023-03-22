@@ -21,8 +21,12 @@ body {
     margin-bottom: 60px;
 }
 
-nav, footer, .transaction-list-row {
+nav, footer, .transaction-list-row, .transaction-list-head {
     background-color: #EDF4F2;
+}
+
+.transaction-list-row {
+    border-bottom: 15px solid white;
 }
 
 #page-container {
