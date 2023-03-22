@@ -27,25 +27,31 @@ public class HomeController : Controller
         }
         else
         {
-            var wallets = await _unitOfWork.Wallets.GetEntities(_ => true);
-
-            var wallet = await _unitOfWork.Wallets.GetEntity(id);
-
-            var transactions = await _unitOfWork.Transactions.GetEntities(tr => tr.WalletId == wallet.Id);
-
-            var categories = await _unitOfWork.Categories.GetEntities(_ => true);
-
-            viewModel = new WalletCategoryTransactionViewModel
-            {
-                Wallets = new SelectList(wallets, "Id", "Name"), 
-                Wallet = wallet,
-                WalletId = wallet.Id,
-                CategoriesSelectList = new SelectList(categories, "Id", "Name"),
-                Transactions = transactions
-            };
+            viewModel = await GetViewModelFromId(id);
         }
 
         return View(viewModel);
+    }
+
+    private async Task<WalletCategoryTransactionViewModel> GetViewModelFromId(int? id)
+    {
+        var wallets = await _unitOfWork.Wallets.GetEntities(_ => true);
+
+        var wallet = await _unitOfWork.Wallets.GetEntity(id);
+
+        var transactions = await _unitOfWork.Transactions.GetEntities(tr => tr.WalletId == wallet.Id);
+
+        var categories = await _unitOfWork.Categories.GetEntities(_ => true);
+
+        var viewModel = new WalletCategoryTransactionViewModel
+        {
+            Wallets = new SelectList(wallets, "Id", "Name"),
+            Wallet = wallet,
+            WalletId = wallet.Id,
+            CategoriesSelectList = new SelectList(categories, "Id", "Name"),
+            Transactions = transactions
+        };
+        return viewModel;
     }
 
     [HttpPost]
