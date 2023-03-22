@@ -1,4 +1,5 @@
 ﻿@model WalletCategoryTransactionViewModel
+@using Humanizer
 @{
     ViewData["Title"] = "Home Page";
 }
@@ -57,32 +58,45 @@
                        value="Add New Transaction"/>
             </div>
             <br/>
-            @* TODO: Move list of transactions to a table for more structured data *@
-            @* TODO: Table should of course have a heading of columns (Transactions, Date, Amount, Actions) *@
             @if (Model.Transactions is not null)
             {
-                @foreach (var transaction in Model.Transactions)
-                {
-                    <div class="transaction-list-row d-flex justify-content-between align-items-center mb-3">
-                        <input type="hidden" asp-for="@transaction.Id"/>
-                        <p class="p-3 fs-5 card-text m-0">&bull; @transaction.Name</p>
-                        <p class="p-3 fs-5 card-text m-0">Cost: @transaction.Cost</p>
-                        <div class="p-3">
-                            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#updateTransactionModal">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
-                                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-                                    <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
-                                </svg>
-                            </button>
-                            <button class="btn btn-success">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-                                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
-                                    <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                }
+                <table class="table text-success transaction-list-head">
+                    <thead class="text-center">
+                    <tr class="fs-4 card-text m-0">
+                        <td class="p-3">Transactions</td>
+                        <td class="p-3">Date</td>
+                        <td class="p-3">Amount</td>
+                        <td class="p-3">Actions</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var transaction in Model.Transactions)
+                    {
+                        <tr class="transaction-list-row fs-5 text-center align-middle">
+                            <input type="hidden" asp-for="@transaction.Id"/>
+                            <td class="p-3 card-text">&bull; @transaction.Name</td>
+                            <td class="p-3 card-text">@transaction.Date.Humanize(utcDate: false)</td>
+                            <td class="p-3 card-text">@transaction.Cost</td>
+                            <td>
+                                <div class="p-3">
+                                    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#updateTransactionModal">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                                        </svg>
+                                    </button>
+                                    <button class="btn btn-success">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                                            <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
             }
         </div>
     </div>
@@ -176,7 +190,7 @@ else
                 <h4 class="modal-title fs-5" id="updateTransactionModalLabel">Add a Transaction</h4>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form id="updateTransactionForm" method="post" asp-controller="Home" asp-action="@* UpdateTransaction*@"> 
+            <form id="updateTransactionForm" method="post" asp-controller="Home" asp-action="@* UpdateTransaction*@">
                 <div class="modal-body">
                     <div class="mb-3 form-label">
                         <label asp-for="Transaction.Name" class="form-label">Transaction</label>
