@@ -15,7 +15,7 @@ public class HomeController : Controller
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<IActionResult> Index(int? id, string? searchString, int? category)
+    public async Task<IActionResult> Index(string? searchString, int? category, int? id = 1)
     {
         WalletCategoryTransactionViewModel viewModel;
 
@@ -61,7 +61,7 @@ public class HomeController : Controller
 
     private async Task<IEnumerable<Transaction>> GetTransactions(int? id, string? searchString, int? category)
     {
-        var transactions = await _unitOfWork.Transactions.GetEntities(tr => tr.WalletId == id);
+        var transactions = await _unitOfWork.Transactions.GetTransactionsWithCategories(tr => tr.WalletId == id);
 
         if (transactions is null)
         {
