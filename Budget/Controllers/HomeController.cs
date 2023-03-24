@@ -15,7 +15,7 @@ public class HomeController : Controller
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<IActionResult> Index(int? id)
+    public async Task<IActionResult> Index(int? id, string? searchString, int? category)
     {
         WalletCategoryTransactionViewModel viewModel;
 
@@ -27,19 +27,24 @@ public class HomeController : Controller
         }
         else
         {
-            viewModel = await GetViewModelFromId(id);
+            viewModel = await GetViewModelFromId(id, searchString, category);
         }
 
         return View(viewModel);
     }
 
-    private async Task<WalletCategoryTransactionViewModel> GetViewModelFromId(int? id)
+    private async Task<WalletCategoryTransactionViewModel> GetViewModelFromId(int? id, string? searchString, int? category)
     {
         var wallets = await _unitOfWork.Wallets.GetEntities(_ => true);
 
         var wallet = await _unitOfWork.Wallets.GetEntity(id);
 
-        var transactions = await _unitOfWork.Transactions.GetEntities(tr => tr.WalletId == wallet.Id);
+        if (wallet is null)
+        {
+            return new WalletCategoryTransactionViewModel();
+        }
+        
+        var transactions = await GetTransactions(wallet.Id, searchString, category);
 
         var categories = await _unitOfWork.Categories.GetEntities(_ => true);
 
@@ -52,6 +57,28 @@ public class HomeController : Controller
             Transactions = transactions
         };
         return viewModel;
+    }
+
+    private async Task<IEnumerable<Transaction>> GetTransactions(int? id, string? searchString, int? category)
+    {
+        var transactions = await _unitOfWork.Transactions.GetEntities(tr => tr.WalletId == id);
+
+        if (transactions is null)
+        {
+            return Enumerable.Empty<Transaction>();
+        }
+        
+        if (searchString is not null)
+        {
+            transactions = transactions.Where(tr => tr.Name.ToLower().Contains(searchString.ToLower()));
+        }
+
+        if (category is not null)
+        {
+            transactions = transactions.Where(tr => tr.CategoryId == category);
+        }
+
+        return transactions;
     }
 
     [HttpPost]
