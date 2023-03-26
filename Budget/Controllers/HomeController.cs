@@ -15,7 +15,7 @@ public class HomeController : Controller
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<IActionResult> Index(string? searchString, int? category, int? id = 1)
+    public async Task<IActionResult> Index(string? searchString, int? category, DateTime? date, int? id = 1)
     {
         WalletCategoryTransactionViewModel viewModel;
 
@@ -27,13 +27,13 @@ public class HomeController : Controller
         }
         else
         {
-            viewModel = await GetViewModelFromId(id, searchString, category);
+            viewModel = await GetViewModelFromId(id, searchString, category, date);
         }
 
         return View(viewModel);
     }
 
-    private async Task<WalletCategoryTransactionViewModel> GetViewModelFromId(int? id, string? searchString, int? category)
+    private async Task<WalletCategoryTransactionViewModel> GetViewModelFromId(int? id, string? searchString, int? category, DateTime? date)
     {
         var wallets = await _unitOfWork.Wallets.GetEntities(_ => true);
 
@@ -44,7 +44,7 @@ public class HomeController : Controller
             return new WalletCategoryTransactionViewModel();
         }
         
-        var transactions = await GetTransactions(wallet.Id, searchString, category);
+        var transactions = await GetTransactions(wallet.Id, searchString, category, date);
 
         var categories = await _unitOfWork.Categories.GetEntities(_ => true);
 
@@ -59,7 +59,7 @@ public class HomeController : Controller
         return viewModel;
     }
 
-    private async Task<IEnumerable<Transaction>> GetTransactions(int? id, string? searchString, int? category)
+    private async Task<IEnumerable<Transaction>> GetTransactions(int? id, string? searchString, int? category, DateTime? date)
     {
         var transactions = await _unitOfWork.Transactions.GetTransactionsWithCategories(tr => tr.WalletId == id);
 
@@ -76,6 +76,11 @@ public class HomeController : Controller
         if (category is not null)
         {
             transactions = transactions.Where(tr => tr.CategoryId == category);
+        }
+
+        if (date is not null)
+        {
+            transactions = transactions.Where(tr => tr.Date.Value.Date == date.Value.Date);
         }
 
         return transactions;
