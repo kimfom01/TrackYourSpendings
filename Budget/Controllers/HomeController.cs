@@ -80,7 +80,7 @@ public class HomeController : Controller
 
         if (date is not null)
         {
-            transactions = transactions.Where(tr => tr.Date.Value.Date == date.Value.Date);
+            transactions = transactions.Where(tr => tr.Date?.Date == date.Value.Date);
         }
 
         return transactions;
