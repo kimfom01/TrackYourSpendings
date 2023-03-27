@@ -76,11 +76,11 @@
                 <table class="table text-success transaction-list-head">
                     <thead class="text-center">
                     <tr class="fs-4 card-text m-0">
-                        <td class="p-3">Transactions</td>
-                        <td class="p-3">Date</td>
-                        <td class="p-3">Category</td>
-                        <td class="p-3">Amount</td>
-                        <td class="p-3">Actions</td>
+                        <td>Transactions</td>
+                        <td>Date</td>
+                        <td>Category</td>
+                        <td>Amount</td>
+                        <td>Actions</td>
                     </tr>
                     </thead>
                     <tbody>
@@ -88,12 +88,12 @@
                     {
                         <tr class="transaction-list-row fs-5 text-center align-middle">
                             <input type="hidden" asp-for="@transaction.Id"/>
-                            <td class="p-3 card-text">&bull; @transaction.Name</td>
-                            <td class="p-3 card-text">@transaction.Date.Humanize(utcDate: false)</td>
-                            <td class="p-3 card-text">@transaction.Category?.Name</td>
-                            <td class="p-3 card-text">@transaction.Cost</td>
+                            <td class="card-text">&bull; @transaction.Name</td>
+                            <td class="card-text">@transaction.Date.Humanize(utcDate: false)</td>
+                            <td class="card-text">@transaction.Category?.Name</td>
+                            <td class="card-text">@transaction.Cost</td>
                             <td>
-                                <form class="p-3">
+                                <form>
                                     <button class="btn btn-success" type="button" data-bs-toggle="modal" 
                                             data-bs-target="#updateTransactionModal">
                                         <i class="bi bi-pencil-square"></i>

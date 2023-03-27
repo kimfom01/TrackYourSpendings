@@ -2,9 +2,33 @@ html {
     font-size: 14px;
 }
 
+@media (min-width: 280px) {
+    html {
+        font-size: 6px;
+    }
+}
+
+@media (min-width: 320px) {
+    html {
+        font-size: 8px;
+    }
+}
+
+@media (min-width: 375px) {
+    html {
+        font-size: 9px;
+    }
+}
+
+@media (min-width: 425px) {
+    html {
+        font-size: 10px;
+    }
+}
+
 @media (min-width: 768px) {
     html {
-        font-size: 16px;
+        font-size: 14px;
     }
 }
 
