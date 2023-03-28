@@ -81,11 +81,24 @@ buttons.forEach(btn => btn.addEventListener("click", (e) => {
         name: transactionRow[1].innerText,
         description: transactionRow[2].innerText,
         cost: transactionRow[5].innerText,
-        month: transactionRow[6].innerText,
+        month: months[transactionRow[6].innerText],
         categoryId: transactionRow[7].innerText
     };
 
-    console.table(transaction)
-    
     updateTransaction(transaction)
 }))
+
+const months = {
+    "January": 1,
+    "February": 2,
+    "March": 3,
+    "April": 4,
+    "May": 5,
+    "June": 6,
+    "July": 7,
+    "August": 8,
+    "September": 9,
+    "October": 10,
+    "November": 11,
+    "December": 12
+}
