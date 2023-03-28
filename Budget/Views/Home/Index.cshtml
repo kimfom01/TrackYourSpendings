@@ -57,9 +57,9 @@
                 <form method="get">
                     <div class="d-flex">
                         <input type="hidden" required name="id" value="@Model.Wallet.Id"/>
-                        <input id="searchString" name="searchString" class="form-control me-2" type="text" 
+                        <input id="searchString" name="searchString" class="form-control me-2" type="text"
                                placeholder="Search by Transaction Name"/>
-                        <select asp-for="Transaction.CategoryId" name="category" asp-items="Model.CategoriesSelectList" 
+                        <select asp-for="Transaction.CategoryId" name="category" asp-items="Model.CategoriesSelectList"
                                 class="form-select me-2">
                             <option value="">-- Choose a Category --</option>
                         </select>
@@ -87,14 +87,17 @@
                     @foreach (var transaction in Model.Transactions)
                     {
                         <tr class="transaction-list-row fs-5 text-center align-middle">
-                            <input type="hidden" asp-for="@transaction.Id"/>
+                            <td hidden>@transaction.Id</td>
                             <td class="card-text">&bull; @transaction.Name</td>
+                            <td class="card-text" hidden>@transaction.Description</td>
                             <td class="card-text">@transaction.Date.Humanize(utcDate: false)</td>
                             <td class="card-text">@transaction.Category?.Name</td>
                             <td class="card-text">@transaction.Cost</td>
+                            <td class="card-text" hidden>@transaction.Month</td>
+                            <td class="card-text" hidden>@transaction.CategoryId</td>
                             <td>
                                 <form>
-                                    <button class="btn btn-success" type="button" data-bs-toggle="modal" 
+                                    <button class="btn btn-success" type="button" data-bs-toggle="modal"
                                             data-bs-target="#updateTransactionModal">
                                         <i class="bi bi-pencil-square"></i>
                                     </button>
@@ -147,7 +150,7 @@ else
 
 <!-- Add Transaction Modal -->
 
-<div class="modal fade" id="addTransactionModal" tabindex="-1" aria-labelledby="addTransactionModalLabel" 
+<div class="modal fade" id="addTransactionModal" tabindex="-1" aria-labelledby="addTransactionModalLabel"
      aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -160,7 +163,7 @@ else
                     <input type="hidden" value="@Model.WalletId" asp-for="WalletId"/>
                     <div class="mb-3 form-label">
                         <label asp-for="Transaction.Name" class="form-label">Transaction</label>
-                        <input asp-for="Transaction.Name" required type="text" class="form-control" 
+                        <input asp-for="Transaction.Name" required type="text" class="form-control"
                                placeholder="Enter Name of Transaction">
                     </div>
                     <div class="mb-3 form-label">
@@ -170,19 +173,20 @@ else
                     </div>
                     <div class="mb-3 form-label">
                         <label asp-for="Transaction.Cost" class="form-label">Cost</label>
-                        $<input asp-for="Transaction.Cost" value="0" min="0" type="number" class="form-control" 
-                                placeholder="0.00">
+                        $
+                        <input asp-for="Transaction.Cost" value="0" min="0" type="number" class="form-control"
+                               placeholder="0.00">
                     </div>
                     <div class="form-label">
                         <label asp-for="Transaction.Month" class="form-label">Select a Month</label>
-                        <select asp-for="Transaction.Month" required asp-items="Html.GetEnumSelectList<Month>()" 
+                        <select asp-for="Transaction.Month" required asp-items="Html.GetEnumSelectList<Month>()"
                                 class="form-select">
                             <option value="">-- Choose a Month --</option>
                         </select>
                     </div>
                     <div class="form-label">
                         <label asp-for="Transaction.CategoryId" class="form-label">Select a Category</label>
-                        <select asp-for="Transaction.CategoryId" required asp-items="Model.CategoriesSelectList" 
+                        <select asp-for="Transaction.CategoryId" required asp-items="Model.CategoriesSelectList"
                                 class="form-select">
                             <option value="-1">-- Choose a Category --</option>
                         </select>
@@ -209,31 +213,33 @@ else
             </div>
             <form id="updateTransactionForm" method="post" asp-controller="Home" asp-action="@* UpdateTransaction*@">
                 <div class="modal-body">
+                    <input type="hidden" id="updateTransactionId" asp-for="Transaction.Id"/>
                     <div class="mb-3 form-label">
                         <label asp-for="Transaction.Name" class="form-label">Transaction</label>
-                        <input asp-for="Transaction.Name" required type="text" class="form-control" 
+                        <input asp-for="Transaction.Name" id="updateTransactionName" required type="text" class="form-control"
                                placeholder="Enter Name of Transaction">
                     </div>
                     <div class="mb-3 form-label">
                         <label asp-for="Transaction.Description" class="form-label">Description</label>
-                        <input asp-for="Transaction.Description" type="text" class="form-control" 
+                        <input asp-for="Transaction.Description" id="updateTransactionDescription" type="text" class="form-control"
                                placeholder="Enter the Description">
                     </div>
                     <div class="mb-3 form-label">
                         <label asp-for="Transaction.Cost" class="form-label">Cost</label>
-                        $<input asp-for="Transaction.Cost" value="0" min="0" type="number" class="form-control" 
-                                placeholder="0.00">
+                        $
+                        <input asp-for="Transaction.Cost" id="updateTransactionCost" value="0" min="0" type="number" class="form-control"
+                               placeholder="0.00">
                     </div>
                     <div class="form-label">
                         <label asp-for="Transaction.Month" class="form-label">Select a Month</label>
-                        <select asp-for="Transaction.Month" required asp-items="Html.GetEnumSelectList<Month>()" 
+                        <select asp-for="Transaction.Month" id="updateTransactionMonth" required asp-items="Html.GetEnumSelectList<Month>()"
                                 class="form-select">
                             <option value="">-- Choose a Month --</option>
                         </select>
                     </div>
                     <div class="form-label">
                         <label asp-for="Transaction.CategoryId" class="form-label">Select a Category</label>
-                        <select asp-for="Transaction.CategoryId" required asp-items="Model.CategoriesSelectList" 
+                        <select asp-for="Transaction.CategoryId" id="updateTransactionCategoryId" required asp-items="Model.CategoriesSelectList"
                                 class="form-select">
                             <option value="-1">-- Choose a Category --</option>
                         </select>
