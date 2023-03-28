@@ -112,23 +112,23 @@ public class HomeController : Controller
         
         return RedirectToAction("Index");
     }
-    
-    // [HttpPost]
-    // public async Task<IActionResult> UpdateTransaction(Transaction transaction, int walletId)
-    // {
-    //     transaction.Date = DateTime.Now;
-    //     
-    //     await _unitOfWork.Transactions.Update(transaction.Id, transaction);
-    //
-    //     var wallet = await _unitOfWork.Wallets.GetEntity(walletId);
-    //
-    //     wallet.Expenses += transaction.Cost;
-    //     wallet.Balance -= transaction.Cost;
-    //     
-    //     await _unitOfWork.SaveChanges();
-    //     
-    //     return RedirectToAction("Index");
-    // }
+
+    [HttpPost]
+    public async Task<IActionResult> UpdateTransaction(Transaction transaction, int walletId)
+    {
+        transaction.Date = DateTime.Now;
+
+        await _unitOfWork.Transactions.Update(transaction.Id, transaction);
+
+        var wallet = await _unitOfWork.Wallets.GetEntity(walletId);
+
+        wallet.Expenses += transaction.Cost;
+        wallet.Balance -= transaction.Cost;
+
+        await _unitOfWork.SaveChanges();
+
+        return RedirectToAction("Index");
+    }
 
     public IActionResult Privacy()
     {

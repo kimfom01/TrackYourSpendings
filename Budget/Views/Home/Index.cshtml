@@ -106,6 +106,7 @@
                                     </button>
                                 </form>
                             </td>
+                            <td hidden>@transaction.WalletId</td>
                         </tr>
                     }
                     </tbody>
@@ -211,9 +212,10 @@ else
                 <h4 class="modal-title fs-5" id="updateTransactionModalLabel">Update Transaction</h4>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form id="updateTransactionForm" method="post" asp-controller="Home" asp-action="@* UpdateTransaction*@">
+            <form id="updateTransactionForm" method="post" asp-controller="Home" asp-action="UpdateTransaction">
                 <div class="modal-body">
-                    <input type="hidden" id="updateTransactionId" asp-for="Transaction.Id"/>
+                    <input type="hidden" id="updateTransactionId" asp-for="Transaction.Id" />
+                    <input type="hidden" id="updateTransactionWalletId" asp-for="Transaction.WalletId" />
                     <div class="mb-3 form-label">
                         <label asp-for="Transaction.Name" class="form-label">Transaction</label>
                         <input asp-for="Transaction.Name" id="updateTransactionName" required type="text" class="form-control"

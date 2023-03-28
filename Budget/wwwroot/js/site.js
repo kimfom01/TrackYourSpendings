@@ -59,12 +59,14 @@ const updateTransaction = (transaction) => {
     const updateCost = document.getElementById("updateTransactionCost");
     const updateMonth = document.getElementById("updateTransactionMonth");
     const updateCategoryId = document.getElementById("updateTransactionCategoryId");
+    const updateWalletId = document.getElementById("updateTransactionWalletId");
     updateId.value = transaction.id;
     updateName.value = transaction.name;
     updateDescription.value = transaction.description;
     updateCost.value = transaction.cost;
     updateMonth.value = transaction.month;
     updateCategoryId.value = transaction.categoryId;
+    updateWalletId.value = transaction.walletId;
 }
 
 const buttons = document.querySelectorAll("table button");
@@ -82,7 +84,8 @@ buttons.forEach(btn => btn.addEventListener("click", (e) => {
         description: transactionRow[2].innerText,
         cost: transactionRow[5].innerText,
         month: months[transactionRow[6].innerText],
-        categoryId: transactionRow[7].innerText
+        categoryId: transactionRow[7].innerText,
+        walletId: transactionRow[9].innerText,
     };
 
     updateTransaction(transaction)
