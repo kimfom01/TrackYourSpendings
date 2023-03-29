@@ -114,13 +114,13 @@ public class HomeController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> UpdateTransaction(Transaction transaction, int walletId)
+    public async Task<IActionResult> UpdateTransaction(Transaction transaction)
     {
         transaction.Date = DateTime.Now;
 
         await _unitOfWork.Transactions.Update(transaction.Id, transaction);
 
-        var wallet = await _unitOfWork.Wallets.GetEntity(walletId);
+        var wallet = await _unitOfWork.Wallets.GetEntity(transaction.WalletId);
 
         wallet.Expenses += transaction.Cost;
         wallet.Balance -= transaction.Cost;

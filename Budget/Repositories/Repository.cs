@@ -30,14 +30,11 @@ public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity :
         }
     }
 
-    public async Task Update(int id, TEntity entity)
+    public Task Update(int id, TEntity entity)
     {
-        var exists = await CheckIfExists(id);
+        DbEntitySet.Update(entity);
 
-        if (exists)
-        {
-            DbEntitySet.Entry(entity).State = EntityState.Modified;
-        }
+        return Task.CompletedTask;
     }
 
     public async Task SaveChanges()
