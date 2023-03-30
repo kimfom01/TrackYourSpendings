@@ -93,6 +93,7 @@ public class BudgetDbContext : DbContext
                 Description = "I bought a new laptop, external keyboard and mouse",
                 Date = DateTime.Now,
                 Cost = 500.00M,
+                Month = Month.March,
                 WalletId = 1,
                 CategoryId = 4
             },
@@ -103,6 +104,7 @@ public class BudgetDbContext : DbContext
                 Description = "I bought a bunch of bananas, grapes and 7 oranges",
                 Date = DateTime.Now,
                 Cost = 150.00M,
+                Month = Month.March,
                 WalletId = 1,
                 CategoryId = 3
             },
@@ -113,6 +115,7 @@ public class BudgetDbContext : DbContext
                 Description = "Went to assist Dominion in her cake business",
                 Date = DateTime.Now,
                 Cost = 150.00M,
+                Month = Month.March,
                 WalletId = 1,
                 CategoryId = 2
             },
@@ -123,6 +126,7 @@ public class BudgetDbContext : DbContext
                 Description = "Paid Annual Health Insurance",
                 Date = DateTime.Now,
                 Cost = 300.00M,
+                Month = Month.March,
                 WalletId = 2,
                 CategoryId = 5
             });
