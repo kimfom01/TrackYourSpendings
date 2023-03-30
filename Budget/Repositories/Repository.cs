@@ -15,12 +15,12 @@ public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity :
         DbEntitySet = budgetDbContext.Set<TEntity>();
     }
 
-    public async Task AddEntity(TEntity entity)
+    public virtual async Task AddEntity(TEntity entity)
     {
         await DbEntitySet.AddAsync(entity);
     }
 
-    public async Task RemoveEntity(int id)
+    public virtual async Task RemoveEntity(int id)
     {
         var entity = await DbEntitySet.FindAsync(id);
 
@@ -30,26 +30,26 @@ public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity :
         }
     }
 
-    public Task Update(int id, TEntity entity)
+    public virtual Task Update(int id, TEntity entity)
     {
         DbEntitySet.Update(entity);
 
         return Task.CompletedTask;
     }
 
-    public async Task SaveChanges()
+    public virtual async Task SaveChanges()
     {
         await _budgetDbContext.SaveChangesAsync();
     }
 
-    public async Task<IEnumerable<TEntity>?> GetEntities(Expression<Func<TEntity, bool>> predicate)
+    public virtual async Task<IEnumerable<TEntity>?> GetEntities(Expression<Func<TEntity, bool>> predicate)
     {
         var entities = DbEntitySet.Where(predicate).AsNoTracking();
 
         return await entities.ToListAsync();
     }
 
-    public async Task<TEntity?> GetEntity(int? id)
+    public virtual async Task<TEntity?> GetEntity(int? id)
     {
         var entity = await DbEntitySet.FindAsync(id);
 

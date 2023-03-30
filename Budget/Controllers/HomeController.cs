@@ -33,7 +33,8 @@ public class HomeController : Controller
         return View(viewModel);
     }
 
-    private async Task<WalletCategoryTransactionViewModel> GetViewModelFromId(int? id, string? searchString, int? category, DateTime? date)
+    private async Task<WalletCategoryTransactionViewModel> GetViewModelFromId(int? id, string? searchString,
+        int? category, DateTime? date)
     {
         var wallets = await _unitOfWork.Wallets.GetEntities(_ => true);
 
@@ -43,7 +44,7 @@ public class HomeController : Controller
         {
             return new WalletCategoryTransactionViewModel();
         }
-        
+
         var transactions = await GetTransactions(wallet.Id, searchString, category, date);
 
         var categories = await _unitOfWork.Categories.GetEntities(_ => true);
@@ -59,15 +60,17 @@ public class HomeController : Controller
         return viewModel;
     }
 
-    private async Task<IEnumerable<Transaction>> GetTransactions(int? id, string? searchString, int? category, DateTime? date)
+    private async Task<IEnumerable<Transaction>> GetTransactions(int? id, string? searchString, int? category,
+        DateTime? date)
     {
-        var transactions = await _unitOfWork.Transactions.GetTransactionsWithCategories(tr => tr.WalletId == id);
+        var transactions = await _unitOfWork.Transactions
+            .GetTransactionsWithCategories(tr => tr.WalletId == id);
 
         if (transactions is null)
         {
             return Enumerable.Empty<Transaction>();
         }
-        
+
         if (searchString is not null)
         {
             transactions = transactions.Where(tr => tr.Name.ToLower().Contains(searchString.ToLower()));
@@ -91,39 +94,46 @@ public class HomeController : Controller
     {
         await _unitOfWork.Wallets.AddEntity(wallet);
         await _unitOfWork.SaveChanges();
-        
+
         return RedirectToAction("Index");
     }
-    
+
     [HttpPost]
     public async Task<IActionResult> AddTransaction(Transaction transaction, int walletId)
     {
         transaction.Date = DateTime.Now;
         transaction.WalletId = walletId;
-        
+
         await _unitOfWork.Transactions.AddEntity(transaction);
 
         var wallet = await _unitOfWork.Wallets.GetEntity(walletId);
 
         wallet.Expenses += transaction.Cost;
         wallet.Balance -= transaction.Cost;
-        
+
         await _unitOfWork.SaveChanges();
-        
+
         return RedirectToAction("Index");
     }
 
     [HttpPost]
     public async Task<IActionResult> UpdateTransaction(Transaction transaction)
     {
-        transaction.Date = DateTime.Now;
+        var formerTransaction = await _unitOfWork.Transactions.GetEntity(transaction.Id);
+
+        var costDifference = transaction.Cost - formerTransaction?.Cost;
+
+        transaction.Date = formerTransaction?.Date;
 
         await _unitOfWork.Transactions.Update(transaction.Id, transaction);
 
         var wallet = await _unitOfWork.Wallets.GetEntity(transaction.WalletId);
 
-        wallet.Expenses += transaction.Cost;
-        wallet.Balance -= transaction.Cost;
+        if (costDifference != 0)
+        {
+            wallet.Expenses += costDifference;
+            wallet.Balance -= costDifference;
+        }
 
         await _unitOfWork.SaveChanges();
 

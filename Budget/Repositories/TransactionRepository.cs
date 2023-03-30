@@ -19,4 +19,11 @@ public class TransactionRepository : Repository<Transaction>, ITransactionReposi
 
         return await transactionsWithCategories.ToListAsync();
     }
+
+    public override async Task<Transaction?> GetEntity(int? id)
+    {
+        var entity = await DbEntitySet.AsNoTracking().FirstOrDefaultAsync(tr => tr.Id == id);
+
+        return entity;
+    }
 }
