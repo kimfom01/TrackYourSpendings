@@ -97,11 +97,12 @@
                             <td class="card-text" hidden>@transaction.CategoryId</td>
                             <td>
                                 <form>
-                                    <button class="btn btn-success" type="button" data-bs-toggle="modal"
+                                    <button class="btn btn-success" type="button" id="editButtons" data-bs-toggle="modal"
                                             data-bs-target="#updateTransactionModal">
                                         <i class="bi bi-pencil-square"></i>
                                     </button>
-                                    <button type="button" class="btn btn-success">
+                                    <button type="button" class="btn btn-success" id="deleteButtons" data-bs-toggle="modal"
+                                                data-bs-target="#deleteTransactionModal">
                                         <i class="bi bi-trash"></i>
                                     </button>
                                 </form>
@@ -249,6 +250,60 @@ else
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="text-success btn btn-light">Update</button>
+                    <button type="button" class="btn btn-success" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Transaction Modal -->
+<div class="modal fade" id="deleteTransactionModal" tabindex="-1" aria-labelledby="deleteTransactionModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title fs-5" id="deleteTransactionModalLabel">Update Transaction</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p class="text-danger fw-bold">Are you sure you want to delete this transaction?</p>
+            </div>
+            <form id="deleteTransactionForm" method="post" asp-controller="Home" asp-action="DeleteTransaction">
+                <div class="modal-body">
+                    <input type="hidden" id="deleteTransactionId" asp-for="Transaction.Id" />
+                    <input type="hidden" id="deleteTransactionWalletId" asp-for="Transaction.WalletId" />
+                    <div class="mb-3 form-label">
+                        <label hidden asp-for="Transaction.Name" class="form-label">Transaction</label>
+                        <input asp-for="Transaction.Name" id="deleteTransactionName" required type="hidden" class="form-control"
+                               placeholder="Enter Name of Transaction">
+                    </div>
+                    <div class="mb-3 form-label">
+                        <label hidden asp-for="Transaction.Description" class="form-label">Description</label>
+                        <input hidden asp-for="Transaction.Description" id="deleteTransactionDescription" type="hidden" class="form-control"
+                               placeholder="Enter the Description">
+                    </div>
+                    <div class="mb-3 form-label">
+                        <label hidden asp-for="Transaction.Cost" class="form-label">Cost</label>
+                        <input hidden asp-for="Transaction.Cost" id="deleteTransactionCost" value="0" min="0" type="hidden" class="form-control"
+                               placeholder="0.00">
+                    </div>
+                    <div class="form-label">
+                        <label hidden asp-for="Transaction.Month" class="form-label">Select a Month</label>
+                        <select hidden asp-for="Transaction.Month" id="deleteTransactionMonth" required asp-items="Html.GetEnumSelectList<Month>()"
+                                class="form-select">
+                            <option value="">-- Choose a Month --</option>
+                        </select>
+                    </div>
+                    <div class="form-label">
+                        <label hidden asp-for="Transaction.CategoryId" class="form-label">Select a Category</label>
+                        <select hidden asp-for="Transaction.CategoryId" id="deleteTransactionCategoryId" required asp-items="Model.CategoriesSelectList"
+                                class="form-select">
+                            <option value="-1">-- Choose a Category --</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="text-success btn btn-light">Delete</button>
                     <button type="button" class="btn btn-success" data-bs-dismiss="modal">Cancel</button>
                 </div>
             </form>

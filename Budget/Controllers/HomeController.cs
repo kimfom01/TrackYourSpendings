@@ -140,6 +140,21 @@ public class HomeController : Controller
         return RedirectToAction("Index");
     }
 
+    [HttpPost]
+    public async Task<IActionResult> DeleteTransaction(Transaction transaction)
+    {
+        await _unitOfWork.Transactions.RemoveEntity(transaction.Id);
+
+        var wallet = await _unitOfWork.Wallets.GetEntity(transaction.WalletId);
+
+        wallet.Expenses -= transaction.Cost;
+        wallet.Balance += transaction.Cost;
+
+        await _unitOfWork.SaveChanges();
+
+        return RedirectToAction("Index");
+    }
+
     public IActionResult Privacy()
     {
         return View();

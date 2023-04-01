@@ -52,44 +52,22 @@ const addTransaction = async () => {
         .catch(err => console.error(err));
 };
 
-const updateTransaction = (transaction) => {
-    const updateId = document.getElementById("updateTransactionId");
-    const updateName = document.getElementById("updateTransactionName");
-    const updateDescription = document.getElementById("updateTransactionDescription");
-    const updateCost = document.getElementById("updateTransactionCost");
-    const updateMonth = document.getElementById("updateTransactionMonth");
-    const updateCategoryId = document.getElementById("updateTransactionCategoryId");
-    const updateWalletId = document.getElementById("updateTransactionWalletId");
-    updateId.value = transaction.id;
-    updateName.value = transaction.name;
-    updateDescription.value = transaction.description;
-    updateCost.value = transaction.cost;
-    updateMonth.value = transaction.month;
-    updateCategoryId.value = transaction.categoryId;
-    updateWalletId.value = transaction.walletId;
+const populateModal = (transaction, action) => {
+    const id = document.getElementById(`${action}TransactionId`);
+    const name = document.getElementById(`${action}TransactionName`);
+    const description = document.getElementById(`${action}TransactionDescription`);
+    const cost = document.getElementById(`${action}TransactionCost`);
+    const month = document.getElementById(`${action}TransactionMonth`);
+    const categoryId = document.getElementById(`${action}TransactionCategoryId`);
+    const walletId = document.getElementById(`${action}TransactionWalletId`);
+    id.value = transaction.id;
+    name.value = transaction.name;
+    description.value = transaction.description;
+    cost.value = transaction.cost;
+    month.value = transaction.month;
+    categoryId.value = transaction.categoryId;
+    walletId.value = transaction.walletId;
 }
-
-const buttons = document.querySelectorAll("table button");
-
-buttons.forEach(btn => btn.addEventListener("click", (e) => {
-    e.preventDefault();
-    
-    const row = e.target.closest("tr");
-    
-    const transactionRow = row.children;
-    
-    const transaction = {
-        id: transactionRow[0].innerText,
-        name: transactionRow[1].innerText,
-        description: transactionRow[2].innerText,
-        cost: transactionRow[5].innerText,
-        month: months[transactionRow[6].innerText],
-        categoryId: transactionRow[7].innerText,
-        walletId: transactionRow[9].innerText,
-    };
-
-    updateTransaction(transaction)
-}))
 
 const months = {
     "January": 1,
@@ -105,3 +83,40 @@ const months = {
     "November": 11,
     "December": 12
 }
+
+const extractTransaction = (e) => {
+    e.preventDefault();
+
+    const row = e.target.closest("tr");
+
+    const transactionRow = row.children;
+
+    const transaction = {
+        id: transactionRow[0].innerText,
+        name: transactionRow[1].innerText,
+        description: transactionRow[2].innerText,
+        cost: transactionRow[5].innerText,
+        month: months[transactionRow[6].innerText],
+        categoryId: transactionRow[7].innerText,
+        walletId: transactionRow[9].innerText,
+    };
+
+    return transaction;
+}
+
+const editButtons = document.querySelectorAll("#editButtons");
+
+editButtons.forEach(btn => btn.addEventListener("click", (e) => {
+
+    const transaction = extractTransaction(e);
+
+    populateModal(transaction, "update");
+}));
+
+const deleteButtons = document.querySelectorAll("#deleteButtons");
+
+deleteButtons.forEach(btn => btn.addEventListener("click", (e) => {
+    const transaction = extractTransaction(e);
+
+    populateModal(transaction, "delete");
+}))
