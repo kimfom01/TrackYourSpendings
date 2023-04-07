@@ -191,6 +191,42 @@ else
     </div>
 </div>
 
+<!-- Delete Wallet Modal -->
+
+<div class="modal fade" id="deleteWalletModal" tabindex="-1" aria-labelledby="updateWalletModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title fs-5" id="deleteWalletModalLabel">Update Wallet</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p class="text-danger fw-bold">Are you sure you want to delete @Model.Wallet?.Name?</p>
+            </div>
+            <form id="deleteWalletForm" method="post" asp-controller="Home" asp-action="DeleteWallet">
+                <div class="modal-body">
+                    <input type="hidden" id="deleteWalletId" asp-for="Wallet!.Id"/>
+                    <div class="mb-3">
+                        <label hidden asp-for="Wallet!.Name" class="form-label">Wallet</label>
+                        <input asp-for="Wallet!.Name" required type="hidden" class="form-control" 
+                               placeholder="Enter Name of Wallet">
+                    </div>
+                    <div class="mb-3">
+                        <label hidden asp-for="Wallet!.Income" class="form-label">Income</label>
+                        <input asp-for="Wallet!.Income" required type="hidden" class="form-control" 
+                                placeholder="0.00">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="text-success btn btn-light">Delete</button>
+                    <button type="button" class="btn btn-success" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <!-- Add Transaction Modal -->
 
 <div class="modal fade" id="addTransactionModal" tabindex="-1" aria-labelledby="addTransactionModalLabel"

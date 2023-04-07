@@ -15,7 +15,7 @@ public class HomeController : Controller
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<IActionResult> Index(string? searchString, int? category, DateTime? date, int? id = 1)
+    public async Task<IActionResult> Index(string? searchString, int? category, DateTime? date, int? id)
     {
         WalletCategoryTransactionViewModel viewModel;
 
@@ -125,6 +125,16 @@ public class HomeController : Controller
         oldWallet.Income = wallet.Income;
 
         await _unitOfWork.Wallets.Update(oldWallet.Id, oldWallet);
+
+        await _unitOfWork.SaveChanges();
+
+        return RedirectToAction("Index");
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> DeleteWallet(Wallet wallet)
+    {
+        await _unitOfWork.Wallets.RemoveEntity(wallet.Id);
 
         await _unitOfWork.SaveChanges();
 
