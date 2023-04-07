@@ -97,6 +97,8 @@ public class HomeController : Controller
     [HttpPost]
     public async Task<IActionResult> AddWallet(Wallet wallet)
     {
+        wallet.Balance = wallet.Income;
+        
         await _unitOfWork.Wallets.AddEntity(wallet);
         await _unitOfWork.SaveChanges();
 
