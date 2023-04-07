@@ -19,7 +19,7 @@ public class BudgetDbContext : DbContext
             .HasData(new Wallet
             {
                 Id = 1,
-                Name = "Test Wallet",
+                Name = "Main Wallet",
                 Income = 5000.00M,
                 Expenses = 800M,
                 Balance = 4200M
@@ -27,7 +27,7 @@ public class BudgetDbContext : DbContext
             new Wallet
             {
                 Id = 2,
-                Name = "Main Wallet",
+                Name = "Test Wallet",
                 Income = 5000.00M,
                 Expenses = 300M,
                 Balance = 4700.00M
