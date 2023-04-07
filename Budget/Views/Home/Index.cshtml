@@ -4,10 +4,6 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4 fw-bold">Budget Finance Tracker</h1>
-</div>
-
 <div class="row mb-3">
     <div class="col-md-4">
         <form method="get">
@@ -103,6 +99,10 @@
                             <td class="card-text" hidden>@transaction.CategoryId</td>
                             <td>
                                 <form>
+                                    <button class="btn btn-success" type="button" id="viewButtons" 
+                                            data-bs-toggle="modal" data-bs-target="#viewTransactionModal">
+                                        <i class="bi bi-eye-fill"></i>
+                                    </button>
                                     <button class="btn btn-success" type="button" id="editButtons" 
                                             data-bs-toggle="modal" data-bs-target="#updateTransactionModal">
                                         <i class="bi bi-pencil-square"></i>
@@ -279,6 +279,60 @@ else
         </div>
     </div>
 </div>
+
+<!-- View Transaction Modal -->
+
+<div class="modal fade" id="viewTransactionModal" tabindex="-1" aria-labelledby="addTransactionModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title fs-5" id="viewTransactionModalLabel">Transaction Details</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="viewTransactionForm" method="post" asp-controller="Home" asp-action="AddTransaction">
+                <div class="modal-body">
+                    <input id="viewTransactionId" type="hidden" asp-for="Transaction!.Id"/>
+                    <input id="viewTransactionWalletId" type="hidden" asp-for="Transaction!.WalletId"/>
+                    <div class="mb-3 form-label">
+                        <label asp-for="Transaction!.Name" class="form-label">Transaction</label>
+                        <input id="viewTransactionName" asp-for="Transaction!.Name" required type="text" 
+                               class="form-control">
+                    </div>
+                    <div class="mb-3 form-label">
+                        <label asp-for="Transaction!.Description" class="form-label">Description</label>
+                        <textarea  id="viewTransactionDescription" asp-for="Transaction!.Description" type="text" 
+                                class="form-control"></textarea>
+                    </div>
+                    <div class="mb-3 form-label">
+                        <label asp-for="Transaction!.Cost" class="form-label">Cost</label>
+                        $
+                        <input id="viewTransactionCost" asp-for="Transaction!.Cost" value="0" min="0" type="number" 
+                               class="form-control">
+                    </div>
+                    <div class="form-label">
+                        <label asp-for="Transaction!.Month" class="form-label">Select a Month</label>
+                        <select id="viewTransactionMonth" asp-for="Transaction!.Month" required 
+                                asp-items="Html.GetEnumSelectList<Month>()" class="form-select">
+                            <option value="">-- Choose a Month --</option>
+                        </select>
+                    </div>
+                    <div class="form-label">
+                        <label asp-for="Transaction!.CategoryId" class="form-label">Select a Category</label>
+                        <select id="viewTransactionCategoryId" asp-for="Transaction!.CategoryId" required 
+                                asp-items="Model.CategoriesSelectList" class="form-select">
+                            <option value="">-- Choose a Category --</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" data-bs-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 
 <!-- Update Transaction Modal -->
 

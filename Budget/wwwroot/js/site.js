@@ -69,3 +69,12 @@ deleteButtons.forEach(btn => btn.addEventListener("click", (e) => {
 
     populateModal(transaction, "delete");
 }))
+
+const viewButtons = document.querySelectorAll("#viewButtons");
+
+viewButtons.forEach(btn => btn.addEventListener("click", (e) => {
+
+    const transaction = extractTransaction(e);
+
+    populateModal(transaction, "view");
+}));
