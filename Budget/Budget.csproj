@@ -17,4 +17,8 @@
     <PackageReference Include="Syncfusion.EJ2.AspNet.Core" Version="21.1.37" />
   </ItemGroup>
 
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Views\Reports\Index.cshtml" />
+  </ItemGroup>
+
 </Project>

@@ -23,7 +23,10 @@ public class HomeController : Controller
         {
             var wallets = await _unitOfWork.Wallets.GetEntities(_ => true);
 
-            viewModel = new WalletCategoryTransactionViewModel { Wallets = new SelectList(wallets, "Id", "Name") };
+            viewModel = new WalletCategoryTransactionViewModel
+            {
+                Wallets = new SelectList(wallets, "Id", "Name")
+            };
         }
         else
         {
@@ -108,10 +111,13 @@ public class HomeController : Controller
 
         var wallet = await _unitOfWork.Wallets.GetEntity(walletId);
 
-        wallet.Expenses += transaction.Cost;
-        wallet.Balance -= transaction.Cost;
-
-        await _unitOfWork.SaveChanges();
+        if (wallet is not null)
+        {
+            wallet.Expenses += transaction.Cost;
+            wallet.Balance -= transaction.Cost;
+            
+            await _unitOfWork.SaveChanges();
+        }
 
         return RedirectToAction("Index");
     }
@@ -129,13 +135,16 @@ public class HomeController : Controller
 
         var wallet = await _unitOfWork.Wallets.GetEntity(transaction.WalletId);
 
-        if (costDifference != 0)
+        if (wallet is not null)
         {
-            wallet.Expenses += costDifference;
-            wallet.Balance -= costDifference;
-        }
+            if (costDifference != 0)
+            {
+                wallet.Expenses += costDifference;
+                wallet.Balance -= costDifference;
+            }
 
-        await _unitOfWork.SaveChanges();
+            await _unitOfWork.SaveChanges();
+        }
 
         return RedirectToAction("Index");
     }
@@ -147,17 +156,15 @@ public class HomeController : Controller
 
         var wallet = await _unitOfWork.Wallets.GetEntity(transaction.WalletId);
 
-        wallet.Expenses -= transaction.Cost;
-        wallet.Balance += transaction.Cost;
+        if (wallet is not null)
+        {
+            wallet.Expenses -= transaction.Cost;
+            wallet.Balance += transaction.Cost;
 
-        await _unitOfWork.SaveChanges();
+            await _unitOfWork.SaveChanges();
+        }
 
         return RedirectToAction("Index");
-    }
-
-    public IActionResult Privacy()
-    {
-        return View();
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
