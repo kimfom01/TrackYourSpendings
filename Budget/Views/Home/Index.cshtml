@@ -22,6 +22,12 @@
                 <input class="btn btn-success" type="button" data-bs-toggle="modal"
                        data-bs-target="#addWalletModal"
                        value="New"/>
+                <input class="btn btn-success" type="button" data-bs-toggle="modal"
+                       data-bs-target="#updateWalletModal"
+                       value="Update"/>
+                <input class="btn btn-success" type="button" data-bs-toggle="modal"
+                                                       data-bs-target="#deleteWalletModal"
+                                                       value="Delete"/>
             </div>
         </form>
     </div>
@@ -145,6 +151,39 @@ else
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="text-success btn btn-light">Add</button>
+                    <button type="button" class="btn btn-success" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Update Wallet Modal -->
+
+<div class="modal fade" id="updateWalletModal" tabindex="-1" aria-labelledby="updateWalletModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title fs-5" id="updateWalletModalLabel">Update Wallet</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="updateWalletForm" method="post" asp-controller="Home" asp-action="UpdateWallet">
+                <div class="modal-body">
+                    <input type="hidden" id="updateWalletId" asp-for="Wallet!.Id"/>
+                    <div class="mb-3">
+                        <label asp-for="Wallet!.Name" class="form-label">Wallet</label>
+                        <input asp-for="Wallet!.Name" required type="text" class="form-control" 
+                               placeholder="Enter Name of Wallet">
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Wallet!.Income" class="form-label">Income</label>
+                        $<input asp-for="Wallet!.Income" required type="number" class="form-control" 
+                                placeholder="0.00">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="text-success btn btn-light">Update</button>
                     <button type="button" class="btn btn-success" data-bs-dismiss="modal">Cancel</button>
                 </div>
             </form>

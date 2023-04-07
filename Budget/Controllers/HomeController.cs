@@ -25,7 +25,8 @@ public class HomeController : Controller
 
             viewModel = new WalletCategoryTransactionViewModel
             {
-                Wallets = new SelectList(wallets, "Id", "Name")
+                Wallets = new SelectList(wallets, "Id", "Name"),
+                Wallet = await _unitOfWork.Wallets.GetEntity(id)
             };
         }
         else
@@ -60,6 +61,7 @@ public class HomeController : Controller
             CategoriesSelectList = new SelectList(categories, "Id", "Name"),
             Transactions = transactions
         };
+        
         return viewModel;
     }
 
@@ -96,6 +98,34 @@ public class HomeController : Controller
     public async Task<IActionResult> AddWallet(Wallet wallet)
     {
         await _unitOfWork.Wallets.AddEntity(wallet);
+        await _unitOfWork.SaveChanges();
+
+        return RedirectToAction("Index");
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> UpdateWallet(Wallet wallet)
+    {
+        var oldWallet = await _unitOfWork.Wallets.GetEntity(wallet.Id);
+
+        if (oldWallet is null)
+        {
+            return Error();
+        }
+        
+        oldWallet.Name = wallet.Name;
+
+        var incomeDifference = wallet.Income - oldWallet.Income;
+
+        if (incomeDifference != 0)
+        {
+            oldWallet.Balance += incomeDifference;
+        }
+        
+        oldWallet.Income = wallet.Income;
+
+        await _unitOfWork.Wallets.Update(oldWallet.Id, oldWallet);
+
         await _unitOfWork.SaveChanges();
 
         return RedirectToAction("Index");

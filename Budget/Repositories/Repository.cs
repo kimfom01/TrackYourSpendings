@@ -56,10 +56,10 @@ public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity :
         return entity;
     }
 
-    private async Task<bool> CheckIfExists(int id)
-    {
-        var entity = await DbEntitySet.FindAsync(id);
-
-        return entity is not null;
-    }
+    // private async Task<bool> CheckIfExists(int id)
+    // {
+    //     var entity = await DbEntitySet.FindAsync(id);
+    //
+    //     return entity is not null;
+    // }
 }
