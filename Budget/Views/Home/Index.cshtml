@@ -59,8 +59,8 @@
                 <form method="get">
                     <div class="d-flex">
                         <input type="hidden" required name="id" value="@Model.Wallet.Id"/>
-                        <input id="searchString" name="searchString" class="form-control me-2" type="text"
-                               placeholder="Search by Transaction Name"/>
+                        <input id="searchString" name="searchString" class="form-control me-2" type="search"
+                               placeholder="Search by Name"/>
                         <select asp-for="Transaction!.CategoryId" name="category" 
                                 asp-items="Model.CategoriesSelectList" class="form-select me-2">
                             <option value="">-- Choose a Category --</option>
