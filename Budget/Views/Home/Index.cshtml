@@ -14,16 +14,13 @@
                 </select>
             </div>
             <div class="mb-3">
-                <input type="submit" class="btn btn-success" value="Select"/>
-                <input class="btn btn-success" type="button" data-bs-toggle="modal"
-                       data-bs-target="#addWalletModal"
-                       value="New"/>
-                <input class="btn btn-success" type="button" data-bs-toggle="modal"
-                       data-bs-target="#updateWalletModal"
-                       value="Update"/>
-                <input class="btn btn-success" type="button" data-bs-toggle="modal"
-                                                       data-bs-target="#deleteWalletModal"
-                                                       value="Delete"/>
+                <button type="submit" class="btn btn-success">Select</button>
+                <button class="btn btn-success" type="button" data-bs-toggle="modal"
+                       data-bs-target="#addWalletModal">New</button>
+                <button class="btn btn-success" type="button" data-bs-toggle="modal"
+                       data-bs-target="#updateWalletModal">Update</button>
+                <button class="btn btn-success" type="button" data-bs-toggle="modal" 
+                        data-bs-target="#deleteWalletModal">Delete</button>
             </div>
         </form>
     </div>
@@ -66,11 +63,11 @@
                             <option value="">-- Choose a Category --</option>
                         </select>
                         <input type="date" class="form-control" name="date"/>
-                        <input type="submit" class="btn btn-success" value="Search"/>
+                        <button type="submit" class="btn btn-success">Search</button>
                     </div>
                 </form>
-                <input class="btn btn-success" type="button" data-bs-toggle="modal"
-                       data-bs-target="#addTransactionModal" value="Add New Transaction"/>
+                <button class="btn btn-success" type="button" data-bs-toggle="modal"
+                       data-bs-target="#addTransactionModal">Add New Transaction</button>
             </div>
             <br/>
             @if (Model.Transactions is not null)
