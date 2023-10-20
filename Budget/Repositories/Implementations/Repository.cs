@@ -2,7 +2,7 @@ using System.Linq.Expressions;
 using Budget.Context;
 using Microsoft.EntityFrameworkCore;
 
-namespace Budget.Repositories;
+namespace Budget.Repositories.Implementations;
 
 public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity : class
 {
@@ -55,11 +55,4 @@ public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity :
 
         return entity;
     }
-
-    // private async Task<bool> CheckIfExists(int id)
-    // {
-    //     var entity = await DbEntitySet.FindAsync(id);
-    //
-    //     return entity is not null;
-    // }
 }

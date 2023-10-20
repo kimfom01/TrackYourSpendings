@@ -1,6 +1,6 @@
 using Budget.Context;
 
-namespace Budget.Repositories;
+namespace Budget.Repositories.Implementations;
 
 public class UnitOfWork : IUnitOfWork
 {
@@ -13,7 +13,7 @@ public class UnitOfWork : IUnitOfWork
         Transactions = new TransactionRepository(dbContext);
         Wallets = new WalletRepository(dbContext);
     }
-    
+
     public ICategoryRepository Categories { get; }
     public ITransactionRepository Transactions { get; }
     public IWalletRepository Wallets { get; }
