@@ -1,7 +1,7 @@
 using Budget.Context;
 using Budget.Models;
 
-namespace Budget.Repositories;
+namespace Budget.Repositories.Implementations;
 
 public class WalletRepository : Repository<Wallet>, IWalletRepository
 {

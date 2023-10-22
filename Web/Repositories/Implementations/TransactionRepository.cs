@@ -3,7 +3,7 @@ using Budget.Context;
 using Budget.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace Budget.Repositories;
+namespace Budget.Repositories.Implementations;
 
 public class TransactionRepository : Repository<Transaction>, ITransactionRepository
 {

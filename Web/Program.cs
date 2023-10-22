@@ -1,5 +1,6 @@
 using Budget.Context;
 using Budget.Repositories;
+using Budget.Repositories.Implementations;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
