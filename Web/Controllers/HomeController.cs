@@ -3,9 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using Budget.Models;
 using Budget.Repositories;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Authorization;
 
-namespace Budget.Controllers;
+namespace Web.Controllers;
 
+[Authorize]
 public class HomeController : Controller
 {
     private readonly IUnitOfWork _unitOfWork;
@@ -61,7 +63,7 @@ public class HomeController : Controller
             CategoriesSelectList = new SelectList(categories, "Id", "Name"),
             Transactions = transactions
         };
-        
+
         return viewModel;
     }
 
@@ -98,7 +100,7 @@ public class HomeController : Controller
     public async Task<IActionResult> AddWallet(Wallet wallet)
     {
         wallet.Balance = wallet.Income;
-        
+
         await _unitOfWork.Wallets.AddEntity(wallet);
         await _unitOfWork.SaveChanges();
 
@@ -114,7 +116,7 @@ public class HomeController : Controller
         {
             return Error();
         }
-        
+
         oldWallet.Name = wallet.Name;
 
         var incomeDifference = wallet.Income - oldWallet.Income;
@@ -123,7 +125,7 @@ public class HomeController : Controller
         {
             oldWallet.Balance += incomeDifference;
         }
-        
+
         oldWallet.Income = wallet.Income;
 
         await _unitOfWork.Wallets.Update(oldWallet.Id, oldWallet);
@@ -157,7 +159,7 @@ public class HomeController : Controller
         {
             wallet.Expenses += transaction.Cost;
             wallet.Balance -= transaction.Cost;
-            
+
             await _unitOfWork.SaveChanges();
         }
 
