@@ -1,4 +1,4 @@
-# Budget
+#  Track Your Spending
 
 ASP.Net Core based web application to keep track of expenses and spending. Developed using ASP.NET Core MVC, C# and SQL Server.
 
