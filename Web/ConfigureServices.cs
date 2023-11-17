@@ -9,12 +9,12 @@ namespace Web;
 
 public static class ConfigureServices
 {
-    public static IServiceCollection RegisterServices(this IServiceCollection services, IConfiguration config)
+    public static IServiceCollection RegisterServices(this IServiceCollection services, IConfiguration config, IWebHostEnvironment env)
     {
         services.AddControllersWithViews();
         services.AddDbContext<BudgetDbContext>(options =>
         {
-            options.UseNpgsql(config.GetConnectionString("DefaultConnection"));
+            options.UseNpgsql(EnvironmentConfigHelper.GetConnectionString(config, env));
         });
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddAuthentication(options =>
@@ -24,12 +24,9 @@ public static class ConfigureServices
             }).AddCookie()
             .AddGoogle(options =>
             {
-                options.ClientId = config.GetValue<string>("Google:CLIENT_ID")
-                                   ?? throw new NullReferenceException("CLIENT_ID missing");
-                options.ClientSecret = config.GetValue<string>("Google:CLIENT_SECRET")
-                                       ?? throw new NullReferenceException("CLIENT_SECRET missing");
-                options.CallbackPath = config.GetValue<string>("Google:REDIRECT_URI")
-                                       ?? throw new NullReferenceException("REDIRECT_URI missing");
+                options.ClientId = EnvironmentConfigHelper.GetGoogleClientId(config, env);
+                options.ClientSecret = EnvironmentConfigHelper.GetGoogleClientSecret(config, env);
+                options.CallbackPath = EnvironmentConfigHelper.GetGoogleRedirectUri(config, env);
                 options.SaveTokens = true;
             });
         

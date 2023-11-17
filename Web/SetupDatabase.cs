@@ -8,7 +8,7 @@ public static class SetupDatabase
     {
         var context = scope.ServiceProvider.GetRequiredService<BudgetDbContext>();
 
-        await context.Database.EnsureDeletedAsync();
+        // await context.Database.EnsureDeletedAsync();
         await context.Database.EnsureCreatedAsync();
     }
 }

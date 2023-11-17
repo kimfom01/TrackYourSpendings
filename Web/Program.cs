@@ -2,7 +2,7 @@ using Web;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.RegisterServices(builder.Configuration);
+builder.Services.RegisterServices(builder.Configuration, builder.Environment);
 
 var app = builder.Build();
 
