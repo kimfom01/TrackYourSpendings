@@ -14,7 +14,7 @@ public static class ConfigureServices
         services.AddControllersWithViews();
         services.AddDbContext<BudgetDbContext>(options =>
         {
-            options.UseSqlServer(config.GetConnectionString("BudgetDb"));
+            options.UseNpgsql(config.GetConnectionString("DefaultConnection"));
         });
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddAuthentication(options =>
