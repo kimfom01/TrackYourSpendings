@@ -1,16 +1,97 @@
 #  Track Your Spending
 
-ASP.Net Core based web application to keep track of expenses and spending. Developed using ASP.NET Core MVC, C# and SQL Server.
+## Introduction
+- This is an application where users can track their finances
+- The application is tailored to simplify the often complex process of categorizing transactions and analyzing expenses, making personal finance management accessible to all users.
 
-### Requirements
-- [x] This is an application where you should record personal finance transactions.
-- [x] You should have three linked tables: Transaction, Category and Wallet.
-- [x] You need to use Entity Framework, raw SQL isn't allowed.
-- [x] Each transaction MUST have a category and belong to a wallet and if you wallet a wallet, all it's transactions should be deleted.
-- [x] You should use SQL Server, not SQLite.
-- [x] You should have a search functionality where I can search transactions by name
-- [x] You should have a filter functionality, so I can show transactions per category and per date.
-- [x] You need to use modals to insert, delete and update transactions and wallets. These operations shouldn't be done in a different page.
+[//]: # (## Table of Contents)
 
-### Source
-This project is slightly modified version of [Budget](https://www.thecsharpacademy.com/project/27) which is a part of [thecsharpacademy.com's](https://www.thecsharpacademy.com/) .NET Full-Stack Developer Roadmap
+[//]: # (- Provide a table of contents if the README is lengthy.)
+
+---
+
+## Installation
+
+### Prerequisites
+- Ensure [.NET SDK/Runtime](https://dotnet.microsoft.com/download) (version 7.0 is installed on your machine.
+- Ensure you have `sql server` installed on your machine or you can connect to remote db.
+- Install [Visual Studio](https://visualstudio.microsoft.com/) or your favorite editor/IDE.
+
+### Getting the Project
+- Clone the repository: `git clone https://github.com/kimfom01/TrackYourSpending.git`
+- Alternatively, download and extract the project ZIP file.
+
+### Configuration
+
+[//]: # (- Set necessary environment variables in `.env` file or system environment.)
+- Update `appsettings.json` with your typical sql server [connection string](https://www.connectionstrings.com/sql-server/).
+
+### Building the Project
+- Navigate to the project's root directory in the terminal.
+- Run `dotnet build` to compile the project.
+
+[//]: # (### Database Setup &#40;If Applicable&#41;)
+
+[//]: # (- Run `dotnet ef database update` to apply migrations.)
+
+### Running the Application
+- Execute `dotnet run` within the project directory.
+- Access the application via the provided local server URL for web projects.
+
+### Publishing (For Deployment)
+- Run `dotnet publish -c Release -o ./publish` to package the application for deployment.
+- Deploy the contents of the `./publish` directory to your hosting environment.
+
+---
+
+## Features
+- Ability to manage multiple wallets
+- Group and filter transactions by categories and date
+- Record transactions
+- Reports, charts (upcoming feature)
+
+---
+
+[//]: # (## Contributing)
+
+[//]: # (- Guidelines for those who want to contribute to the project.)
+
+[//]: # (- Mention how they can submit pull requests and propose bug fixes or new features.)
+
+[//]: # (## Code of Conduct)
+
+[//]: # (- Outline expectations for participation and the process for reporting unacceptable behavior.)
+
+[//]: # (## License)
+
+[//]: # (- Specify the license under which the project is released.)
+
+[//]: # (## Credits)
+
+[//]: # (- Acknowledge contributors and any third-party resources or libraries used.)
+
+[//]: # ()
+[//]: # (## Contact Information)
+
+[//]: # (- Provide contact details for further queries or discussions.)
+
+[//]: # ()
+[//]: # (## Changelog)
+
+[//]: # (- &#40;Optional&#41; Include a changelog file detailing the chronological changes made to the project.)
+
+[//]: # ()
+[//]: # (## FAQs)
+
+[//]: # (- &#40;Optional&#41; Frequently asked questions about the project.)
+
+[//]: # ()
+[//]: # (## Screenshots/Demo)
+
+[//]: # (- &#40;Optional&#41; Include screenshots or a demo video to visually demonstrate your project.)
+
+[//]: # ()
+[//]: # (## Known Issues and Roadmap)
+
+[//]: # (- &#40;Optional&#41; List any known issues and future plans for the project.)
+
