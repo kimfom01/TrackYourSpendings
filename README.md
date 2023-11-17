@@ -1,4 +1,4 @@
-# Budget
+#  Track Your Spending
 
 ## Introduction
 - This is an application where users can track their finances
@@ -94,3 +94,4 @@
 [//]: # (## Known Issues and Roadmap)
 
 [//]: # (- &#40;Optional&#41; List any known issues and future plans for the project.)
+
