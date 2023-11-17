@@ -11,6 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{DD1C787D-F1A
 	ProjectSection(SolutionItems) = preProject
 		Dockerfile = Dockerfile
 		.dockerignore = .dockerignore
+		.env = .env
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{D6FBF96C-754F-4C19-9113-99824AB4134F}"
