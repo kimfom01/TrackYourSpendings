@@ -18,9 +18,6 @@ public static class EnvironmentConfigHelper
                                                      ?? throw new NullReferenceException("DB_URI missing"));
         }
 
-        Console.WriteLine();
-        Console.WriteLine(Environment.GetEnvironmentVariable("DB_URI"));
-
         return connectionString;
     }
 
