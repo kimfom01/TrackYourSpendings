@@ -16,7 +16,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Decode SSL Certificate
+      - if: github.event_name == 'push'
+        name: Decode SSL Certificate
         run: |
           mkdir ./Web/certs/ && touch ./Web/certs/cert.pfx
           cat "${{ secrets.SSL_CERT_BASE64 }}" | base64 -d > ./Web/certs/cert.pfx
