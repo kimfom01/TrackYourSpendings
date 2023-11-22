@@ -70,7 +70,7 @@ jobs:
 
       - name: Decode SSL Certificate
         run: |
-          mkdir ./Web/certs/ && touch ./Web/certs/cert.pfx
+          mkdir -p ./Web/certs/ && touch ./Web/certs/cert.pfx
           cat "${{ secrets.SSL_CERT_BASE64 }}" | base64 -d > ./Web/certs/cert.pfx
 
       - name: Build Docker Image
