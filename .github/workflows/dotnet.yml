@@ -16,6 +16,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Decode SSL Certificate
+        run: echo "${{ secrets.SSL_CERT_BASE64 }}" | base64 -d > ./Web/certs/cert.pfx
+
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
