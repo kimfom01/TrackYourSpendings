@@ -34,7 +34,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: net-build
-          path: output
+          path: ./
 
       # # - if: github.event_name == 'push'
       # - name: Decode SSL Certificate
