@@ -55,6 +55,9 @@ jobs:
           mkdir -p ./Web/certs/ && touch ./Web/certs/cert.pfx
           ${{ secrets.SSL_CERT_BASE64 }} | base64 -d > ./Web/certs/cert.pfx
 
+      - name: Print tree of current directory
+        run: tree .
+
       - name: Build Docker Image
         run: docker build -t kimfom01/trackyourspendings:latest .
 
