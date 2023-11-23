@@ -45,10 +45,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: net-build
-          path: output
-
-      - name: Change to Build Directory
-        run: cd output && pwd
+          path: .
 
       - name: Decode SSL Certificate
         run: |
