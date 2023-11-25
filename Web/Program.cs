@@ -9,7 +9,7 @@ var app = builder.Build();
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 using var scope = app.Services.CreateScope();
-await SetupDatabase.ResetDatabase(scope);
+await SetupDatabase.ResetDatabase(scope, builder.Environment);
 
 if (!app.Environment.IsDevelopment())
 {
