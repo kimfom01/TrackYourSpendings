@@ -1,11 +1,11 @@
 repo_name: kimfom01/TrackYourSpending
-report_id: 3d7b76efe1c60ce27fb2bcff60ecc0d8
+report_id: 5c5c149029206f275aacb6aafce0633b
 repo_type: Public
-timestamp: '2023-11-09T17:02:46+00:00'
+timestamp: '2023-12-14T09:50:40+00:00'
 requested_by: kimfom01
 provider: github
 branch: main
-detected_tools_count: 19
+detected_tools_count: 20
 tools:
 - name: C#
   description: Simple, general-purpose, object-oriented programming language for the
@@ -60,8 +60,8 @@ tools:
   category: Languages & Frameworks
   sub_category: Frameworks (Full Stack)
   image_url: https://img.stackshare.io/service/6403/default_91fc1f0ee315262794273aa1387eaf8fed8436e6.png
-  detection_source_url: Tests/Tests.csproj
-  detection_source: Web/Web.csproj
+  detection_source_url: https://github.com/kimfom01/TrackYourSpending/blob/main/Tests/Tests.csproj
+  detection_source: Tests/Tests.csproj
   last_updated_by: Kim Fom
   last_updated_on: 2023-10-22 12:51:22.000000000 Z
 - name: ASP.NET Core
@@ -75,46 +75,42 @@ tools:
   category: Languages & Frameworks
   sub_category: Frameworks (Full Stack)
   image_url: https://img.stackshare.io/service/11331/asp.net-core.png
-  detection_source_url: Tests/Tests.csproj
-  detection_source: Web/Web.csproj
+  detection_source_url: https://github.com/kimfom01/TrackYourSpending/blob/main/Tests/Tests.csproj
+  detection_source: Tests/Tests.csproj
   last_updated_by: Kim Fom
   last_updated_on: 2023-10-22 12:51:22.000000000 Z
-- name: Entity Framework
-  description: An object-relational mapper that enables .NET developers to work with
-    relational data
-  website_url: https://docs.microsoft.com/en-us/aspnet/entity-framework
-  license: Apache-2.0
+- name: PostgreSQL
+  description: A powerful, open source object-relational database system
+  website_url: http://www.postgresql.org/
   open_source: true
-  hosted_saas: false
-  category: Data Stores
-  sub_category: Object Relational Mapper (ORM)
-  image_url: https://img.stackshare.io/service/3251/no-img-open-source.png
-  detection_source: Web/Web.csproj
-  last_updated_by: Kim Fom
-  last_updated_on: 2023-03-19 22:53:36.000000000 Z
-- name: Entity Framework Core
-  description: 'Lightweight and cross-platform version of the popular Entity Framework '
-  website_url: https://docs.microsoft.com/en-us/ef/core/
-  license: MIT
-  open_source: true
-  hosted_saas: false
-  category: Data Stores
-  sub_category: Object Relational Mapper (ORM)
-  image_url: https://img.stackshare.io/service/10254/no-img-open-source.png
-  detection_source: Web/Web.csproj
-  last_updated_by: Kim Fom
-  last_updated_on: 2023-10-23 15:59:07.000000000 Z
-- name: Microsoft SQL Server
-  description: A relational database management system developed by Microsoft
-  website_url: http://microsoft.com/sqlserver
-  open_source: false
   hosted_saas: false
   category: Data Stores
   sub_category: Databases
-  image_url: https://img.stackshare.io/service/1027/sql_server.png
+  image_url: https://img.stackshare.io/service/1028/ASOhU5xJ.png
   detection_source: Web/Web.csproj
   last_updated_by: Kim Fom
-  last_updated_on: 2023-10-23 15:59:07.000000000 Z
+  last_updated_on: 2023-11-17 11:07:38.000000000 Z
+- name: pgvector
+  description: Open-source vector similarity search for Postgres
+  website_url: https://github.com/pgvector/pgvector/
+  open_source: false
+  hosted_saas: false
+  category: Data Stores
+  sub_category: Database Tools
+  image_url: https://img.stackshare.io/service/109221/default_b888cdf5617d936aa6aacf130911906955508639.png
+  detection_source: Web/wwwroot/lib/jquery-validation-unobtrusive/LICENSE.txt
+  last_updated_by: Kim Fom
+  last_updated_on: 2023-02-27 08:55:37.000000000 Z
+- name: Docker
+  description: Enterprise Container Platform for High-Velocity Innovation.
+  website_url: https://www.docker.com/
+  license: Apache-2.0
+  open_source: true
+  hosted_saas: false
+  category: Build, Test, Deploy
+  sub_category: Virtual Machine Platforms & Containers
+  image_url: https://img.stackshare.io/service/586/n4u37v9t_400x400.png
+  detection_source: Repo Metadata
 - name: Git
   description: Fast, scalable, distributed revision control system
   website_url: http://git-scm.com/
@@ -134,7 +130,7 @@ tools:
   image_url: https://img.stackshare.io/service/11563/actions.png
   detection_source: ".github/workflows/dotnet.yml"
   last_updated_by: Kim Fom
-  last_updated_on: 2023-10-22 13:39:15.000000000 Z
+  last_updated_on: 2023-11-22 13:27:51.000000000 Z
 - name: NuGet
   description: The package manager for .NET
   website_url: https://www.nuget.org/
@@ -179,10 +175,31 @@ tools:
   category: Build, Test, Deploy
   sub_category: Testing Frameworks
   image_url: https://img.stackshare.io/service/3077/ca5a327feb49ddfe1f4b11548907e5a1_400x400.png
-  detection_source_url: Tests/Tests.csproj
+  detection_source_url: https://github.com/kimfom01/TrackYourSpending/blob/main/Tests/Tests.csproj
   detection_source: Tests/Tests.csproj
   last_updated_by: Kim Fom
   last_updated_on: 2023-10-22 12:51:22.000000000 Z
+- name: LangChain
+  description: Build AI apps with LLMs through composability
+  website_url: https://github.com/hwchase17/langchain
+  open_source: true
+  hosted_saas: false
+  category: Communications
+  sub_category: Large Language Model Tools
+  image_url: https://img.stackshare.io/service/48790/default_5b6c6b73f1ff3775c85d2a1ba954cb87e30cbf13.jpg
+  detection_source: Web/wwwroot/lib/jquery-validation-unobtrusive/LICENSE.txt
+  last_updated_by: Kim Fom
+  last_updated_on: 2023-02-27 08:55:37.000000000 Z
+- name: Shell
+  description: A shell is a text-based terminal, used for manipulating programs and
+    files. Shell scripts typically manage program execution.
+  website_url: https://en.wikipedia.org/wiki/Shell_script
+  open_source: false
+  hosted_saas: false
+  category: Languages & Frameworks
+  sub_category: Languages
+  image_url: https://img.stackshare.io/service/4631/default_c2062d40130562bdc836c13dbca02d318205a962.png
+  detection_source: Repo Metadata
 - name: Humanizer.Core
   description: Humanizer core package that contains the library and the neutral language
   package_url: https://www.nuget.org/Humanizer.Core
@@ -193,10 +210,10 @@ tools:
   category: Libraries
   sub_category: NuGet Packages
   image_url: https://img.stackshare.io/package/13200/default_e23dabba1be2c69fbf5fc50bdc46cbffbe6ca2cb.png
-  detection_source_url: Web/Web.csproj
+  detection_source_url: https://github.com/kimfom01/TrackYourSpending/blob/main/Web/Web.csproj
   detection_source: Web/Web.csproj
   last_updated_by: Kim Fom
-  last_updated_on: 2023-10-23 15:59:07.000000000 Z
+  last_updated_on: 2023-11-17 11:07:38.000000000 Z
 - name: Microsoft.AspNetCore.Authentication.Google
   description: ASP.NET Core contains middleware to support Google's OpenId and OAuth
     2.0 authentication workflows
@@ -208,24 +225,10 @@ tools:
   category: Libraries
   sub_category: NuGet Packages
   image_url: https://img.stackshare.io/package/13881/default_e637dea816bab62ca037ba8b354e359bd6438b40.png
-  detection_source_url: Web/Web.csproj
+  detection_source_url: https://github.com/kimfom01/TrackYourSpending/blob/main/Web/Web.csproj
   detection_source: Web/Web.csproj
   last_updated_by: Kim Fom
-  last_updated_on: 2023-10-23 15:59:07.000000000 Z
-- name: Microsoft.EntityFrameworkCore.SqlServer
-  description: Microsoft SQL Server database provider for Entity Framework Core
-  package_url: https://www.nuget.org/Microsoft.EntityFrameworkCore.SqlServer
-  version: 7.0.4
-  license: Apache-2.0
-  open_source: true
-  hosted_saas: false
-  category: Libraries
-  sub_category: NuGet Packages
-  image_url: https://img.stackshare.io/package/12891/default_4e8402857d2ce7356903ee7422d9b4a0f23cc137.png
-  detection_source_url: Web/Web.csproj
-  detection_source: Web/Web.csproj
-  last_updated_by: Kim Fom
-  last_updated_on: 2023-10-23 15:59:07.000000000 Z
+  last_updated_on: 2023-11-17 11:07:38.000000000 Z
 - name: xunit.runner.visualstudio
   description: Visual Studio 2012+ Test Explorer runner for the xUnit.net framework
   package_url: https://www.nuget.org/xunit.runner.visualstudio
@@ -236,7 +239,7 @@ tools:
   category: Libraries
   sub_category: NuGet Packages
   image_url: https://img.stackshare.io/package/13260/default_d2db5a200c4fe2d08cbdb2174cc230708973870b.png
-  detection_source_url: Tests/Tests.csproj
+  detection_source_url: https://github.com/kimfom01/TrackYourSpending/blob/main/Tests/Tests.csproj
   detection_source: Tests/Tests.csproj
   last_updated_by: Kim Fom
   last_updated_on: 2023-10-22 12:51:22.000000000 Z
