@@ -158,6 +158,7 @@ public class HomeController : Controller
     {
         transaction.Date = DateTime.Now;
         transaction.WalletId = walletId;
+        transaction.UserId = _userManager.GetUserId(User);
 
         await _unitOfWork.Transactions.AddEntity(transaction);
 
