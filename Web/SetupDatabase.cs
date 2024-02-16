@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Web.Context;
 
 namespace Web;
@@ -13,6 +14,6 @@ public static class SetupDatabase
             await context.Database.EnsureDeletedAsync();
         }
 
-        await context.Database.EnsureCreatedAsync();
+        await context.Database.MigrateAsync();
     }
 }
