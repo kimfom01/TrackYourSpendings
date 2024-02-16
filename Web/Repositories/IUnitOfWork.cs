@@ -1,4 +1,4 @@
-namespace Budget.Repositories;
+namespace Web.Repositories;
 
 public interface IUnitOfWork : IDisposable
 {

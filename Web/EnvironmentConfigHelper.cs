@@ -34,7 +34,6 @@ public static class EnvironmentConfigHelper
             Password = userInfo[1],
             Database = databaseUri.LocalPath.TrimStart('/'),
             SslMode = SslMode.Require,
-            TrustServerCertificate = true,
             Pooling = true,
             MinPoolSize = 0,
             MaxPoolSize = 100,

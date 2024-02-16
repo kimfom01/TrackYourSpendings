@@ -1,6 +1,6 @@
-using Budget.Models;
+using Web.Models;
 
-namespace Budget.Repositories;
+namespace Web.Repositories;
 
 public interface IWalletRepository : IRepository<Wallet>
 {

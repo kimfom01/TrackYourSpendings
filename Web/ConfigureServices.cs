@@ -1,9 +1,8 @@
-using Budget.Context;
-using Budget.Repositories;
-using Budget.Repositories.Implementations;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.EntityFrameworkCore;
+using Web.Context;
+using Web.Models;
+using Web.Repositories;
+using Web.Repositories.Implementations;
 
 namespace Web;
 
@@ -12,16 +11,17 @@ public static class ConfigureServices
     public static IServiceCollection RegisterServices(this IServiceCollection services, IConfiguration config, IWebHostEnvironment env)
     {
         services.AddControllersWithViews();
-        services.AddDbContext<BudgetDbContext>(options =>
+        services.AddDbContext<DataContext>(options =>
         {
             options.UseNpgsql(EnvironmentConfigHelper.GetConnectionString(config, env));
+            
         });
+
+        services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
+            .AddEntityFrameworkStores<DataContext>();
+        
         services.AddScoped<IUnitOfWork, UnitOfWork>();
-        services.AddAuthentication(options =>
-            {
-                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
-            }).AddCookie()
+        services.AddAuthentication()
             .AddGoogle(options =>
             {
                 options.ClientId = EnvironmentConfigHelper.GetGoogleClientId(config, env);

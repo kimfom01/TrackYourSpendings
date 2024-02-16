@@ -1,12 +1,12 @@
-using Budget.Context;
+using Web.Context;
 
-namespace Budget.Repositories.Implementations;
+namespace Web.Repositories.Implementations;
 
 public class UnitOfWork : IUnitOfWork
 {
-    private readonly BudgetDbContext _dbContext;
+    private readonly DataContext _dbContext;
 
-    public UnitOfWork(BudgetDbContext dbContext)
+    public UnitOfWork(DataContext dbContext)
     {
         _dbContext = dbContext;
         Categories = new CategoryRepository(dbContext);
