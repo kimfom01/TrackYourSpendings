@@ -15,8 +15,9 @@ public class DataContext : IdentityDbContext<ApplicationUser>
     {
     }
 
-    // protected override void OnModelCreating(ModelBuilder modelBuilder)
-    // {
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
     //     modelBuilder.Entity<Wallet>()
     //         .HasData(new Wallet
     //         {
@@ -35,58 +36,58 @@ public class DataContext : IdentityDbContext<ApplicationUser>
     //             Balance = 4700.00M
     //         });
     //
-    //     modelBuilder.Entity<Category>()
-    //         .HasData(new Category
-    //         {
-    //             Id = 1,
-    //             Name = "Housing"
-    //         },
-    //         new Category
-    //         {
-    //             Id = 2,
-    //             Name = "Transportation"
-    //         },
-    //         new Category
-    //         {
-    //             Id = 3,
-    //             Name = "Food"
-    //         },
-    //         new Category
-    //         {
-    //             Id = 4,
-    //             Name = "Utilities"
-    //         },
-    //         new Category
-    //         {
-    //             Id = 5,
-    //             Name = "Insurance"
-    //         },
-    //         new Category
-    //         {
-    //             Id = 6,
-    //             Name = "Medical & Healthcare"
-    //         },
-    //         new Category
-    //         {
-    //             Id = 7,
-    //             Name = "Saving, Investing & Dept Payments"
-    //         },
-    //         new Category
-    //         {
-    //             Id = 8,
-    //             Name = "Personal Spending"
-    //         },
-    //         new Category
-    //         {
-    //             Id = 9,
-    //             Name = "Recreation & Entertainment"
-    //         },
-    //         new Category
-    //         {
-    //             Id = 10,
-    //             Name = "Miscellaneous"
-    //         });
-    //
+    modelBuilder.Entity<Category>()
+        .HasData(new Category
+        {
+            Id = 1,
+            Name = "Housing"
+        },
+        new Category
+        {
+            Id = 2,
+            Name = "Transportation"
+        },
+        new Category
+        {
+            Id = 3,
+            Name = "Food"
+        },
+        new Category
+        {
+            Id = 4,
+            Name = "Utilities"
+        },
+        new Category
+        {
+            Id = 5,
+            Name = "Insurance"
+        },
+        new Category
+        {
+            Id = 6,
+            Name = "Medical & Healthcare"
+        },
+        new Category
+        {
+            Id = 7,
+            Name = "Saving, Investing & Dept Payments"
+        },
+        new Category
+        {
+            Id = 8,
+            Name = "Personal Spending"
+        },
+        new Category
+        {
+            Id = 9,
+            Name = "Recreation & Entertainment"
+        },
+        new Category
+        {
+            Id = 10,
+            Name = "Miscellaneous"
+        });
+    
     //     modelBuilder.Entity<Transaction>()
     //         .HasData(new Transaction
     //         {
@@ -132,5 +133,5 @@ public class DataContext : IdentityDbContext<ApplicationUser>
     //             WalletId = 2,
     //             CategoryId = 5
     //         });
-    // }
+    }
 }
