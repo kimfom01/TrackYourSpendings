@@ -1,13 +1,13 @@
 using System.Linq.Expressions;
-using Budget.Context;
-using Budget.Models;
 using Microsoft.EntityFrameworkCore;
+using Web.Context;
+using Web.Models;
 
-namespace Budget.Repositories.Implementations;
+namespace Web.Repositories.Implementations;
 
 public class TransactionRepository : Repository<Transaction>, ITransactionRepository
 {
-    public TransactionRepository(BudgetDbContext budgetDbContext) : base(budgetDbContext)
+    public TransactionRepository(DataContext dataContext) : base(dataContext)
     {
     }
 
@@ -20,9 +20,9 @@ public class TransactionRepository : Repository<Transaction>, ITransactionReposi
         return await transactionsWithCategories.ToListAsync();
     }
 
-    public override async Task<Transaction?> GetEntity(int? id)
+    public override async Task<Transaction?> GetEntity(Expression<Func<Transaction, bool>> predicate)
     {
-        var entity = await DbEntitySet.AsNoTracking().FirstOrDefaultAsync(tr => tr.Id == id);
+        var entity = await DbEntitySet.AsNoTracking().FirstOrDefaultAsync(predicate);
 
         return entity;
     }

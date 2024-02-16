@@ -1,4 +1,4 @@
-using Budget.Context;
+using Web.Context;
 
 namespace Web;
 
@@ -6,7 +6,7 @@ public static class SetupDatabase
 {
     public static async Task ResetDatabase(IServiceScope scope, IWebHostEnvironment environment)
     {
-        var context = scope.ServiceProvider.GetRequiredService<BudgetDbContext>();
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
 
         if (environment.IsDevelopment())
         {

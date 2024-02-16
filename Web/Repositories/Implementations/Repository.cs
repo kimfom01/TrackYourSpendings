@@ -1,18 +1,18 @@
 using System.Linq.Expressions;
-using Budget.Context;
 using Microsoft.EntityFrameworkCore;
+using Web.Context;
 
-namespace Budget.Repositories.Implementations;
+namespace Web.Repositories.Implementations;
 
 public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity : class
 {
-    private readonly BudgetDbContext _budgetDbContext;
+    private readonly DataContext _dataContext;
     protected DbSet<TEntity> DbEntitySet { get; }
 
-    protected Repository(BudgetDbContext budgetDbContext)
+    protected Repository(DataContext dataContext)
     {
-        _budgetDbContext = budgetDbContext;
-        DbEntitySet = budgetDbContext.Set<TEntity>();
+        _dataContext = dataContext;
+        DbEntitySet = dataContext.Set<TEntity>();
     }
 
     public virtual async Task AddEntity(TEntity entity)
@@ -20,9 +20,9 @@ public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity :
         await DbEntitySet.AddAsync(entity);
     }
 
-    public virtual async Task RemoveEntity(int id)
+    public virtual async Task RemoveEntity(Expression<Func<TEntity, bool>> predicate)
     {
-        var entity = await DbEntitySet.FindAsync(id);
+        var entity = await DbEntitySet.FirstOrDefaultAsync(predicate);
 
         if (entity is not null)
         {
@@ -39,7 +39,7 @@ public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity :
 
     public virtual async Task SaveChanges()
     {
-        await _budgetDbContext.SaveChangesAsync();
+        await _dataContext.SaveChangesAsync();
     }
 
     public virtual async Task<IEnumerable<TEntity>?> GetEntities(Expression<Func<TEntity, bool>> predicate)
@@ -49,9 +49,9 @@ public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity :
         return await entities.ToListAsync();
     }
 
-    public virtual async Task<TEntity?> GetEntity(int? id)
+    public virtual async Task<TEntity?> GetEntity(Expression<Func<TEntity, bool>> predicate)
     {
-        var entity = await DbEntitySet.FindAsync(id);
+        var entity = await DbEntitySet.FirstOrDefaultAsync(predicate);
 
         return entity;
     }
