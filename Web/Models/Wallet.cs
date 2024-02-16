@@ -1,10 +1,13 @@
+using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
 
-namespace Budget.Models;
+namespace Web.Models;
 
 public class Wallet
 {
     public int Id { get; set; }
+    
+    [MaxLength(50)]
     public required string Name { get; set; }
     
     [Precision(10, 2)]
@@ -17,4 +20,7 @@ public class Wallet
     public decimal? Balance { get; set; } = 0M;
 
     public IEnumerable<Transaction>? Transactions { get; set; }
+    
+    public string? UserId { get; set; }
+    public ApplicationUser? User { get; set; }
 }
