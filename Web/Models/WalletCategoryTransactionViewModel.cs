@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace Budget.Models;
+namespace Web.Models;
 
 public class WalletCategoryTransactionViewModel
 {

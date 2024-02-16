@@ -1,4 +1,4 @@
-namespace Budget.Models;
+namespace Web.Models;
 
 public class ErrorViewModel
 {
