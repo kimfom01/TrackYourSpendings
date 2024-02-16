@@ -1,4 +1,4 @@
-#  Track Your Spending
+#  Track Your Spendings
 
 ## Introduction
 - This is an application where users can track their finances
