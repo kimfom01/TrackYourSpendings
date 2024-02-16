@@ -37,11 +37,6 @@ public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity :
         return Task.CompletedTask;
     }
 
-    public virtual async Task SaveChanges()
-    {
-        await _dataContext.SaveChangesAsync();
-    }
-
     public virtual async Task<IEnumerable<TEntity>?> GetEntities(Expression<Func<TEntity, bool>> predicate)
     {
         var entities = DbEntitySet.Where(predicate).AsNoTracking();
