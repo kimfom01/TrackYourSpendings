@@ -3,17 +3,20 @@ using Web.Context;
 
 namespace Web;
 
-public static class SetupDatabase
+public static class Database
 {
-    public static async Task ResetDatabase(IServiceScope scope, IWebHostEnvironment environment)
+    public static async Task SetupDatabase(IServiceScope scope, IWebHostEnvironment environment)
     {
         var context = scope.ServiceProvider.GetRequiredService<DataContext>();
 
         if (environment.IsDevelopment())
         {
             await context.Database.EnsureDeletedAsync();
+            await context.Database.EnsureCreatedAsync();
         }
-
-        await context.Database.MigrateAsync();
+        else
+        {
+            await context.Database.MigrateAsync();
+        }
     }
 }
