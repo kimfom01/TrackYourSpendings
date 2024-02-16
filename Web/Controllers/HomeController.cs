@@ -1,9 +1,10 @@
 ﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using Budget.Models;
-using Budget.Repositories;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Web.Models;
+using Web.Repositories;
 
 namespace Web.Controllers;
 
@@ -11,10 +12,12 @@ namespace Web.Controllers;
 public class HomeController : Controller
 {
     private readonly IUnitOfWork _unitOfWork;
+    private readonly UserManager<ApplicationUser> _userManager;
 
-    public HomeController(IUnitOfWork unitOfWork)
+    public HomeController(IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager)
     {
         _unitOfWork = unitOfWork;
+        _userManager = userManager;
     }
 
     public async Task<IActionResult> Index(string? searchString, int? category, DateTime? date, int? id)
@@ -23,12 +26,13 @@ public class HomeController : Controller
 
         if (id is null or -1)
         {
-            var wallets = await _unitOfWork.Wallets.GetEntities(_ => true);
+            var wallets = await _unitOfWork.Wallets.GetEntities(wal => wal.UserId == _userManager.GetUserId(User));
 
             viewModel = new WalletCategoryTransactionViewModel
             {
                 Wallets = new SelectList(wallets, "Id", "Name"),
-                Wallet = await _unitOfWork.Wallets.GetEntity(id)
+                Wallet = await _unitOfWork.Wallets.GetEntity(wall =>
+                    wall.Id == id && wall.UserId == _userManager.GetUserId(User))
             };
         }
         else
@@ -42,9 +46,10 @@ public class HomeController : Controller
     private async Task<WalletCategoryTransactionViewModel> GetViewModelFromId(int? id, string? searchString,
         int? category, DateTime? date)
     {
-        var wallets = await _unitOfWork.Wallets.GetEntities(_ => true);
+        var wallets = await _unitOfWork.Wallets.GetEntities(wal => wal.UserId == _userManager.GetUserId(User));
 
-        var wallet = await _unitOfWork.Wallets.GetEntity(id);
+        var wallet = await _unitOfWork.Wallets.GetEntity(wall =>
+            wall.Id == id && wall.UserId == _userManager.GetUserId(User));
 
         if (wallet is null)
         {
@@ -71,7 +76,7 @@ public class HomeController : Controller
         DateTime? date)
     {
         var transactions = await _unitOfWork.Transactions
-            .GetTransactionsWithCategories(tr => tr.WalletId == id);
+            .GetTransactionsWithCategories(tr => tr.WalletId == id && tr.UserId == _userManager.GetUserId(User));
 
         if (transactions is null)
         {
@@ -80,7 +85,7 @@ public class HomeController : Controller
 
         if (searchString is not null)
         {
-            transactions = transactions.Where(tr => tr.Name.ToLower().Contains(searchString.ToLower()));
+            transactions = transactions.Where(tr => tr.Name.Contains(searchString, StringComparison.CurrentCultureIgnoreCase));
         }
 
         if (category is not null)
@@ -100,6 +105,7 @@ public class HomeController : Controller
     public async Task<IActionResult> AddWallet(Wallet wallet)
     {
         wallet.Balance = wallet.Income;
+        wallet.UserId = _userManager.GetUserId(User);
 
         await _unitOfWork.Wallets.AddEntity(wallet);
         await _unitOfWork.SaveChanges();
@@ -110,7 +116,8 @@ public class HomeController : Controller
     [HttpPost]
     public async Task<IActionResult> UpdateWallet(Wallet wallet)
     {
-        var oldWallet = await _unitOfWork.Wallets.GetEntity(wallet.Id);
+        var oldWallet = await _unitOfWork.Wallets.GetEntity(wall =>
+            wall.Id == wallet.Id && wall.UserId == _userManager.GetUserId(User));
 
         if (oldWallet is null)
         {
@@ -138,7 +145,8 @@ public class HomeController : Controller
     [HttpPost]
     public async Task<IActionResult> DeleteWallet(Wallet wallet)
     {
-        await _unitOfWork.Wallets.RemoveEntity(wallet.Id);
+        await _unitOfWork.Wallets.RemoveEntity(wal =>
+            wal.Id == wallet.Id && wal.UserId == _userManager.GetUserId(User));
 
         await _unitOfWork.SaveChanges();
 
@@ -153,7 +161,8 @@ public class HomeController : Controller
 
         await _unitOfWork.Transactions.AddEntity(transaction);
 
-        var wallet = await _unitOfWork.Wallets.GetEntity(walletId);
+        var wallet = await _unitOfWork.Wallets.GetEntity(wall =>
+            wall.Id == walletId && wall.UserId == _userManager.GetUserId(User));
 
         if (wallet is not null)
         {
@@ -169,7 +178,8 @@ public class HomeController : Controller
     [HttpPost]
     public async Task<IActionResult> UpdateTransaction(Transaction transaction)
     {
-        var formerTransaction = await _unitOfWork.Transactions.GetEntity(transaction.Id);
+        var formerTransaction = await _unitOfWork.Transactions.GetEntity(tr =>
+            tr.Id == transaction.Id && tr.UserId == _userManager.GetUserId(User));
 
         var costDifference = transaction.Cost - formerTransaction?.Cost;
 
@@ -177,7 +187,8 @@ public class HomeController : Controller
 
         await _unitOfWork.Transactions.Update(transaction.Id, transaction);
 
-        var wallet = await _unitOfWork.Wallets.GetEntity(transaction.WalletId);
+        var wallet = await _unitOfWork.Wallets.GetEntity(wall =>
+            wall.Id == transaction.WalletId && wall.UserId == _userManager.GetUserId(User));
 
         if (wallet is not null)
         {
@@ -196,9 +207,11 @@ public class HomeController : Controller
     [HttpPost]
     public async Task<IActionResult> DeleteTransaction(Transaction transaction)
     {
-        await _unitOfWork.Transactions.RemoveEntity(transaction.Id);
+        await _unitOfWork.Transactions.RemoveEntity(tr =>
+            tr.Id == transaction.Id && tr.UserId == _userManager.GetUserId(User));
 
-        var wallet = await _unitOfWork.Wallets.GetEntity(transaction.WalletId);
+        var wallet = await _unitOfWork.Wallets.GetEntity(wall =>
+            wall.Id == transaction.WalletId && wall.UserId == _userManager.GetUserId(User));
 
         if (wallet is not null)
         {
