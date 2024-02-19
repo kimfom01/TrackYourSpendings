@@ -19,6 +19,8 @@ public class Wallet
     [Precision(10, 2)]
     public decimal? Balance { get; set; } = 0M;
 
+    public bool Active { get; set; } = false;
+
     public IEnumerable<Transaction>? Transactions { get; set; }
     
     public string? UserId { get; set; }
