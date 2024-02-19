@@ -15,9 +15,11 @@ public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity :
         DbEntitySet = dataContext.Set<TEntity>();
     }
 
-    public virtual async Task AddEntity(TEntity entity)
+    public virtual async Task<TEntity> AddEntity(TEntity entity)
     {
-        await DbEntitySet.AddAsync(entity);
+        var entityEntry = await DbEntitySet.AddAsync(entity);
+
+        return entityEntry.Entity;
     }
 
     public virtual async Task RemoveEntity(Expression<Func<TEntity, bool>> predicate)
@@ -30,7 +32,7 @@ public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity :
         }
     }
 
-    public virtual Task Update(int id, TEntity entity)
+    public virtual Task Update(TEntity entity)
     {
         DbEntitySet.Update(entity);
 
