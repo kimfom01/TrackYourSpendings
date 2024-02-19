@@ -40,17 +40,15 @@ const extractTransaction = (e) => {
 
     const transactionRow = row.children;
 
-    const transaction = {
+    return {
         id: transactionRow[0].innerText,
         name: transactionRow[1].innerText,
         description: transactionRow[2].innerText,
-        cost: transactionRow[5].innerText,
-        month: months[transactionRow[6].innerText],
-        categoryId: transactionRow[7].innerText,
-        walletId: transactionRow[9].innerText,
+        cost: transactionRow[4].innerText,
+        month: months[transactionRow[5].innerText],
+        categoryId: transactionRow[6].innerText,
+        walletId: transactionRow[8].innerText,
     };
-
-    return transaction;
 }
 
 const editButtons = document.querySelectorAll("#editButtons");
