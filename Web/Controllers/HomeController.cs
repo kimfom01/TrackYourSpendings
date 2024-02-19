@@ -3,62 +3,121 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Web.Dtos;
 using Web.Models;
-using Web.Repositories;
+using Web.Services;
 
 namespace Web.Controllers;
 
 [Authorize]
 public class HomeController : Controller
 {
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly ICategoryService _categoryService;
     private readonly UserManager<ApplicationUser> _userManager;
+    private readonly IWalletService _walletService;
+    private readonly ITransactionService _transactionService;
 
-    public HomeController(IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager)
+    public HomeController(
+        UserManager<ApplicationUser> userManager,
+        IWalletService walletService,
+        ITransactionService transactionService,
+        ICategoryService categoryService)
     {
-        _unitOfWork = unitOfWork;
         _userManager = userManager;
+        _walletService = walletService;
+        _transactionService = transactionService;
+        _categoryService = categoryService;
     }
 
-    public async Task<IActionResult> Index(string? searchString, int? category, DateTime? date, int? id)
+    public async Task<IActionResult> Index(string? searchString, int? category, DateTime? date)
     {
-        WalletCategoryTransactionViewModel viewModel;
+        var userId = _userManager.GetUserId(User);
 
-        if (id is null or -1)
+        var wallet = await _walletService.GetActiveWallet(userId);
+
+        var wallets = await _walletService.GetInactiveWallets(userId);
+
+        var categories = await _categoryService.GetCategories();
+
+        if (wallet is null)
         {
-            var wallets = await _unitOfWork.Wallets.GetEntities(wal => wal.UserId == _userManager.GetUserId(User));
-
-            viewModel = new WalletCategoryTransactionViewModel
+            return View(new WalletCategoryTransactionViewModel
             {
-                Wallets = new SelectList(wallets, "Id", "Name"),
-                Wallet = await _unitOfWork.Wallets.GetEntity(wall =>
-                    wall.Id == id && wall.UserId == _userManager.GetUserId(User))
-            };
+                Wallets = new SelectList(wallets, "Id", "Name")
+            });
+        }
+
+        WalletCategoryTransactionViewModel viewModel;
+        if (searchString is not null || category is not null || date is not null)
+        {
+            viewModel = await GetViewModelFromId(wallet.Id, searchString, category, date);
         }
         else
         {
-            viewModel = await GetViewModelFromId(id, searchString, category, date);
+            viewModel = new WalletCategoryTransactionViewModel
+            {
+                Wallets = new SelectList(wallets, "Id", "Name"),
+                Wallet = wallet,
+                CategoriesSelectList = new SelectList(categories, "Id", "Name"),
+                Transactions = await _transactionService.GetTransactions(userId)
+            };
         }
 
         return View(viewModel);
     }
 
-    private async Task<WalletCategoryTransactionViewModel> GetViewModelFromId(int? id, string? searchString,
+    [HttpPost]
+    public async Task<IActionResult> Index(int? walletId)
+    {
+        if (walletId is null)
+        {
+            return View("Index");
+        }
+
+        var userId = _userManager.GetUserId(User);
+
+        var wallet = await _walletService.GetWallet(walletId, userId);
+
+        if (wallet is null)
+        {
+            return View("Index");
+        }
+
+        await _walletService.SetActiveWallet(wallet, userId);
+
+        var wallets = await _walletService.GetInactiveWallets(userId);
+
+        var categories = await _categoryService.GetCategories();
+
+        var viewModel = new WalletCategoryTransactionViewModel
+        {
+            Wallets = new SelectList(wallets, "Id", "Name"),
+            Wallet = wallet,
+            CategoriesSelectList = new SelectList(categories, "Id", "Name"),
+            Transactions = await _transactionService.GetTransactions(userId)
+        };
+
+        return View(viewModel);
+    }
+
+    private async Task<WalletCategoryTransactionViewModel> GetViewModelFromId(int? walletId, string? searchString,
         int? category, DateTime? date)
     {
-        var wallets = await _unitOfWork.Wallets.GetEntities(wal => wal.UserId == _userManager.GetUserId(User));
+        var userId = _userManager.GetUserId(User);
 
-        var wallet = await _unitOfWork.Wallets.GetEntity(wall =>
-            wall.Id == id && wall.UserId == _userManager.GetUserId(User));
+        var wallets = await _walletService.GetInactiveWallets(userId);
+
+        var wallet = await _walletService.GetWallet(walletId, userId);
 
         if (wallet is null)
         {
             return new WalletCategoryTransactionViewModel();
         }
 
-        var transactions = await GetTransactions(wallet.Id, searchString, category, date);
+        var transactions =
+            await _transactionService.SearchAndFilter(userId, wallet.Id, searchString, category, date);
 
-        var categories = await _unitOfWork.Categories.GetEntities(_ => true);
+        var categories = await _categoryService.GetCategories();
 
         var viewModel = new WalletCategoryTransactionViewModel
         {
@@ -72,155 +131,100 @@ public class HomeController : Controller
         return viewModel;
     }
 
-    private async Task<IEnumerable<Transaction>> GetTransactions(int? id, string? searchString, int? category,
-        DateTime? date)
-    {
-        var transactions = await _unitOfWork.Transactions
-            .GetTransactionsWithCategories(tr => tr.WalletId == id && tr.UserId == _userManager.GetUserId(User));
-
-        if (transactions is null)
-        {
-            return Enumerable.Empty<Transaction>();
-        }
-
-        if (searchString is not null)
-        {
-            transactions = transactions.Where(tr => tr.Name.Contains(searchString, StringComparison.CurrentCultureIgnoreCase));
-        }
-
-        if (category is not null)
-        {
-            transactions = transactions.Where(tr => tr.CategoryId == category);
-        }
-
-        if (date is not null)
-        {
-            transactions = transactions.Where(tr => tr.Date?.Date == date.Value.Date);
-        }
-
-        return transactions;
-    }
-
     [HttpPost]
-    public async Task<IActionResult> AddWallet(Wallet wallet)
+    public async Task<IActionResult> AddWallet(Wallet? wallet)
     {
-        wallet.Balance = wallet.Income;
-        wallet.UserId = _userManager.GetUserId(User);
+        try
+        {
+            if (wallet is null)
+            {
+                return View("Index");
+            }
 
-        await _unitOfWork.Wallets.AddEntity(wallet);
-        await _unitOfWork.SaveChanges();
+            var userId = _userManager.GetUserId(User);
 
-        return RedirectToAction("Index");
+            await _walletService.AddWallet(wallet, userId);
+
+            return RedirectToAction("Index");
+        }
+        catch (Exception)
+        {
+            return View("Index");
+        }
     }
 
     [HttpPost]
     public async Task<IActionResult> UpdateWallet(Wallet wallet)
     {
-        var oldWallet = await _unitOfWork.Wallets.GetEntity(wall =>
-            wall.Id == wallet.Id && wall.UserId == _userManager.GetUserId(User));
-
-        if (oldWallet is null)
+        try
         {
-            return Error();
+            var userId = _userManager.GetUserId(User);
+
+            await _walletService.UpdateWallet(wallet, userId);
+
+            return RedirectToAction("Index");
         }
-
-        oldWallet.Name = wallet.Name;
-
-        var incomeDifference = wallet.Income - oldWallet.Income;
-
-        if (incomeDifference != 0)
+        catch (Exception)
         {
-            oldWallet.Balance += incomeDifference;
+            return View("Index");
         }
-
-        oldWallet.Income = wallet.Income;
-
-        await _unitOfWork.Wallets.Update(oldWallet.Id, oldWallet);
-
-        await _unitOfWork.SaveChanges();
-
-        return RedirectToAction("Index");
     }
 
     [HttpPost]
     public async Task<IActionResult> DeleteWallet(Wallet wallet)
     {
-        await _unitOfWork.Wallets.RemoveEntity(wal =>
-            wal.Id == wallet.Id && wal.UserId == _userManager.GetUserId(User));
+        var userId = _userManager.GetUserId(User);
 
-        await _unitOfWork.SaveChanges();
-
-        return RedirectToAction("Index");
-    }
-
-    [HttpPost]
-    public async Task<IActionResult> AddTransaction(Transaction transaction, int walletId)
-    {
-        transaction.Date = DateTime.Now;
-        transaction.WalletId = walletId;
-        transaction.UserId = _userManager.GetUserId(User);
-
-        await _unitOfWork.Transactions.AddEntity(transaction);
-
-        var wallet = await _unitOfWork.Wallets.GetEntity(wall =>
-            wall.Id == walletId && wall.UserId == _userManager.GetUserId(User));
-
-        if (wallet is not null)
-        {
-            wallet.Expenses += transaction.Cost;
-            wallet.Balance -= transaction.Cost;
-
-            await _unitOfWork.SaveChanges();
-        }
+        await _walletService.DeleteWallet(wallet, userId);
 
         return RedirectToAction("Index");
     }
 
     [HttpPost]
-    public async Task<IActionResult> UpdateTransaction(Transaction transaction)
+    public async Task<IActionResult> AddTransaction(Transaction? transaction)
     {
-        var formerTransaction = await _unitOfWork.Transactions.GetEntity(tr =>
-            tr.Id == transaction.Id && tr.UserId == _userManager.GetUserId(User));
-
-        var costDifference = transaction.Cost - formerTransaction?.Cost;
-
-        transaction.Date = formerTransaction?.Date;
-
-        await _unitOfWork.Transactions.Update(transaction.Id, transaction);
-
-        var wallet = await _unitOfWork.Wallets.GetEntity(wall =>
-            wall.Id == transaction.WalletId && wall.UserId == _userManager.GetUserId(User));
-
-        if (wallet is not null)
+        try
         {
-            if (costDifference != 0)
+            if (transaction is null)
             {
-                wallet.Expenses += costDifference;
-                wallet.Balance -= costDifference;
+                throw new Exception("Transaction required");
             }
 
-            await _unitOfWork.SaveChanges();
-        }
+            var userId = _userManager.GetUserId(User);
 
-        return RedirectToAction("Index");
+            await _transactionService.AddTransaction(transaction, userId);
+
+            return RedirectToAction("Index");
+        }
+        catch (Exception)
+        {
+            return View("Index");
+        }
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> UpdateTransaction(TransactionDto transaction)
+    {
+        try
+        {
+            var userId = _userManager.GetUserId(User);
+
+            await _transactionService.UpdateTransaction(transaction, userId);
+
+            return RedirectToAction("Index");
+        }
+        catch (Exception)
+        {
+            return View("Index");
+        }
     }
 
     [HttpPost]
     public async Task<IActionResult> DeleteTransaction(Transaction transaction)
     {
-        await _unitOfWork.Transactions.RemoveEntity(tr =>
-            tr.Id == transaction.Id && tr.UserId == _userManager.GetUserId(User));
+        var userId = _userManager.GetUserId(User);
 
-        var wallet = await _unitOfWork.Wallets.GetEntity(wall =>
-            wall.Id == transaction.WalletId && wall.UserId == _userManager.GetUserId(User));
-
-        if (wallet is not null)
-        {
-            wallet.Expenses -= transaction.Cost;
-            wallet.Balance += transaction.Cost;
-
-            await _unitOfWork.SaveChanges();
-        }
+        await _transactionService.DeleteTransaction(transaction, userId);
 
         return RedirectToAction("Index");
     }
