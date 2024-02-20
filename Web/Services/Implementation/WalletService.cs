@@ -74,14 +74,6 @@ public class WalletService : IWalletService
         await _unitOfWork.SaveChanges();
     }
 
-    public async Task<IEnumerable<Wallet>> GetWallets(string? userId)
-    {
-        var wallets = await _unitOfWork.Wallets.GetEntities(wal =>
-            wal.UserId == userId);
-
-        return wallets ?? Enumerable.Empty<Wallet>();
-    }
-
     public async Task<IEnumerable<Wallet>> GetInactiveWallets(string? userId)
     {
         var wallets = await _unitOfWork.Wallets.GetEntities(wal =>
