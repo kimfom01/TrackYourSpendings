@@ -9,6 +9,12 @@ using Web.Services;
 
 namespace Web.Controllers;
 
+/// <summary>
+/// HomeController manages the main user interface for financial operations including viewing, adding, and modifying wallets and transactions.
+/// </summary>
+/// <remarks>
+/// Requires user authentication. Utilizes services for category, wallet, and transaction management to render the appropriate views.
+/// </remarks>
 [Authorize]
 public class HomeController : Controller
 {
@@ -17,6 +23,13 @@ public class HomeController : Controller
     private readonly IWalletService _walletService;
     private readonly ITransactionService _transactionService;
 
+    /// <summary>
+    /// Constructs the HomeController with necessary services.
+    /// </summary>
+    /// <param name="userManager">Manages user accounts.</param>
+    /// <param name="walletService">Provides wallet related operations.</param>
+    /// <param name="transactionService">Facilitates transaction management.</param>
+    /// <param name="categoryService">Accesses and manipulates financial categories.</param>
     public HomeController(
         UserManager<ApplicationUser> userManager,
         IWalletService walletService,
@@ -29,6 +42,13 @@ public class HomeController : Controller
         _categoryService = categoryService;
     }
 
+    /// <summary>
+    /// Renders the home page, optionally filtering transactions based on search criteria.
+    /// </summary>
+    /// <param name="searchString">Optional string to search transactions.</param>
+    /// <param name="category">Optional category ID to filter transactions.</param>
+    /// <param name="date">Optional date to filter transactions.</param>
+    /// <returns>The Index view populated with filtered transactions and relevant data.</returns>
     public async Task<IActionResult> Index(string? searchString, int? category, DateTime? date)
     {
         var userId = _userManager.GetUserId(User);
@@ -66,6 +86,11 @@ public class HomeController : Controller
         return View(viewModel);
     }
 
+    /// <summary>
+    /// Changes the active wallet and refreshes the home page with transactions from the selected wallet.
+    /// </summary>
+    /// <param name="walletId">The ID of the wallet to make active.</param>
+    /// <returns>The Index view reflecting the new active wallet's transactions.</returns>
     [HttpPost]
     public async Task<IActionResult> Index(int? walletId)
     {
@@ -131,6 +156,11 @@ public class HomeController : Controller
         return viewModel;
     }
 
+    /// <summary>
+    /// Adds a new wallet for the current user and redirects to the Index view.
+    /// </summary>
+    /// <param name="wallet">The wallet to add.</param>
+    /// <returns>A redirect to the Index view on success, or the Index view with an error message on failure.</returns>
     [HttpPost]
     public async Task<IActionResult> AddWallet(Wallet? wallet)
     {
@@ -153,6 +183,11 @@ public class HomeController : Controller
         }
     }
 
+    /// <summary>
+    /// Updates an existing wallet's details for the current user and redirects to the Index view.
+    /// </summary>
+    /// <param name="wallet">The wallet with updated details.</param>
+    /// <returns>A redirect to the Index view on success, or the Index view with an error message on failure.</returns>
     [HttpPost]
     public async Task<IActionResult> UpdateWallet(Wallet wallet)
     {
@@ -170,6 +205,11 @@ public class HomeController : Controller
         }
     }
 
+    /// <summary>
+    /// Deletes a wallet for the current user and redirects to the Index view.
+    /// </summary>
+    /// <param name="wallet">The wallet to delete.</param>
+    /// <returns>A redirect to the Index view.</returns>
     [HttpPost]
     public async Task<IActionResult> DeleteWallet(Wallet wallet)
     {
@@ -180,6 +220,11 @@ public class HomeController : Controller
         return RedirectToAction("Index");
     }
 
+    /// <summary>
+    /// Adds a new transaction for the current user and redirects to the Index view.
+    /// </summary>
+    /// <param name="transaction">The transaction to add.</param>
+    /// <returns>A redirect to the Index view on success, or the Index view with an error message on failure.</returns>
     [HttpPost]
     public async Task<IActionResult> AddTransaction(Transaction? transaction)
     {
@@ -202,6 +247,11 @@ public class HomeController : Controller
         }
     }
 
+    /// <summary>
+    /// Updates an existing transaction for the current user and redirects to the Index view.
+    /// </summary>
+    /// <param name="transaction">The DTO containing transaction updates.</param>
+    /// <returns>A redirect to the Index view on success, or the Index view with an error message on failure.</returns>
     [HttpPost]
     public async Task<IActionResult> UpdateTransaction(TransactionDto transaction)
     {
@@ -219,6 +269,11 @@ public class HomeController : Controller
         }
     }
 
+    /// <summary>
+    /// Deletes a transaction for the current user and redirects to the Index view.
+    /// </summary>
+    /// <param name="transaction">The transaction to delete.</param>
+    /// <returns>A redirect to the Index view.</returns>
     [HttpPost]
     public async Task<IActionResult> DeleteTransaction(Transaction transaction)
     {

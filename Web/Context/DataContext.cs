@@ -4,134 +4,109 @@ using Web.Models;
 
 namespace Web.Context;
 
+/// <summary>
+/// Represents the database context for the application, integrating Identity framework support.
+/// </summary>
+/// <remarks>
+/// This context includes sets for Categories, Transactions, and Wallets, alongside user management provided by IdentityDbContext.
+/// </remarks>
 public class DataContext : IdentityDbContext<ApplicationUser>
 {
+    /// <summary>
+    /// Gets or sets the database set for Categories.
+    /// </summary>
+    /// <value>
+    /// The DbSet representing the categories in the database.
+    /// </value>
     public DbSet<Category> Categories { get; set; }
+
+    /// <summary>
+    /// Gets or sets the database set for Transactions.
+    /// </summary>
+    /// <value>
+    /// The DbSet representing the transactions in the database.
+    /// </value>
     public DbSet<Transaction> Transactions { get; set; }
+
+    /// <summary>
+    /// Gets or sets the database set for Wallets.
+    /// </summary>
+    /// <value>
+    /// The DbSet representing the wallets in the database.
+    /// </value>
     public DbSet<Wallet> Wallets { get; set; }
-    
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="DataContext"/> class using the specified options.
+    /// </summary>
+    /// <param name="options">The options to be used by a DbContext.</param>
     public DataContext(DbContextOptions<DataContext> options)
         : base(options)
     {
     }
 
+    /// <summary>
+    /// Configures the schema needed for the application when the model is being created.
+    /// </summary>
+    /// <param name="modelBuilder">Provides a simple API for configuring a model that maps to a database.</param>
+    /// <remarks>
+    /// This method includes configuration for seeding the Category entities.
+    /// </remarks>
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        // Comment: Seed initial data for categories into the database.
         base.OnModelCreating(modelBuilder);
-    //     modelBuilder.Entity<Wallet>()
-    //         .HasData(new Wallet
-    //         {
-    //             Id = 1,
-    //             Name = "Main Wallet",
-    //             Income = 5000.00M,
-    //             Expenses = 800M,
-    //             Balance = 4200M
-    //         },
-    //         new Wallet
-    //         {
-    //             Id = 2,
-    //             Name = "Test Wallet",
-    //             Income = 5000.00M,
-    //             Expenses = 300M,
-    //             Balance = 4700.00M
-    //         });
-    //
-    modelBuilder.Entity<Category>()
-        .HasData(new Category
-        {
-            Id = 1,
-            Name = "Housing"
-        },
-        new Category
-        {
-            Id = 2,
-            Name = "Transportation"
-        },
-        new Category
-        {
-            Id = 3,
-            Name = "Food"
-        },
-        new Category
-        {
-            Id = 4,
-            Name = "Utilities"
-        },
-        new Category
-        {
-            Id = 5,
-            Name = "Insurance"
-        },
-        new Category
-        {
-            Id = 6,
-            Name = "Medical & Healthcare"
-        },
-        new Category
-        {
-            Id = 7,
-            Name = "Saving, Investing & Dept Payments"
-        },
-        new Category
-        {
-            Id = 8,
-            Name = "Personal Spending"
-        },
-        new Category
-        {
-            Id = 9,
-            Name = "Recreation & Entertainment"
-        },
-        new Category
-        {
-            Id = 10,
-            Name = "Miscellaneous"
-        });
-    
-    //     modelBuilder.Entity<Transaction>()
-    //         .HasData(new Transaction
-    //         {
-    //             Id = 1,
-    //             Name = "Computer Accessories",
-    //             Description = "I bought a new laptop, external keyboard and mouse",
-    //             Date = DateTime.Now,
-    //             Cost = 500.00M,
-    //             Month = Month.March,
-    //             WalletId = 1,
-    //             CategoryId = 4
-    //         },
-    //         new Transaction
-    //         {
-    //             Id = 2,
-    //             Name = "Weekly fruit stocking",
-    //             Description = "I bought a bunch of bananas, grapes and 7 oranges",
-    //             Date = DateTime.Now,
-    //             Cost = 150.00M,
-    //             Month = Month.March,
-    //             WalletId = 1,
-    //             CategoryId = 3
-    //         },
-    //         new Transaction
-    //         {
-    //             Id = 3,
-    //             Name = "Trip to Belgorod",
-    //             Description = "Went to assist Dominion in her cake business",
-    //             Date = DateTime.Now,
-    //             Cost = 150.00M,
-    //             Month = Month.March,
-    //             WalletId = 1,
-    //             CategoryId = 2
-    //         },
-    //         new Transaction
-    //         {
-    //             Id = 4,
-    //             Name = "Annual Health Insurance",
-    //             Description = "Paid Annual Health Insurance",
-    //             Date = DateTime.Now,
-    //             Cost = 300.00M,
-    //             Month = Month.March,
-    //             WalletId = 2,
-    //             CategoryId = 5
-    //         });
+        modelBuilder.Entity<Category>()
+            .HasData(new Category
+                {
+                    Id = 1,
+                    Name = "Housing"
+                },
+                new Category
+                {
+                    Id = 2,
+                    Name = "Transportation"
+                },
+                new Category
+                {
+                    Id = 3,
+                    Name = "Food"
+                },
+                new Category
+                {
+                    Id = 4,
+                    Name = "Utilities"
+                },
+                new Category
+                {
+                    Id = 5,
+                    Name = "Insurance"
+                },
+                new Category
+                {
+                    Id = 6,
+                    Name = "Medical & Healthcare"
+                },
+                new Category
+                {
+                    Id = 7,
+                    Name = "Saving, Investing & Dept Payments"
+                },
+                new Category
+                {
+                    Id = 8,
+                    Name = "Personal Spending"
+                },
+                new Category
+                {
+                    Id = 9,
+                    Name = "Recreation & Entertainment"
+                },
+                new Category
+                {
+                    Id = 10,
+                    Name = "Miscellaneous"
+                }
+            );
     }
 }
