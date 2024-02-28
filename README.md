@@ -70,6 +70,7 @@
 
 - Reports page with bar chart to show total spendings across months within a year
 - Pie chart on report page to show percentage of spendings per category
+- Read and parse bank statements (tinkoff, sberbank, vtb, etc.)
 
 ## Hosting
 
