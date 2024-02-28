@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.HttpOverrides;
 using Web;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,6 +21,11 @@ else
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
 }
+
+app.UseForwardedHeaders(new ForwardedHeadersOptions
+{
+    ForwardedHeaders = ForwardedHeaders.XForwardedProto
+});
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
