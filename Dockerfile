@@ -5,17 +5,17 @@ EXPOSE 433
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
-COPY ["Web/Web.csproj", "Web/"]
-RUN dotnet restore "Web/Web.csproj"
+COPY ["TrackYourSpendings.Web/TrackYourSpendings.Web.csproj", "TrackYourSpendings.Web/"]
+RUN dotnet restore "TrackYourSpendings.Web/TrackYourSpendings.Web.csproj"
 COPY . .
-WORKDIR "/src/Web"
-RUN dotnet build "Web.csproj" -c Release -o /app/build --no-restore
+WORKDIR "/src/TrackYourSpendings.Web"
+RUN dotnet build "TrackYourSpendings.Web.csproj" -c Release -o /app/build --no-restore
 
 FROM build AS publish
-RUN dotnet publish "Web.csproj" -c Release -o /app/publish
+RUN dotnet publish "TrackYourSpendings.Web.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 
-ENTRYPOINT ["dotnet", "Web.dll"]
+ENTRYPOINT ["dotnet", "TrackYourSpendings.Web.dll"]
