@@ -10,4 +10,4 @@ docker push "$IMAGE"
 
 printf "\n"
 
-echo "Build and pushed image "$IMAGE":latest"
+echo "Build and pushed image $IMAGE"
