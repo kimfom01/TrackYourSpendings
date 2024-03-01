@@ -62,12 +62,12 @@ public class TransactionService : ITransactionService
 
         if (transaction.Cost is not null && oldTransaction.Cost is not null)
         {
-            var costDifference = Math.Abs(transaction.Cost.Value - oldTransaction.Cost.Value);
+            var costDifference = oldTransaction.Cost.Value - transaction.Cost.Value;
 
             if (costDifference != 0)
             {
-                wallet.Expenses += costDifference;
-                wallet.Balance -= costDifference;
+                wallet.Expenses -= costDifference;
+                wallet.Balance += costDifference;
             }
         }
 
