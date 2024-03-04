@@ -1,6 +1,9 @@
 using Microsoft.AspNetCore.HttpOverrides;
 using TrackYourSpendings.Web;
 
+var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+var url = $"http://0.0.0.0:{port}";
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.RegisterServices(builder.Configuration, builder.Environment);
@@ -40,4 +43,4 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{walletId?}");
 
-app.Run();
+app.Run(url);
