@@ -7,7 +7,7 @@ using TrackYourSpendings.Web.Repositories.Implementations;
 using TrackYourSpendings.Web.Services;
 using TrackYourSpendings.Web.Services.Implementation;
 
-namespace TrackYourSpendings.Web;
+namespace TrackYourSpendings.Web.Utils;
 
 public static class ConfigureServices
 {
@@ -36,6 +36,8 @@ public static class ConfigureServices
                 options.CallbackPath = EnvironmentConfigHelper.GetGoogleRedirectUri(config, env);
                 options.SaveTokens = true;
             });
+        services.AddHealthChecks()
+            .AddDbContextCheck<DataContext>();
 
         return services;
     }
