@@ -13,7 +13,7 @@ public class Transaction
     public Month? Month { get; set; }
     public DateTime? Date { get; set; }
     [Precision(10, 2)]
-    public decimal? Cost { get; set; }
+    public decimal Cost { get; set; } = 0M;
     public int CategoryId { get; set; }
     public Category? Category { get; set; }
     public int WalletId { get; set; }
