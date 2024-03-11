@@ -40,6 +40,8 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{walletId?}");
 
+app.MapPrometheusScrapingEndpoint();
+
 app.MapHealthChecks("/healthz");
 
 app.Run();
