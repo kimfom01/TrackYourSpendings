@@ -137,7 +137,7 @@ public class TransactionService : ITransactionService
 
         var transactions =
             await _unitOfWork.Transactions.GetTransactionsWithCategories(tr =>
-                tr.WalletId == wallet.Id && tr.UserId == userId);
+                tr.WalletId == wallet.Id && tr.UserId == userId && tr.Date!.Value.Month == DateTime.Now.Month);
 
         var transactionDtos = _mapper.Map<IEnumerable<TransactionDto>>(transactions);
 

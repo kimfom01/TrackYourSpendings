@@ -1,6 +1,6 @@
 using Npgsql;
 
-namespace TrackYourSpendings.Web;
+namespace TrackYourSpendings.Web.Utils;
 
 public static class EnvironmentConfigHelper
 {

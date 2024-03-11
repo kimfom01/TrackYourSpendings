@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using TrackYourSpendings.Web.Context;
 
-namespace TrackYourSpendings.Web;
+namespace TrackYourSpendings.Web.Utils;
 
 public static class Database
 {

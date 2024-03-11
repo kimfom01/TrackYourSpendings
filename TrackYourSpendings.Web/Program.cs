@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.HttpOverrides;
-using TrackYourSpendings.Web;
+using TrackYourSpendings.Web.Utils;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -39,5 +39,7 @@ app.MapRazorPages();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{walletId?}");
+
+app.MapHealthChecks("/healthz");
 
 app.Run();
