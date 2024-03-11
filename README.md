@@ -35,7 +35,7 @@
 
 ## Hosting
 
-- [Render](https://render.com/) (docker image)
+Self hosted on a VPS using docker
 
 ---
 
