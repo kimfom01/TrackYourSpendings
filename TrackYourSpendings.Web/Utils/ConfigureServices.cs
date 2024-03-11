@@ -1,5 +1,8 @@
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 using TrackYourSpendings.Web.Context;
 using TrackYourSpendings.Web.Models;
 using TrackYourSpendings.Web.Repositories;
@@ -14,6 +17,36 @@ public static class ConfigureServices
     public static IServiceCollection RegisterServices(this IServiceCollection services, IConfiguration config,
         IWebHostEnvironment env)
     {
+        var tracingOtlpEndpoint = config["OTLP_ENDPOINT_URL"];
+        var otel = services.AddOpenTelemetry();
+        
+        otel.ConfigureResource(res => res.AddService(serviceName: env.ApplicationName));
+
+        otel.WithMetrics(metrics =>
+            metrics
+                .AddAspNetCoreInstrumentation()
+                .AddMeter("Microsoft.AspNetCore.Hosting")
+                .AddMeter("Microsoft.AspNetCore.Server.Kestrel")
+                .AddPrometheusExporter()
+        );
+
+        otel.WithTracing(tracing =>
+        {
+            tracing.AddAspNetCoreInstrumentation();
+            tracing.AddHttpClientInstrumentation();
+            if (tracingOtlpEndpoint is not null)
+            {
+                tracing.AddOtlpExporter(otlpOptions =>
+                {
+                    otlpOptions.Endpoint = new Uri(tracingOtlpEndpoint);
+                });
+            }
+            else
+            {
+                tracing.AddConsoleExporter();
+            }
+        });
+        
         services.AddControllersWithViews();
         services.AddDbContext<DataContext>(options =>
         {
