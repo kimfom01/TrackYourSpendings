@@ -60,9 +60,9 @@ public class TransactionService : ITransactionService
             throw new NullReferenceException("Wallet does not exist");
         }
 
-        if (transaction.Cost is not null && oldTransaction.Cost is not null)
+        if (transaction.Cost >= 0)
         {
-            var costDifference = oldTransaction.Cost.Value - transaction.Cost.Value;
+            var costDifference = oldTransaction.Cost - transaction.Cost;
 
             if (costDifference != 0)
             {
