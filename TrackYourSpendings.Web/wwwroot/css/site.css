@@ -73,6 +73,15 @@ div.modal-content {
   display: none;
 }
 
+.nav-item > .nav-link.active {
+  background-color: #198754;
+  color: #fff;
+}
+
+.nav-item > .nav-link {
+  color: #198754;
+}
+
 
 /*
 Google sign in button
