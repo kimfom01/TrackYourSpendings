@@ -13,7 +13,7 @@ services:
       - nginx-network
     env_file:
       - .env
-  graphana:
+  grafana:
     image: grafana/grafana-enterprise
     ports:
       - "3000:3000"
