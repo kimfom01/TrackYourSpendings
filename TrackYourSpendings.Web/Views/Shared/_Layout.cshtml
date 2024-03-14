@@ -1,4 +1,9 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using TrackYourSpendings.Web.Models
+@inject SignInManager<ApplicationUser> SignInManager
+
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -14,7 +19,14 @@
 <header>
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
         <div class="container">
-            <a class="navbar-brand text-success fw-bold" asp-area="" asp-controller="Home" asp-action="Index">Track Your Spendings</a>
+            @if (SignInManager.IsSignedIn(User))
+            {
+                <a class="navbar-brand text-success fw-bold" asp-area="" asp-controller="Budget" asp-action="Index">Track Your Spendings</a>
+            }
+            else
+            {
+                <a class="navbar-brand text-success fw-bold" asp-area="" asp-controller="Home" asp-action="Index">Track Your Spendings</a>
+            }
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
