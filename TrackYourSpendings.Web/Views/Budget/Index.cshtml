@@ -18,16 +18,16 @@
                 </select>
             </div>
             <div class="mb-3 d-flex gap-2">
-                <button type="submit" class="btn btn-success">Choose Wallet</button>
+                <button type="submit" class="btn btn-outline-success">Choose Wallet</button>
                 <button class="btn btn-success" type="button" data-bs-toggle="modal"
                         data-bs-target="#addWalletModal">
                     Create Wallet
                 </button>
-                <button class="btn btn-success" type="button" data-bs-toggle="modal"
+                <button class="btn btn-outline-success" type="button" data-bs-toggle="modal"
                         data-bs-target="#updateWalletModal">
                     Edit Wallet
                 </button>
-                <button class="btn btn-success" type="button" data-bs-toggle="modal"
+                <button class="btn btn-danger" type="button" data-bs-toggle="modal"
                         data-bs-target="#deleteWalletModal">
                     Delete Wallet
                 </button>
@@ -39,9 +39,9 @@
 @if (Model.Wallet is not null)
 {
     <div class="card shadow">
-        <div class="card-body fw-bold">
+        <div class="card-body fw-bolder">
             <div class="card-title">
-                <h2 class="text-center text-success">@Model.Wallet.Name</h2>
+                <h2 class="text-center fw-bolder text-success">@Model.Wallet.Name (@Model.Wallet.Currency)</h2>
             </div>
             <div class="d-flex justify-content-between">
                 <p class="card-text">Income:</p>
@@ -51,9 +51,10 @@
                 <p class="card-text">Expenditure:</p>
                 <p class="card-text">@Model.Wallet.Currency @Model.Wallet.Expenses</p>
             </div>
+            <hr />
             <div class="d-flex justify-content-between">
-                <p class="card-text">Balance:</p>
-                <p class="card-text">@Model.Wallet.Currency @Model.Wallet.Balance</p>
+                <h3 class="card-text fw-bolder">Balance:</h3>
+                <h3 class="card-text fw-bolder">@Model.Wallet.Currency @Model.Wallet.Balance</h3>
             </div>
         </div>
     </div>
@@ -91,7 +92,7 @@
                         <td class="tbl-description">Description</td>
                         @* <td class="tbl-date">Date</td> *@
                         <td class="tbl-category">Category</td>
-                        <td class="tbl-cost">Amount</td>
+                        <td class="tbl-cost">Amount (@Model.Wallet.Currency)</td>
                         <td>Actions</td>
                     </tr>
                     </thead>
@@ -268,8 +269,7 @@ else
                             placeholder="Enter the Description..."></textarea>
                     </div>
                     <div class="mb-3 form-label">
-                        <label asp-for="Transaction!.Cost" class="form-label">Cost</label>
-                        $
+                        <label asp-for="Transaction!.Cost" class="form-label">Cost (@Model.Wallet?.Currency)</label>
                         <input asp-for="Transaction!.Cost" min="0" step="0.001" type="number" class="form-control"
                                placeholder="0.00">
                     </div>
@@ -322,8 +322,7 @@ else
                             class="form-control"></textarea>
                     </div>
                     <div class="mb-3 form-label">
-                        <label asp-for="Transaction!.Cost" class="form-label">Cost</label>
-                        $
+                        <label asp-for="Transaction!.Cost" class="form-label">Cost (@Model.Wallet?.Currency)</label>
                         <input id="viewTransactionCost" disabled asp-for="Transaction!.Cost" value="0" min="0" step="0.001" type="number"
                                class="form-control">
                     </div>
@@ -376,8 +375,7 @@ else
                                class="form-control" placeholder="Enter the Description">
                     </div>
                     <div class="mb-3 form-label">
-                        <label asp-for="Transaction!.Cost" class="form-label">Cost</label>
-                        $
+                        <label asp-for="Transaction!.Cost" class="form-label">Cost (@Model.Wallet?.Currency)</label>
                         <input asp-for="Transaction!.Cost" id="updateTransactionCost" value="0" min="0" step="0.001" type="number"
                                class="form-control" placeholder="0.00">
                     </div>
