@@ -10,6 +10,9 @@ public class Wallet
     [MaxLength(50)]
     public required string Name { get; set; }
     
+    [MaxLength(5)]
+    public required string Currency { get; set; }
+    
     [Precision(10, 2)]
     public decimal Income { get; set; }
 
