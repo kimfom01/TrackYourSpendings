@@ -34,6 +34,7 @@ public class WalletService : IWalletService
         }
 
         oldWallet.Name = wallet.Name;
+        oldWallet.Currency = wallet.Currency;
 
         var incomeDifference = wallet.Income - oldWallet.Income;
 
