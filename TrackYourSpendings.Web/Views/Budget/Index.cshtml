@@ -13,7 +13,7 @@
                     <option value="">-- Choose a Wallet --</option>
                     @if (Model.Wallet is not null)
                     {
-                        <option selected value="@Model.Wallet!.Id">@Model.Wallet!.Name</option>
+                        <option selected value="@Model.Wallet!.Id">@Model.Wallet!.Name (@Model.Wallet.Currency)</option>
                     }
                 </select>
             </div>
@@ -45,15 +45,15 @@
             </div>
             <div class="d-flex justify-content-between">
                 <p class="card-text">Income:</p>
-                <p class="card-text">$@Model.Wallet.Income</p>
+                <p class="card-text">@Model.Wallet.Currency @Model.Wallet.Income</p>
             </div>
             <div class="d-flex justify-content-between">
                 <p class="card-text">Expenditure:</p>
-                <p class="card-text">$@Model.Wallet.Expenses</p>
+                <p class="card-text">@Model.Wallet.Currency @Model.Wallet.Expenses</p>
             </div>
             <div class="d-flex justify-content-between">
                 <p class="card-text">Balance:</p>
-                <p class="card-text">$@Model.Wallet.Balance</p>
+                <p class="card-text">@Model.Wallet.Currency @Model.Wallet.Balance</p>
             </div>
         </div>
     </div>
@@ -154,8 +154,13 @@ else
                                placeholder="Enter Name of Wallet">
                     </div>
                     <div class="mb-3">
+                        <label asp-for="Wallet!.Currency" class="form-label">Enter Currency (e.g USD)</label>
+                        <input asp-for="Wallet!.Currency" required type="text" class="form-control"
+                               placeholder="Enter Currency">
+                    </div>
+                    <div class="mb-3">
                         <label asp-for="Wallet!.Income" class="form-label">Income</label>
-                        $<input asp-for="Wallet!.Income" required min="0" type="number" step="0.001" class="form-control" placeholder="0.00">
+                        <input asp-for="Wallet!.Income" required min="0" type="number" step="0.001" class="form-control" placeholder="0.00">
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -186,8 +191,13 @@ else
                                placeholder="Enter Name of Wallet">
                     </div>
                     <div class="mb-3">
+                        <label asp-for="Wallet!.Currency" class="form-label">Enter New Currency (e.g USD)</label>
+                        <input asp-for="Wallet!.Currency" required type="text" class="form-control"
+                               placeholder="Enter Currency">
+                    </div>
+                    <div class="mb-3">
                         <label asp-for="Wallet!.Income" class="form-label">Income</label>
-                        $<input asp-for="Wallet!.Income" required min="0" type="number" step="0.001" class="form-control" placeholder="0.00">
+                        (@Model.Wallet?.Currency)<input asp-for="Wallet!.Income" required min="0" type="number" step="0.001" class="form-control" placeholder="0.00">
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -210,7 +220,7 @@ else
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <p class="text-danger fw-bold">Are you sure you want to delete <span class="fs-3">'@Model.Wallet?.Name?'</span></p>
+                <p class="text-danger fw-bold">Are you sure you want to delete <span class="fs-5">'@Model.Wallet?.Name' Wallet?</span></p>
             </div>
             <form id="deleteWalletForm" method="post" asp-controller="Budget" asp-action="DeleteWallet">
                 <div class="modal-body">
