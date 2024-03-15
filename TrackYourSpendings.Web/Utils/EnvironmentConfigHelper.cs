@@ -1,4 +1,5 @@
 using Npgsql;
+using TrackYourSpendings.Web.Exceptions;
 
 namespace TrackYourSpendings.Web.Utils;
 
@@ -15,7 +16,7 @@ public static class EnvironmentConfigHelper
         else
         {
             connectionString = BuildConnectionString(Environment.GetEnvironmentVariable("DB_URI")
-                                                     ?? throw new NullReferenceException("DB_URI missing"));
+                                                     ?? throw new NotFoundException("DB_URI not found"));
         }
 
         return connectionString;
@@ -48,11 +49,11 @@ public static class EnvironmentConfigHelper
         if (env.IsDevelopment())
         {
             return config.GetValue<string>("Google:CLIENT_ID")
-                   ?? throw new NullReferenceException("CLIENT_ID missing");
+                   ?? throw new NotFoundException("CLIENT_ID not found");
         }
 
         return Environment.GetEnvironmentVariable("CLIENT_ID")
-               ?? throw new NullReferenceException("CLIENT_ID missing");
+               ?? throw new NotFoundException("CLIENT_ID not found");
     }
 
     public static string GetGoogleClientSecret(IConfiguration config, IWebHostEnvironment env)
@@ -60,11 +61,11 @@ public static class EnvironmentConfigHelper
         if (env.IsDevelopment())
         {
             return config.GetValue<string>("Google:CLIENT_SECRET")
-                   ?? throw new NullReferenceException("CLIENT_SECRET missing");
+                   ?? throw new NotFoundException("CLIENT_SECRET not found");
         }
 
         return Environment.GetEnvironmentVariable("CLIENT_SECRET")
-               ?? throw new NullReferenceException("CLIENT_SECRET missing");
+               ?? throw new NotFoundException("CLIENT_SECRET not found");
     }
 
     public static string GetGoogleRedirectUri(IConfiguration config, IWebHostEnvironment env)
@@ -72,10 +73,66 @@ public static class EnvironmentConfigHelper
         if (env.IsDevelopment())
         {
             return config.GetValue<string>("Google:REDIRECT_URI")
-                   ?? throw new NullReferenceException("REDIRECT_URI missing");
+                   ?? throw new NotFoundException("REDIRECT_URI not found");
         }
 
         return Environment.GetEnvironmentVariable("REDIRECT_URI")
-               ?? throw new NullReferenceException("REDIRECT_URI missing");
+               ?? throw new NotFoundException("REDIRECT_URI not found");
+    }
+
+    public static string GetEmailPassword(IConfiguration config, IWebHostEnvironment env)
+    {
+        if (env.IsDevelopment())
+        {
+            return config.GetValue<string>("Email:PASSWORD")
+                   ?? throw new NotFoundException("PASSWORD not found");
+        }
+
+        return Environment.GetEnvironmentVariable("Email:PASSWORD")
+               ?? throw new NotFoundException("PASSWORD not found");
+    }
+
+    public static string GetEmailHost(IConfiguration config, IWebHostEnvironment env)
+    {
+        if (env.IsDevelopment())
+        {
+            return config.GetValue<string>("Email:HOST")
+                   ?? throw new NotFoundException("HOST not found");
+        }
+
+        return Environment.GetEnvironmentVariable("Email:HOST")
+               ?? throw new NotFoundException("HOST not found");
+    }
+
+    public static string GetEmailSenderEmail(IConfiguration config, IWebHostEnvironment env)
+    {
+        if (env.IsDevelopment())
+        {
+            return config.GetValue<string>("Email:SENDER_EMAIL")
+                   ?? throw new NotFoundException("SENDER_EMAIL not found");
+        }
+
+        return Environment.GetEnvironmentVariable("Email:SENDER_EMAIL")
+               ?? throw new NotFoundException("SENDER_EMAIL not found");
+    }
+
+    public static int GetEmailPort(IConfiguration config, IWebHostEnvironment env)
+    {
+        int port;
+        if (env.IsDevelopment())
+        {
+            port = config.GetValue<int>("Email:PORT");
+
+            if (port == 0)
+            {
+                throw new NotFoundException("PORT not found");
+            }
+
+            return port;
+        }
+
+        return int.TryParse(Environment.GetEnvironmentVariable("Email:PORT"), out port)
+            ? port
+            : throw new NotFoundException("PORT not found");
     }
 }
