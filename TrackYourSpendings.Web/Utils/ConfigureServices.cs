@@ -1,9 +1,11 @@
 using System.Reflection;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using TrackYourSpendings.Web.Context;
+using TrackYourSpendings.Web.Infrastructure;
 using TrackYourSpendings.Web.Models;
 using TrackYourSpendings.Web.Repositories;
 using TrackYourSpendings.Web.Repositories.Implementations;
@@ -53,7 +55,7 @@ public static class ConfigureServices
             options.UseNpgsql(EnvironmentConfigHelper.GetConnectionString(config, env));
         });
 
-        services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
+        services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
             .AddEntityFrameworkStores<DataContext>();
 
         services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -71,6 +73,7 @@ public static class ConfigureServices
             });
         services.AddHealthChecks()
             .AddDbContextCheck<DataContext>();
+        services.AddTransient<IEmailSender, EmailSender>();
 
         return services;
     }
