@@ -88,7 +88,7 @@ public static class EnvironmentConfigHelper
                    ?? throw new NotFoundException("PASSWORD not found");
         }
 
-        return Environment.GetEnvironmentVariable("Email:PASSWORD")
+        return Environment.GetEnvironmentVariable("PASSWORD")
                ?? throw new NotFoundException("PASSWORD not found");
     }
 
@@ -100,7 +100,7 @@ public static class EnvironmentConfigHelper
                    ?? throw new NotFoundException("HOST not found");
         }
 
-        return Environment.GetEnvironmentVariable("Email:HOST")
+        return Environment.GetEnvironmentVariable("HOST")
                ?? throw new NotFoundException("HOST not found");
     }
 
@@ -112,7 +112,7 @@ public static class EnvironmentConfigHelper
                    ?? throw new NotFoundException("SENDER_EMAIL not found");
         }
 
-        return Environment.GetEnvironmentVariable("Email:SENDER_EMAIL")
+        return Environment.GetEnvironmentVariable("SENDER_EMAIL")
                ?? throw new NotFoundException("SENDER_EMAIL not found");
     }
 
@@ -131,7 +131,7 @@ public static class EnvironmentConfigHelper
             return port;
         }
 
-        return int.TryParse(Environment.GetEnvironmentVariable("Email:PORT"), out port)
+        return int.TryParse(Environment.GetEnvironmentVariable("PORT"), out port)
             ? port
             : throw new NotFoundException("PORT not found");
     }
