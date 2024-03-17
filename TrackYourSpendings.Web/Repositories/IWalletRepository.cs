@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using TrackYourSpendings.Web.Models;
 
 namespace TrackYourSpendings.Web.Repositories;
@@ -11,4 +12,5 @@ namespace TrackYourSpendings.Web.Repositories;
 /// </remarks>
 public interface IWalletRepository : IRepository<Wallet>
 {
+    Task<Wallet?> GetWalletDetails(Expression<Func<Wallet, bool>> predicate);
 }

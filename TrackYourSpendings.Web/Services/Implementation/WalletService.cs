@@ -63,6 +63,12 @@ public class WalletService : IWalletService
             wall.Active == true && wall.UserId == userId);
     }
 
+    public async Task<Wallet?> GetActiveWalletDetails(string? userId)
+    {
+        return await _unitOfWork.Wallets.GetWalletDetails(wall =>
+            wall.Active == true && wall.UserId == userId);
+    }
+
     public async Task SetActiveWallet(Wallet wallet, string? userId)
     {
         var oldActiveWallet = await GetActiveWallet(userId);
@@ -70,7 +76,7 @@ public class WalletService : IWalletService
         {
             oldActiveWallet.Active = false;
         }
-        
+
         wallet.Active = true;
         await _unitOfWork.SaveChanges();
     }
@@ -86,6 +92,12 @@ public class WalletService : IWalletService
     public async Task<Wallet?> GetWallet(int? walletId, string? userId)
     {
         return await _unitOfWork.Wallets.GetEntity(wall =>
+            wall.Id == walletId && wall.UserId == userId);
+    }
+    
+    public async Task<Wallet?> GetWalletDetails(int? walletId, string? userId)
+    {
+        return await _unitOfWork.Wallets.GetWalletDetails(wall =>
             wall.Id == walletId && wall.UserId == userId);
     }
 }
