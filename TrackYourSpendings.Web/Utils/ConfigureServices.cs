@@ -1,4 +1,5 @@
 using System.Reflection;
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using OpenTelemetry.Metrics;
@@ -21,7 +22,7 @@ public static class ConfigureServices
     {
         var tracingOtlpEndpoint = config["OTLP_ENDPOINT_URL"];
         var otel = services.AddOpenTelemetry();
-        
+
         otel.ConfigureResource(res => res.AddService(serviceName: env.ApplicationName));
 
         otel.WithMetrics(metrics =>
@@ -38,24 +39,25 @@ public static class ConfigureServices
             tracing.AddHttpClientInstrumentation();
             if (tracingOtlpEndpoint is not null)
             {
-                tracing.AddOtlpExporter(otlpOptions =>
-                {
-                    otlpOptions.Endpoint = new Uri(tracingOtlpEndpoint);
-                });
+                tracing.AddOtlpExporter(otlpOptions => { otlpOptions.Endpoint = new Uri(tracingOtlpEndpoint); });
             }
             else
             {
                 tracing.AddConsoleExporter();
             }
         });
-        
-        services.AddControllersWithViews();
+
+        services.AddControllersWithViews().AddJsonOptions(options =>
+        {
+            options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+        });;
         services.AddDbContext<DataContext>(options =>
         {
             options.UseNpgsql(EnvironmentConfigHelper.GetConnectionString(config, env));
         });
 
-        services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
+        services.AddDefaultIdentity<ApplicationUser>(options =>
+                options.SignIn.RequireConfirmedAccount = !env.IsDevelopment())
             .AddEntityFrameworkStores<DataContext>();
 
         services.AddScoped<IUnitOfWork, UnitOfWork>();

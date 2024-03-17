@@ -41,6 +41,13 @@ public interface IWalletService
     /// <param name="userId">The identifier of the user whose active wallet is to be retrieved.</param>
     /// <returns>A task representing the asynchronous operation, containing the active wallet if one exists; otherwise, null.</returns>
     Task<Wallet?> GetActiveWallet(string? userId);
+    
+    /// <summary>
+    /// Retrieves the active wallet with details for a given user.
+    /// </summary>
+    /// <param name="userId">The identifier of the user whose active wallet is to be retrieved.</param>
+    /// <returns>A task representing the asynchronous operation, containing the active wallet if one exists; otherwise, null.</returns>
+    Task<Wallet?> GetActiveWalletDetails(string? userId);
 
     /// <summary>
     /// Sets a specified wallet as the active wallet for a given user.
@@ -64,4 +71,12 @@ public interface IWalletService
     /// <param name="userId">The identifier of the user who owns the wallet.</param>
     /// <returns>A task representing the asynchronous operation, containing the wallet if found; otherwise, null.</returns>
     Task<Wallet?> GetWallet(int? walletId, string? userId);
+
+    /// <summary>
+    /// Retrieves a specific wallet by its identifier for a given user along with the list of transactions.
+    /// </summary>
+    /// <param name="walletId">The identifier of the wallet to be retrieved.</param>
+    /// <param name="userId">The identifier of the user who owns the wallet.</param>
+    /// <returns>A task representing the asynchronous operation, containing the wallet if found; otherwise, null.</returns>
+    Task<Wallet?> GetWalletDetails(int? walletId, string? userId);
 }
