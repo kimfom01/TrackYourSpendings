@@ -15,8 +15,8 @@ public static class EnvironmentConfigHelper
         }
         else
         {
-            connectionString = BuildConnectionString(Environment.GetEnvironmentVariable("DB_URI")
-                                                     ?? throw new NotFoundException("DB_URI not found"));
+            connectionString = BuildConnectionString(Environment.GetEnvironmentVariable("NEON_DB_URI")
+                                                     ?? throw new NotFoundException("NEON_DB_URI not found"));
         }
 
         return connectionString;
@@ -52,8 +52,8 @@ public static class EnvironmentConfigHelper
                    ?? throw new NotFoundException("CLIENT_ID not found");
         }
 
-        return Environment.GetEnvironmentVariable("CLIENT_ID")
-               ?? throw new NotFoundException("CLIENT_ID not found");
+        return Environment.GetEnvironmentVariable("GOOGLE_CLIENT_ID")
+               ?? throw new NotFoundException("GOOGLE_CLIENT_ID not found");
     }
 
     public static string GetGoogleClientSecret(IConfiguration config, IWebHostEnvironment env)
@@ -64,8 +64,8 @@ public static class EnvironmentConfigHelper
                    ?? throw new NotFoundException("CLIENT_SECRET not found");
         }
 
-        return Environment.GetEnvironmentVariable("CLIENT_SECRET")
-               ?? throw new NotFoundException("CLIENT_SECRET not found");
+        return Environment.GetEnvironmentVariable("GOOGLE_CLIENT_SECRET")
+               ?? throw new NotFoundException("GOOGLE_CLIENT_SECRET not found");
     }
 
     public static string GetGoogleRedirectUri(IConfiguration config, IWebHostEnvironment env)
@@ -76,8 +76,8 @@ public static class EnvironmentConfigHelper
                    ?? throw new NotFoundException("REDIRECT_URI not found");
         }
 
-        return Environment.GetEnvironmentVariable("REDIRECT_URI")
-               ?? throw new NotFoundException("REDIRECT_URI not found");
+        return Environment.GetEnvironmentVariable("GOOGLE_REDIRECT_URI")
+               ?? throw new NotFoundException("GOOGLE_REDIRECT_URI not found");
     }
 
     public static string GetEmailPassword(IConfiguration config, IWebHostEnvironment env)
@@ -88,8 +88,8 @@ public static class EnvironmentConfigHelper
                    ?? throw new NotFoundException("PASSWORD not found");
         }
 
-        return Environment.GetEnvironmentVariable("PASSWORD")
-               ?? throw new NotFoundException("PASSWORD not found");
+        return Environment.GetEnvironmentVariable("EMAIL_PASSWORD")
+               ?? throw new NotFoundException("EMAIL_PASSWORD not found");
     }
 
     public static string GetEmailHost(IConfiguration config, IWebHostEnvironment env)
@@ -100,8 +100,8 @@ public static class EnvironmentConfigHelper
                    ?? throw new NotFoundException("HOST not found");
         }
 
-        return Environment.GetEnvironmentVariable("HOST")
-               ?? throw new NotFoundException("HOST not found");
+        return Environment.GetEnvironmentVariable("EMAIL_HOST")
+               ?? throw new NotFoundException("EMAIL_HOST not found");
     }
 
     public static string GetEmailSenderEmail(IConfiguration config, IWebHostEnvironment env)
@@ -112,8 +112,8 @@ public static class EnvironmentConfigHelper
                    ?? throw new NotFoundException("SENDER_EMAIL not found");
         }
 
-        return Environment.GetEnvironmentVariable("SENDER_EMAIL")
-               ?? throw new NotFoundException("SENDER_EMAIL not found");
+        return Environment.GetEnvironmentVariable("EMAIL_SENDER")
+               ?? throw new NotFoundException("EMAIL_SENDER not found");
     }
 
     public static int GetEmailPort(IConfiguration config, IWebHostEnvironment env)
@@ -131,8 +131,8 @@ public static class EnvironmentConfigHelper
             return port;
         }
 
-        return int.TryParse(Environment.GetEnvironmentVariable("PORT"), out port)
+        return int.TryParse(Environment.GetEnvironmentVariable("EMAIL_PORT"), out port)
             ? port
-            : throw new NotFoundException("PORT not found");
+            : throw new NotFoundException("EMAIL_PORT not found");
     }
 }
