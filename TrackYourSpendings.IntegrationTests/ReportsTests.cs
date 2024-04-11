@@ -1,3 +1,5 @@
+using TrackYourSpendings.IntegrationTests.Utils;
+
 namespace TrackYourSpendings.IntegrationTests;
 
 public class ReportsTests : BaseAuth

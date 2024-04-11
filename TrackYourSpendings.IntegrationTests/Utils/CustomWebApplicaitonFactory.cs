@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using TrackYourSpendings.Web.Context;
 
-namespace TrackYourSpendings.IntegrationTests;
+namespace TrackYourSpendings.IntegrationTests.Utils;
 
 public class CustomWebApplicationFactory<TProgram>
     : WebApplicationFactory<TProgram> where TProgram : class

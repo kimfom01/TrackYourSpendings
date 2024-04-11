@@ -1,13 +1,14 @@
 using System.Net;
 using Microsoft.AspNetCore.Mvc.Testing;
+using TrackYourSpendings.IntegrationTests.Utils;
 
 namespace TrackYourSpendings.IntegrationTests;
 
-public class GeneralTest : IClassFixture<CustomWebApplicationFactory<Program>>
+public class UnauthorisedClientTests : IClassFixture<CustomWebApplicationFactory<Program>>
 {
     private readonly HttpClient _client;
 
-    public GeneralTest(CustomWebApplicationFactory<Program> webApplicationFactory)
+    public UnauthorisedClientTests(CustomWebApplicationFactory<Program> webApplicationFactory)
     {
         _client = webApplicationFactory.CreateClient(new WebApplicationFactoryClientOptions
         {
@@ -47,6 +48,4 @@ public class GeneralTest : IClassFixture<CustomWebApplicationFactory<Program>>
 
         Assert.Contains("<form", await response.Content.ReadAsStringAsync());
     }
-
-    
 }

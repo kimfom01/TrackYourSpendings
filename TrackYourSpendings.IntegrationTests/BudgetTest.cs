@@ -1,4 +1,5 @@
 using System.Net;
+using TrackYourSpendings.IntegrationTests.Utils;
 using Xunit.Abstractions;
 
 namespace TrackYourSpendings.IntegrationTests;

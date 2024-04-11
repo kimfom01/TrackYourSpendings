@@ -2,10 +2,11 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
+using TrackYourSpendings.IntegrationTests.Utils;
 
 namespace TrackYourSpendings.IntegrationTests;
 
-public class BaseAuth : IClassFixture<CustomWebApplicationFactory<Program>>
+public abstract class BaseAuth : IClassFixture<CustomWebApplicationFactory<Program>>
 {
     protected readonly HttpClient Client;
 
