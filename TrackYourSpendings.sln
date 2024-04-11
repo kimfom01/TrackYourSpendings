@@ -5,11 +5,13 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrackYourSpendings.Web", "TrackYourSpendings.Web\TrackYourSpendings.Web.csproj", "{B922522A-5852-417D-9F0A-3FAE6E4BBC68}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{F7D63663-03B7-42E5-B7DF-1586B1D636DC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrackYourSpendings.IntegrationTests", "TrackYourSpendings.IntegrationTests\TrackYourSpendings.IntegrationTests.csproj", "{F7D63663-03B7-42E5-B7DF-1586B1D636DC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{DD1C787D-F1A4-45CF-B4DE-5694DECA88E5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{D6FBF96C-754F-4C19-9113-99824AB4134F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrackYourSpendings.UnitTests", "TrackYourSpendings.UnitTests\TrackYourSpendings.UnitTests.csproj", "{1D54A169-59D2-470C-8F99-E69E6FF86F12}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -28,9 +30,14 @@ Global
 		{F7D63663-03B7-42E5-B7DF-1586B1D636DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F7D63663-03B7-42E5-B7DF-1586B1D636DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F7D63663-03B7-42E5-B7DF-1586B1D636DC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1D54A169-59D2-470C-8F99-E69E6FF86F12}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D54A169-59D2-470C-8F99-E69E6FF86F12}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D54A169-59D2-470C-8F99-E69E6FF86F12}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D54A169-59D2-470C-8F99-E69E6FF86F12}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{B922522A-5852-417D-9F0A-3FAE6E4BBC68} = {DD1C787D-F1A4-45CF-B4DE-5694DECA88E5}
 		{F7D63663-03B7-42E5-B7DF-1586B1D636DC} = {D6FBF96C-754F-4C19-9113-99824AB4134F}
+		{1D54A169-59D2-470C-8F99-E69E6FF86F12} = {D6FBF96C-754F-4C19-9113-99824AB4134F}
 	EndGlobalSection
 EndGlobal

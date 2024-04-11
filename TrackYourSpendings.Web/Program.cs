@@ -45,3 +45,5 @@ app.MapPrometheusScrapingEndpoint();
 app.MapHealthChecks("/healthz");
 
 app.Run();
+
+public partial class Program;
