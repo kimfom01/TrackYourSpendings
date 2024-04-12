@@ -12,13 +12,13 @@
                 <h2 class="mb-2 fw-bold d-flex justify-content-center">Login</h2>
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <div class="form-floating mb-3">
-                    <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true"/>
-                    <label asp-for="Input.Email" class="form-label"></label>
+                    <input id="email" asp-for="Input.Email" type="email" class="form-control" autocomplete="username" aria-required="true"/>
+                    <label for="email" asp-for="Input.Email" class="form-label">Email</label>
                     <span asp-validation-for="Input.Email" class="text-danger"></span>
                 </div>
                 <div class="form-floating my-3">
-                    <input asp-for="Input.Password" class="form-control" autocomplete="current-password" aria-required="true"/>
-                    <label asp-for="Input.Password" class="form-label"></label>
+                    <input id="password" asp-for="Input.Password" type="password" class="form-control" autocomplete="current-password" aria-required="true"/>
+                    <label for="password" asp-for="Input.Password" class="form-label">Password</label>
                     <span asp-validation-for="Input.Password" class="text-danger"></span>
                 </div>
                 <div class="d-flex justify-content-between mb-3">

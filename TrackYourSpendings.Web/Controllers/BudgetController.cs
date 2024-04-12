@@ -22,6 +22,8 @@ public class BudgetController: Controller
     private readonly IWalletService _walletService;
     private readonly ITransactionService _transactionService;
 
+    private const string IndexPage = "Index";
+
     /// <summary>
     /// Constructs the HomeController with necessary services.
     /// </summary>
@@ -95,7 +97,7 @@ public class BudgetController: Controller
     {
         if (walletId is null)
         {
-            return View("Index");
+            return View(IndexPage);
         }
 
         var userId = _userManager.GetUserId(User);
@@ -104,7 +106,7 @@ public class BudgetController: Controller
 
         if (wallet is null)
         {
-            return View("Index");
+            return View(IndexPage);
         }
 
         await _walletService.SetActiveWallet(wallet, userId);
@@ -167,18 +169,18 @@ public class BudgetController: Controller
         {
             if (wallet is null)
             {
-                return View("Index");
+                return View(IndexPage);
             }
 
             var userId = _userManager.GetUserId(User);
 
             await _walletService.AddWallet(wallet, userId);
 
-            return RedirectToAction("Index");
+            return RedirectToAction(IndexPage);
         }
         catch (Exception)
         {
-            return View("Index");
+            return View(IndexPage);
         }
     }
 
@@ -200,7 +202,7 @@ public class BudgetController: Controller
         }
         catch (Exception)
         {
-            return View("Index");
+            return View(IndexPage);
         }
     }
 
@@ -231,18 +233,18 @@ public class BudgetController: Controller
         {
             if (transaction is null)
             {
-                throw new Exception("Transaction required");
+                return View(IndexPage);
             }
 
             var userId = _userManager.GetUserId(User);
 
             await _transactionService.AddTransaction(transaction, userId);
 
-            return RedirectToAction("Index");
+            return RedirectToAction(IndexPage);
         }
         catch (Exception)
         {
-            return View("Index");
+            return View(IndexPage);
         }
     }
 
@@ -260,11 +262,11 @@ public class BudgetController: Controller
 
             await _transactionService.UpdateTransaction(transaction, userId);
 
-            return RedirectToAction("Index");
+            return RedirectToAction(IndexPage);
         }
         catch (Exception)
         {
-            return View("Index");
+            return View(IndexPage);
         }
     }
 
@@ -280,6 +282,6 @@ public class BudgetController: Controller
 
         await _transactionService.DeleteTransaction(transaction, userId);
 
-        return RedirectToAction("Index");
+        return RedirectToAction(IndexPage);
     }
 }

@@ -6,12 +6,10 @@ namespace TrackYourSpendings.Web.Repositories.Implementations;
 
 public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity : class
 {
-    private readonly DataContext _dataContext;
     protected DbSet<TEntity> DbEntitySet { get; }
 
     protected Repository(DataContext dataContext)
     {
-        _dataContext = dataContext;
         DbEntitySet = dataContext.Set<TEntity>();
     }
 

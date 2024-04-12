@@ -1,3 +1,4 @@
+using TrackYourSpendings.Web.Exceptions;
 using TrackYourSpendings.Web.Models;
 using TrackYourSpendings.Web.Repositories;
 
@@ -30,7 +31,7 @@ public class WalletService : IWalletService
 
         if (oldWallet is null)
         {
-            throw new NullReferenceException($"There is no wallet with id={wallet.Id}");
+            throw new NotFoundException($"There is no wallet with id={wallet.Id}");
         }
 
         oldWallet.Name = wallet.Name;
@@ -60,13 +61,13 @@ public class WalletService : IWalletService
     public async Task<Wallet?> GetActiveWallet(string? userId)
     {
         return await _unitOfWork.Wallets.GetEntity(wall =>
-            wall.Active == true && wall.UserId == userId);
+            wall.Active && wall.UserId == userId);
     }
 
     public async Task<Wallet?> GetActiveWalletDetails(string? userId)
     {
         return await _unitOfWork.Wallets.GetWalletDetails(wall =>
-            wall.Active == true && wall.UserId == userId);
+            wall.Active && wall.UserId == userId);
     }
 
     public async Task SetActiveWallet(Wallet wallet, string? userId)
@@ -84,7 +85,7 @@ public class WalletService : IWalletService
     public async Task<IEnumerable<Wallet>> GetInactiveWallets(string? userId)
     {
         var wallets = await _unitOfWork.Wallets.GetEntities(wal =>
-            wal.UserId == userId && wal.Active == false);
+            wal.UserId == userId && !wal.Active);
 
         return wallets ?? Enumerable.Empty<Wallet>();
     }

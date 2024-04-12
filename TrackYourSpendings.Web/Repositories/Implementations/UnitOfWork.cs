@@ -25,6 +25,15 @@ public class UnitOfWork : IUnitOfWork
 
     public void Dispose()
     {
-        _dbContext.Dispose();
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            _dbContext.Dispose();
+        }
     }
 }

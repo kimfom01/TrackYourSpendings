@@ -48,15 +48,15 @@ public class DataContext : IdentityDbContext<ApplicationUser>
     /// <summary>
     /// Configures the schema needed for the application when the model is being created.
     /// </summary>
-    /// <param name="modelBuilder">Provides a simple API for configuring a model that maps to a database.</param>
+    /// <param name="builder">Provides a simple API for configuring a model that maps to a database.</param>
     /// <remarks>
     /// This method includes configuration for seeding the Category entities.
     /// </remarks>
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    protected override void OnModelCreating(ModelBuilder builder)
     {
         // Comment: Seed initial data for categories into the database.
-        base.OnModelCreating(modelBuilder);
-        modelBuilder.Entity<Category>()
+        base.OnModelCreating(builder);
+        builder.Entity<Category>()
             .HasData(new Category
                 {
                     Id = 1,
