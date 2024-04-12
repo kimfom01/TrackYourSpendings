@@ -1,11 +1,12 @@
 using System.Net;
 using TrackYourSpendings.IntegrationTests.Utils;
+using TrackYourSpendings.Web;
 
 namespace TrackYourSpendings.IntegrationTests;
 
 public class BudgetTest : BaseAuth
 {
-    public BudgetTest(CustomWebApplicationFactory<Program> factory) : base(factory)
+    public BudgetTest(CustomWebApplicationFactory<ITestsEntry> factory) : base(factory)
     {
     }
 
@@ -23,7 +24,7 @@ public class BudgetTest : BaseAuth
 
     public class Wallet : BudgetTest
     {
-        public Wallet(CustomWebApplicationFactory<Program> factory) : base(factory)
+        public Wallet(CustomWebApplicationFactory<ITestsEntry> factory) : base(factory)
         {
         }
 

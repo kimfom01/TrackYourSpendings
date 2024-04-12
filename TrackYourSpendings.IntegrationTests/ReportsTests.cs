@@ -1,10 +1,11 @@
 using TrackYourSpendings.IntegrationTests.Utils;
+using TrackYourSpendings.Web;
 
 namespace TrackYourSpendings.IntegrationTests;
 
 public class ReportsTests : BaseAuth
 {
-    public ReportsTests(CustomWebApplicationFactory<Program> factory) : base(factory)
+    public ReportsTests(CustomWebApplicationFactory<ITestsEntry> factory) : base(factory)
     {
     }
 

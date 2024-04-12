@@ -7,14 +7,14 @@ using TrackYourSpendings.Web.Models;
 
 namespace TrackYourSpendings.Web.Areas.Identity.Pages.Account.Manage;
 
-public class Disable2faModel : PageModel
+public class Disable2FaModel : PageModel
 {
     private readonly UserManager<ApplicationUser> _userManager;
-    private readonly ILogger<Disable2faModel> _logger;
+    private readonly ILogger<Disable2FaModel> _logger;
 
-    public Disable2faModel(
+    public Disable2FaModel(
         UserManager<ApplicationUser> userManager,
-        ILogger<Disable2faModel> logger)
+        ILogger<Disable2FaModel> logger)
     {
         _userManager = userManager;
         _logger = logger;

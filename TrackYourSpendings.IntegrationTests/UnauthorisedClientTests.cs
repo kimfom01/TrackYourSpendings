@@ -1,14 +1,15 @@
 using System.Net;
 using Microsoft.AspNetCore.Mvc.Testing;
 using TrackYourSpendings.IntegrationTests.Utils;
+using TrackYourSpendings.Web;
 
 namespace TrackYourSpendings.IntegrationTests;
 
-public class UnauthorisedClientTests : IClassFixture<CustomWebApplicationFactory<Program>>
+public class UnauthorisedClientTests : IClassFixture<CustomWebApplicationFactory<ITestsEntry>>
 {
     private readonly HttpClient _client;
 
-    public UnauthorisedClientTests(CustomWebApplicationFactory<Program> webApplicationFactory)
+    public UnauthorisedClientTests(CustomWebApplicationFactory<ITestsEntry> webApplicationFactory)
     {
         _client = webApplicationFactory.CreateClient(new WebApplicationFactoryClientOptions
         {

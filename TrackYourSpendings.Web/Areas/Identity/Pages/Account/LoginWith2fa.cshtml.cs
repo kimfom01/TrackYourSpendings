@@ -8,16 +8,16 @@ using TrackYourSpendings.Web.Models;
 
 namespace TrackYourSpendings.Web.Areas.Identity.Pages.Account;
 
-public class LoginWith2faModel : PageModel
+public class LoginWith2FaModel : PageModel
 {
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly UserManager<ApplicationUser> _userManager;
-    private readonly ILogger<LoginWith2faModel> _logger;
+    private readonly ILogger<LoginWith2FaModel> _logger;
 
-    public LoginWith2faModel(
+    public LoginWith2FaModel(
         SignInManager<ApplicationUser> signInManager,
         UserManager<ApplicationUser> userManager,
-        ILogger<LoginWith2faModel> logger)
+        ILogger<LoginWith2FaModel> logger)
     {
         _signInManager = signInManager;
         _userManager = userManager;
