@@ -50,7 +50,7 @@ public static class ConfigureServices
         services.AddControllersWithViews().AddJsonOptions(options =>
         {
             options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
-        });;
+        });
         services.AddDbContext<DataContext>(options =>
         {
             options.UseNpgsql(EnvironmentConfigHelper.GetConnectionString(config, env));
