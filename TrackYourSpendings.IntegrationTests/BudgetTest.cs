@@ -1,6 +1,5 @@
 using System.Net;
 using TrackYourSpendings.IntegrationTests.Utils;
-using Xunit.Abstractions;
 
 namespace TrackYourSpendings.IntegrationTests;
 
@@ -17,16 +16,15 @@ public class BudgetTest : BaseAuth
     {
         var response = await Client.GetAsync(url);
 
-        response.EnsureSuccessStatusCode();
+        var message = response.EnsureSuccessStatusCode();
+        
+        Assert.True(message.IsSuccessStatusCode);
     }
 
     public class Wallet : BudgetTest
     {
-        private readonly ITestOutputHelper _testOutputHelper;
-
-        public Wallet(CustomWebApplicationFactory<Program> factory, ITestOutputHelper testOutputHelper) : base(factory)
+        public Wallet(CustomWebApplicationFactory<Program> factory) : base(factory)
         {
-            _testOutputHelper = testOutputHelper;
         }
 
         [Fact]

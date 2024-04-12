@@ -1,5 +1,6 @@
 using AutoMapper;
 using TrackYourSpendings.Web.Dtos;
+using TrackYourSpendings.Web.Exceptions;
 using TrackYourSpendings.Web.Models;
 using TrackYourSpendings.Web.Repositories;
 
@@ -26,7 +27,7 @@ public class TransactionService : ITransactionService
 
         if (wallet is null)
         {
-            throw new NullReferenceException("No active wallet");
+            throw new NotFoundException("No active wallet");
         }
 
         transaction.Date = DateTime.Now;
@@ -50,14 +51,14 @@ public class TransactionService : ITransactionService
 
         if (oldTransaction is null)
         {
-            throw new NullReferenceException("Transaction does not exist");
+            throw new NotFoundException("Transaction does not exist");
         }
 
         var wallet = await _walletService.GetWallet(oldTransaction.WalletId, userId);
 
         if (wallet is null)
         {
-            throw new NullReferenceException("Wallet does not exist");
+            throw new NotFoundException("Wallet does not exist");
         }
 
         if (transaction.Cost >= 0)
@@ -132,7 +133,7 @@ public class TransactionService : ITransactionService
 
         if (wallet is null)
         {
-            throw new NullReferenceException("No active wallet");
+            throw new NotFoundException("No active wallet");
         }
 
         var transactions =

@@ -26,7 +26,9 @@ public class UnauthorisedClientTests : IClassFixture<CustomWebApplicationFactory
     {
         var response = await _client.GetAsync(url);
 
-        response.EnsureSuccessStatusCode();
+        var message = response.EnsureSuccessStatusCode();
+        
+        Assert.True(message.IsSuccessStatusCode);
     }
 
     [Theory]

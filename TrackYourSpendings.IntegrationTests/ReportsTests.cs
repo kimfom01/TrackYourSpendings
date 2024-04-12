@@ -14,6 +14,8 @@ public class ReportsTests : BaseAuth
     {
         var response = await Client.GetAsync(url);
 
-        response.EnsureSuccessStatusCode();
+        var message = response.EnsureSuccessStatusCode();
+        
+        Assert.True(message.IsSuccessStatusCode);
     }
 }
