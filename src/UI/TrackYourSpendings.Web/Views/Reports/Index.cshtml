@@ -1,0 +1,32 @@
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "Budget";
+}
+
+
+<div class="d-flex flex-column gap-3 justify-content-center align-items-center">
+    <form method="post" class="d-flex flex-column gap-3 justify-content-center align-items-center" action="javascript:void(0);">
+        <select id="walletId" required class="form-select">
+            <option value="">-- Choose a Wallet --</option>
+        </select>
+        <button class="btn btn-success" type="button" id="load-report-btn">Load Chart</button>
+    </form>
+
+    <p>Simple chart for selected wallet</p>
+    <p>This chart shows the percentage of your transactions 📜</p>
+    <div id="chart_div" class="w-auto"></div>
+    
+    
+    <div><p>Meanwhile, here is the current time for your enjoyment: <span class="fw-bolder" id="current-time"></span></p></div>
+</div>
+
+
+<script>
+    const currentTime = document.getElementById("current-time");
+
+    const setTime = () => {   
+        currentTime.innerText = new Date().toLocaleTimeString();
+    }
+
+    setInterval(setTime, 1000);
+</script>
