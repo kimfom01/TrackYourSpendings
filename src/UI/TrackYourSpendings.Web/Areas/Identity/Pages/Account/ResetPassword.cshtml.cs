@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
-using TrackYourSpendings.Infrastructure.Identity;
+using TrackYourSpendings.Infrastructure.Database.Identity;
 
 namespace TrackYourSpendings.Web.Areas.Identity.Pages.Account;
 

@@ -3,7 +3,6 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using TrackYourSpendings.Application.Contracts.Persistence;
 using TrackYourSpendings.Application.Dtos.Transactions;
-using TrackYourSpendings.Application.Exceptions;
 using TrackYourSpendings.Application.Features.Transactions.Requests.Queries;
 
 namespace TrackYourSpendings.Application.Features.Transactions.Handlers.Queries;
@@ -29,17 +28,18 @@ public class GetTransactionsRequestHandler : IRequestHandler<GetTransactionsRequ
     {
         _logger.LogInformation("Getting transaction for user with id={userId}", request.UserId);
 
-        var wallet = await _unitOfWork.Wallets.GetActiveWallet(request.UserId);
+        var wallet = await _unitOfWork.Wallets.GetActiveWallet(request.UserId!);
 
-        if (wallet is null)
+        if (wallet is not null)
         {
-            _logger.LogError("No active wallet for user with id={userId}", request.UserId);
-            throw new NotFoundException("No active wallet");
+            var transactions = await _unitOfWork.Transactions.GetTransactionsWithCategories(wallet.Id, request.UserId);
+
+            return _mapper.Map<List<GetTransactionDto>>(transactions);
         }
 
-        var transactions = await _unitOfWork.Transactions.GetTransactionsWithCategories(tr =>
-            tr.WalletId == wallet.Id && tr.UserId == request.UserId);
+        _logger.LogError("No active wallet for user with id={userId}", request.UserId);
+        // throw new NotFoundException("No active wallet");
 
-        return _mapper.Map<List<GetTransactionDto>>(transactions);
+        return [];
     }
 }

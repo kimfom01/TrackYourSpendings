@@ -11,10 +11,16 @@ public class TransactionRepository : Repository<Transaction>, ITransactionReposi
     {
     }
 
-    public async Task<IEnumerable<Transaction>?> GetTransactionsWithCategories(Expression<Func<Transaction, bool>> predicate)
+    public async Task<IEnumerable<Transaction>?> GetTransactionsWithCategories(Guid? walletId, string? userId)
     {
+        if (walletId is null || userId is null)
+        {
+            return [];
+        }
+
         var transactionsWithCategories = DbEntitySet
-            .Where(predicate)
+            .Where(tr =>
+                tr.WalletId == walletId && tr.UserId == userId)
             .Include(tr => tr.Category);
 
         return await transactionsWithCategories.ToListAsync();

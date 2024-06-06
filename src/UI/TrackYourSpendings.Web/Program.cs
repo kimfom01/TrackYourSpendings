@@ -6,16 +6,13 @@ using TrackYourSpendings.Web.Utils;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.ConfigureApplicationServices(builder.Configuration);
-builder.Services.ConfigureInfrastructureServices(builder.Configuration);
+builder.Services.ConfigureInfrastructureServices(builder.Configuration, builder.Environment.IsDevelopment());
 builder.Services.ConfigureWebProjectServices(builder.Configuration, builder.Environment);
 builder.Configuration.AddEnvironmentVariables();
 
 var app = builder.Build();
 
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
-
-using var scope = app.Services.CreateScope();
-await Database.SetupDatabase(scope, builder.Environment);
 
 if (app.Environment.IsDevelopment())
 {
@@ -31,6 +28,8 @@ app.UseForwardedHeaders(new ForwardedHeadersOptions
 {
     ForwardedHeaders = ForwardedHeaders.XForwardedProto
 });
+
+app.ApplyMigrations();
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
@@ -50,5 +49,3 @@ app.MapPrometheusScrapingEndpoint();
 app.MapHealthChecks("/healthz");
 
 app.Run();
-
-// TODO: Create default wallets for each month of the year, discuss this with Suwilanji.

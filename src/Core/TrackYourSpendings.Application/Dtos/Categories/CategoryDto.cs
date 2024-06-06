@@ -4,5 +4,5 @@ namespace TrackYourSpendings.Application.Dtos.Categories;
 
 public class CategoryDto : BaseDto
 {
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 }

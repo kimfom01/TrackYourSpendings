@@ -11,7 +11,6 @@ public class Wallet : BaseEntity
     public decimal Expenses { get; set; }
     public decimal Balance { get; set; }
     public bool Active { get; set; }
-    public Guid UserId { get; set; }
 
     public IEnumerable<Transaction>? Transactions { get; set; }
 }

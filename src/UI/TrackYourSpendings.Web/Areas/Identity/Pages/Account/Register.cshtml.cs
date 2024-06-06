@@ -2,13 +2,15 @@
 
 using System.ComponentModel.DataAnnotations;
 using System.Text;
+using MediatR;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
-using TrackYourSpendings.Infrastructure.Identity;
+using TrackYourSpendings.Application.Features.Wallets.Requests.Commands;
+using TrackYourSpendings.Infrastructure.Database.Identity;
 
 namespace TrackYourSpendings.Web.Areas.Identity.Pages.Account;
 
@@ -20,13 +22,15 @@ public class RegisterModel : PageModel
     private readonly IUserEmailStore<ApplicationUser> _emailStore;
     private readonly ILogger<RegisterModel> _logger;
     private readonly IEmailSender _emailSender;
+    private readonly IMediator _mediator;
 
     public RegisterModel(
         UserManager<ApplicationUser> userManager,
         IUserStore<ApplicationUser> userStore,
         SignInManager<ApplicationUser> signInManager,
         ILogger<RegisterModel> logger,
-        IEmailSender emailSender)
+        IEmailSender emailSender,
+        IMediator mediator)
     {
         _userManager = userManager;
         _userStore = userStore;
@@ -34,6 +38,7 @@ public class RegisterModel : PageModel
         _signInManager = signInManager;
         _logger = logger;
         _emailSender = emailSender;
+        _mediator = mediator;
     }
 
     [BindProperty] public InputModel Input { get; set; }
@@ -61,7 +66,7 @@ public class RegisterModel : PageModel
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
     }
-        
+
     public async Task OnGetAsync(string returnUrl = null)
     {
         ReturnUrl = returnUrl;
@@ -87,20 +92,25 @@ public class RegisterModel : PageModel
 
             var userId = await _userManager.GetUserIdAsync(user);
 
+            await _mediator.Publish(new CreateWalletNotification
+            {
+                UserId = userId
+            });
+
             var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
             var callbackUrl = Url.Page(
                 "/Account/ConfirmEmail",
                 pageHandler: null,
-                values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
+                values: new { area = "Identity", userId, code, returnUrl },
                 protocol: Request.Scheme);
 
             await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                $"Please confirm your account by <a href='{callbackUrl}'>clicking here</a>.");
+                $"Please confirm your account by <a href=\"{callbackUrl}\">clicking here</a>.");
 
             if (_userManager.Options.SignIn.RequireConfirmedAccount)
             {
-                return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
+                return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl });
             }
 
             await _signInManager.SignInAsync(user, isPersistent: false);

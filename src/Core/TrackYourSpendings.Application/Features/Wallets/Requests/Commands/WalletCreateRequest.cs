@@ -5,6 +5,6 @@ namespace TrackYourSpendings.Application.Features.Wallets.Requests.Commands;
 
 public class WalletCreateRequest : IRequest<WalletDto>
 {
-    public WalletCreateDto WalletCreateDto { get; set; }
-    public Guid UserId { get; set; }
+    public WalletCreateDto? WalletCreateDto { get; set; }
+    public string? UserId { get; set; }
 }

@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using TrackYourSpendings.Infrastructure.Identity;
+using TrackYourSpendings.Infrastructure.Database.Identity;
 
 namespace TrackYourSpendings.Web.Areas.Identity.Pages.Account;
 
@@ -78,7 +78,7 @@ public class LoginModel : PageModel
 
         if (result.RequiresTwoFactor)
         {
-            return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });
+            return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, Input.RememberMe });
         }
 
         if (result.IsLockedOut)

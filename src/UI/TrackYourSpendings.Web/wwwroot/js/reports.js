@@ -3,7 +3,11 @@ let wallet;
 const getActiveWallet = async () => {
     const response = await fetch(`/Reports/wallets/d-active`);
 
-    return await response.json();
+    if (response.ok) {
+        return await response.json();
+    }
+
+    throw new Error(await response.text())
 }
 
 const getWallet = async () => {
@@ -24,7 +28,7 @@ const getWallets = async () => {
     return await response.json();
 }
 
-window.addEventListener('load', async () => {
+const fetchActiveWallet = async () => {
     try {
         wallet = await getActiveWallet();
         const container = document.getElementById("chart_div");
@@ -40,9 +44,11 @@ window.addEventListener('load', async () => {
             walletList.appendChild(new Option(wall.name, wall.id));
         })
     } catch (ex) {
-        console.log(ex)
+        // console.log(ex)
     }
-})
+}
+
+window.addEventListener('load', fetchActiveWallet);
 
 const loadReportBtn = document.getElementById("load-report-btn");
 loadReportBtn && loadReportBtn.addEventListener("click", async () => {
@@ -61,7 +67,7 @@ async function drawChart() {
     for (const [key] of Object.entries(transactionsGroups)) {
         rows.push([key, transactionsGroups[key].length])
     }
-    
+
     data.addRows(rows)
 
     const options = {

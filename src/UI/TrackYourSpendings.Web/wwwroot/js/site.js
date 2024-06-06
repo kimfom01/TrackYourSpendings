@@ -5,7 +5,6 @@ const populateModal = (transaction, action) => {
     const name = document.getElementById(`${action}TransactionName`);
     const description = document.getElementById(`${action}TransactionDescription`);
     const cost = document.getElementById(`${action}TransactionCost`);
-    const month = document.getElementById(`${action}TransactionMonth`);
     const categoryId = document.getElementById(`${action}TransactionCategoryId`);
     const walletId = document.getElementById(`${action}TransactionWalletId`);
 
@@ -13,25 +12,10 @@ const populateModal = (transaction, action) => {
     name.value = transaction.name;
     description.value = transaction.description;
     cost.value = transaction.cost;
-    month.value = transaction.month;
     categoryId.value = transaction.categoryId;
     walletId.value = transaction.walletId;
 }
 
-const months = {
-    "January": 1,
-    "February": 2,
-    "March": 3,
-    "April": 4,
-    "May": 5,
-    "June": 6,
-    "July": 7,
-    "August": 8,
-    "September": 9,
-    "October": 10,
-    "November": 11,
-    "December": 12
-}
 
 const extractTransaction = (e) => {
     e.preventDefault();
@@ -45,9 +29,8 @@ const extractTransaction = (e) => {
         name: transactionRow[1].innerText,
         description: transactionRow[2].innerText,
         cost: transactionRow[4].innerText,
-        month: months[transactionRow[5].innerText],
-        categoryId: transactionRow[6].innerText,
-        walletId: transactionRow[8].innerText,
+        categoryId: transactionRow[5].innerText,
+        walletId: transactionRow[7].innerText,
     };
 }
 

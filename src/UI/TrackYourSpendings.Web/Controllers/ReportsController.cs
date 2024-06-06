@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using TrackYourSpendings.Application.Dtos.Wallets;
 using TrackYourSpendings.Application.Features.Wallets.Requests.Queries;
 using TrackYourSpendings.Domain.Entities;
-using TrackYourSpendings.Infrastructure.Identity;
+using TrackYourSpendings.Infrastructure.Database.Identity;
 
 namespace TrackYourSpendings.Web.Controllers;
 
@@ -20,7 +20,7 @@ public class ReportsController : Controller
     public ReportsController(
         IMediator mediator,
         UserManager<ApplicationUser> userManager
-        )
+    )
     {
         _mediator = mediator;
         _userManager = userManager;
@@ -34,7 +34,7 @@ public class ReportsController : Controller
     [HttpGet("wallets/q")]
     public async Task<ActionResult<WalletDto>> GetWallet([FromQuery] Guid walletId)
     {
-        var userId = new Guid(_userManager.GetUserId(User));
+        var userId = _userManager.GetUserId(User);
 
         var wallet = await _mediator.Send(new GetWalletRequest
         {
@@ -48,7 +48,7 @@ public class ReportsController : Controller
     [HttpGet("wallets")]
     public async Task<ActionResult<Wallet>> GetWallets()
     {
-        var userId = new Guid(_userManager.GetUserId(User));
+        var userId = _userManager.GetUserId(User);
 
         var wallets = await _mediator.Send(new GetInactiveWalletsRequest
         {
@@ -61,7 +61,7 @@ public class ReportsController : Controller
     [HttpGet("wallets/active")]
     public async Task<ActionResult<Wallet>> GetActiveWallet()
     {
-        var userId = new Guid(_userManager.GetUserId(User));
+        var userId = _userManager.GetUserId(User);
 
         var wallet = await _mediator.Send(new GetActiveWalletRequest
         {
@@ -74,7 +74,7 @@ public class ReportsController : Controller
     [HttpGet("wallets/d-active")]
     public async Task<ActionResult<Wallet>> GetActiveWalletDetails()
     {
-        var userId = new Guid(_userManager.GetUserId(User));
+        var userId = _userManager.GetUserId(User);
 
         var wallet = await _mediator.Send(new GetActiveWalletDetailRequest
         {

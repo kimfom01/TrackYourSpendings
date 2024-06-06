@@ -9,7 +9,7 @@ using System.Text.Encodings.Web;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using TrackYourSpendings.Infrastructure.Identity;
+using TrackYourSpendings.Infrastructure.Database.Identity;
 
 namespace TrackYourSpendings.Web.Areas.Identity.Pages.Account.Manage;
 

@@ -15,11 +15,16 @@
     <p>Simple chart for selected wallet</p>
     <p>This chart shows the percentage of your transactions 📜</p>
     <div id="chart_div" class="w-auto"></div>
-    
-    
-    <div><p>Meanwhile, here is the current time for your enjoyment: <span class="fw-bolder" id="current-time"></span></p></div>
+
+    <div>
+        <p>Meanwhile, here is the current time for your enjoyment: <span class="fw-bolder" id="current-time"></span></p>
+    </div>
 </div>
 
+@section Scripts
+{
+    <script src="~/js/reports.js" asp-append-version="true"></script>
+}
 
 <script>
     const currentTime = document.getElementById("current-time");

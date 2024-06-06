@@ -20,14 +20,14 @@ public class DeleteTransactionRequestHandler : IRequestHandler<DeleteTransaction
 
     public async Task<Unit> Handle(DeleteTransactionRequest request, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Deleting transaction with id={transactionId}", request.TransactionDto.Id);
+        _logger.LogInformation("Deleting transaction with id={transactionId}", request.TransactionDto!.Id);
 
         await _unitOfWork.Transactions.RemoveEntity(tra =>
             tra.Id == request.TransactionDto.Id && tra.UserId == request.UserId);
 
         var wallet = await _unitOfWork.Wallets.GetEntity(wal =>
             wal.Id == request.TransactionDto.WalletId && wal.UserId == request.UserId);
-        
+
         if (wallet is not null)
         {
             wallet.Expenses -= request.TransactionDto.Cost;

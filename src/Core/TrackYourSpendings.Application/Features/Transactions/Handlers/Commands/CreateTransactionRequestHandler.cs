@@ -3,7 +3,6 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using TrackYourSpendings.Application.Contracts.Persistence;
 using TrackYourSpendings.Application.Dtos.Transactions;
-using TrackYourSpendings.Application.Exceptions;
 using TrackYourSpendings.Application.Features.Transactions.Requests.Commands;
 using TrackYourSpendings.Domain.Entities;
 
@@ -27,30 +26,34 @@ public class CreateTransactionRequestHandler : IRequestHandler<CreateTransaction
 
     public async Task<GetTransactionDto> Handle(CreateTransactionRequest request, CancellationToken cancellationToken)
     {
+        // validate request before processing
+
         _logger.LogInformation("Adding new transaction");
         var wallet =
-            await _unitOfWork.Wallets.GetActiveWallet(request.UserId);
+            await _unitOfWork.Wallets.GetActiveWallet(request.UserId!);
 
-        if (wallet is null)
+        if (wallet is not null)
         {
-            _logger.LogError("No active wallet to add transactions to");
-            throw new NotFoundException("No active wallet to add transactions to");
+            var transaction = _mapper.Map<Transaction>(request.TransactionDto);
+
+            transaction.Date = DateTime.Now;
+            transaction.WalletId = wallet.Id;
+            transaction.UserId = request.UserId!;
+
+            var added = await _unitOfWork.Transactions.AddEntity(transaction);
+
+            wallet.Expenses += transaction.Cost;
+            wallet.Balance -= transaction.Cost;
+
+            await _unitOfWork.SaveChanges(cancellationToken);
+            _logger.LogInformation("Transaction successfully added");
+
+            return _mapper.Map<GetTransactionDto>(added);
         }
 
-        var transaction = _mapper.Map<Transaction>(request.TransactionDto);
+        _logger.LogError("No active wallet to add transactions to");
+        // throw new NotFoundException("No active wallet to add transactions to");
 
-        transaction.Date = DateTime.Now;
-        transaction.WalletId = wallet.Id;
-        transaction.UserId = request.UserId;
-
-        var added = await _unitOfWork.Transactions.AddEntity(transaction);
-
-        wallet.Expenses += transaction.Cost;
-        wallet.Balance -= transaction.Cost;
-
-        await _unitOfWork.SaveChanges(cancellationToken);
-        _logger.LogInformation("Transaction successfully added");
-
-        return _mapper.Map<GetTransactionDto>(added);
+        throw new InvalidOperationException("No active wallet to add transactions to");
     }
 }

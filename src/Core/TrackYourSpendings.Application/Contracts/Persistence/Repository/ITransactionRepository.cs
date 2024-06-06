@@ -15,7 +15,8 @@ public interface ITransactionRepository : IRepository<Transaction>
     /// <summary>
     /// Retrieves all transactions that satisfy the specified predicate, including their associated category details.
     /// </summary>
-    /// <param name="predicate">A function to test each transaction for a condition, used to filter the transactions included in the result.</param>
+    /// <param name="walletId"></param>
+    /// <param name="userId"></param>
     /// <returns>
     /// A task that represents the asynchronous operation, containing the list of transactions with their categories if found; otherwise, null.
     /// </returns>
@@ -23,5 +24,5 @@ public interface ITransactionRepository : IRepository<Transaction>
     /// This method is particularly useful for operations requiring access to both transaction and category information, optimizing data retrieval
     /// by minimizing the number of separate queries needed.
     /// </remarks>
-    Task<IEnumerable<Transaction>?> GetTransactionsWithCategories(Expression<Func<Transaction, bool>> predicate);
+    Task<IEnumerable<Transaction>?> GetTransactionsWithCategories(Guid? walletId, string? userId);
 }

@@ -3,12 +3,11 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using TrackYourSpendings.Application.Contracts.Persistence;
 using TrackYourSpendings.Application.Dtos.Wallets;
-using TrackYourSpendings.Application.Exceptions;
 using TrackYourSpendings.Application.Features.Wallets.Requests.Queries;
 
 namespace TrackYourSpendings.Application.Features.Wallets.Handlers.Queries;
 
-public class GetActiveWalletRequestHandler : IRequestHandler<GetActiveWalletRequest, WalletDto>
+public class GetActiveWalletRequestHandler : IRequestHandler<GetActiveWalletRequest, WalletDto?>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<GetActiveWalletRequestHandler> _logger;
@@ -24,7 +23,7 @@ public class GetActiveWalletRequestHandler : IRequestHandler<GetActiveWalletRequ
         _mapper = mapper;
     }
 
-    public async Task<WalletDto> Handle(GetActiveWalletRequest request, CancellationToken cancellationToken)
+    public async Task<WalletDto?> Handle(GetActiveWalletRequest request, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Getting active wallet for user={userId}", request.UserId);
         var wallet = await _unitOfWork.Wallets.GetEntity(wall =>
@@ -33,7 +32,7 @@ public class GetActiveWalletRequestHandler : IRequestHandler<GetActiveWalletRequ
         if (wallet is null)
         {
             _logger.LogError("No wallet has been set active yet for user={userId}", request.UserId);
-            throw new NotFoundException($"No wallet has been set active yet for user={request.UserId}");
+            // throw new NotFoundException($"No wallet has been set active yet for user={request.UserId}");
         }
 
         return _mapper.Map<WalletDto>(wallet);

@@ -5,5 +5,5 @@ namespace TrackYourSpendings.Application.Features.Categories.Requests.Queries;
 
 public class GetCatetoriesRequest : IRequest<List<CategoryDto>>
 {
-    public Guid UserId { get; set; }
+    public string? UserId { get; set; }
 }

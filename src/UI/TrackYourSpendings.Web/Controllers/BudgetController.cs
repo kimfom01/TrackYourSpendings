@@ -3,14 +3,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using TrackYourSpendings.Application.Dtos.Transactions;
-using TrackYourSpendings.Application.Dtos.Wallets;
 using TrackYourSpendings.Application.Features.Categories.Requests.Queries;
-using TrackYourSpendings.Application.Features.Transactions.Requests.Commands;
 using TrackYourSpendings.Application.Features.Transactions.Requests.Queries;
 using TrackYourSpendings.Application.Features.Wallets.Requests.Commands;
 using TrackYourSpendings.Application.Features.Wallets.Requests.Queries;
-using TrackYourSpendings.Infrastructure.Identity;
+using TrackYourSpendings.Infrastructure.Database.Identity;
 using TrackYourSpendings.Web.ViewModels;
 
 namespace TrackYourSpendings.Web.Controllers;
@@ -34,9 +31,7 @@ public class BudgetController : Controller
     /// </summary>
     /// <param name="mediator"></param>
     /// <param name="userManager"></param>
-    public BudgetController(
-        IMediator mediator,
-        UserManager<ApplicationUser> userManager)
+    public BudgetController(IMediator mediator, UserManager<ApplicationUser> userManager)
     {
         _mediator = mediator;
         _userManager = userManager;
@@ -53,39 +48,57 @@ public class BudgetController : Controller
     public async Task<IActionResult> Index(string? searchString, Guid? category, DateTime? date,
         CancellationToken cancellationToken)
     {
-        var userId = new Guid(_userManager.GetUserId(User));
-
-        var wallet = await _mediator.Send(new GetActiveWalletRequest { UserId = userId }, cancellationToken);
-
-        var wallets = await _mediator.Send(new GetInactiveWalletsRequest { UserId = userId }, cancellationToken);
-
-        var categories = await _mediator.Send(new GetCatetoriesRequest { UserId = userId }, cancellationToken);
-
-        if (wallet is null)
+        try
         {
-            return View(new WalletCategoryTransactionViewModel
+            var userId = _userManager.GetUserId(User);
+
+            var wallet = await _mediator.Send(new GetActiveWalletRequest
             {
-                Wallets = new SelectList(wallets, "Id", "Name")
-            });
-        }
+                UserId = userId
+            }, cancellationToken);
 
-        WalletCategoryTransactionViewModel viewModel;
-        if (searchString is not null || category is not null || date is not null)
-        {
-            viewModel = await GetViewModelFromId(wallet.Id, searchString, category, date, cancellationToken);
-        }
-        else
-        {
-            viewModel = new WalletCategoryTransactionViewModel
+            var wallets = await _mediator.Send(new GetInactiveWalletsRequest
             {
-                Wallets = new SelectList(wallets, "Id", "Name"),
-                Wallet = wallet,
-                CategoriesSelectList = new SelectList(categories, "Id", "Name"),
-                Transactions = await _mediator.Send(new GetTransactionsRequest { UserId = userId }, cancellationToken)
-            };
-        }
+                UserId = userId
+            }, cancellationToken);
 
-        return View(viewModel);
+            var categories = await _mediator.Send(new GetCatetoriesRequest
+            {
+                UserId = userId
+            }, cancellationToken);
+
+            if (wallet is null)
+            {
+                return View(new BudgetViewModel
+                {
+                    WalletsSelectList = new SelectList(wallets, "Id", "Name")
+                });
+            }
+
+            BudgetViewModel viewModel;
+            if (searchString is not null || category is not null || date is not null)
+            {
+                viewModel = await GetViewModelFromId(wallet.Id, searchString, category, date, cancellationToken);
+            }
+            else
+            {
+                viewModel = new BudgetViewModel
+                {
+                    WalletsSelectList = new SelectList(wallets, "Id", "Name"),
+                    Wallet = wallet,
+                    WalletId = wallet.Id,
+                    CategoriesSelectList = new SelectList(categories, "Id", "Name"),
+                    Transactions = await _mediator.Send(new GetTransactionsRequest { UserId = userId },
+                        cancellationToken)
+                };
+            }
+
+            return View(viewModel);
+        }
+        catch (Exception)
+        {
+            return View(new BudgetViewModel());
+        }
     }
 
     /// <summary>
@@ -97,246 +110,104 @@ public class BudgetController : Controller
     [HttpPost]
     public async Task<IActionResult> Index(Guid? walletId, CancellationToken cancellationToken)
     {
-        if (walletId is null)
-        {
-            return View(IndexPage);
-        }
-
-        var userId = new Guid(_userManager.GetUserId(User));
-
-        var wallet = await _mediator.Send(new GetWalletRequest
-        {
-            UserId = userId, WalletId = walletId.Value
-        }, cancellationToken);
-
-        if (wallet is null)
-        {
-            return View(IndexPage);
-        }
-
-        await _mediator.Send(new SetActiveWalletRequest
-        {
-            UserId = userId, WalletId = walletId.Value
-        }, cancellationToken);
-
-        var wallets = await _mediator.Send(new GetInactiveWalletsRequest { UserId = userId }, cancellationToken);
-
-        var categories = await _mediator.Send(new GetCatetoriesRequest { UserId = userId }, cancellationToken);
-
-        var viewModel = new WalletCategoryTransactionViewModel
-        {
-            Wallets = new SelectList(wallets, "Id", "Name"),
-            Wallet = wallet,
-            CategoriesSelectList = new SelectList(categories, "Id", "Name"),
-            Transactions = await _mediator.Send(new GetTransactionsRequest { UserId = userId }, cancellationToken)
-        };
-
-        return View(viewModel);
-    }
-
-    private async Task<WalletCategoryTransactionViewModel> GetViewModelFromId(Guid? walletId, string? searchString,
-        Guid? categoryId, DateTime? date, CancellationToken cancellationToken)
-    {
-        var userId = new Guid(_userManager.GetUserId(User));
-
-        var wallets = await _mediator.Send(new GetInactiveWalletsRequest { UserId = userId }, cancellationToken);
-
-        var wallet = await _mediator.Send(new GetWalletRequest
-        {
-            UserId = userId,
-            WalletId = walletId.Value
-        }, cancellationToken);
-
-        if (wallet is null)
-        {
-            return new WalletCategoryTransactionViewModel();
-        }
-
-        var transactions =
-            await _mediator.Send(new SearchAndFilterTransactionsRequest
-            {
-                CategoryId = categoryId,
-                Date = date,
-                SearchString = searchString,
-                UserId = userId,
-                WalletId = walletId
-            }, cancellationToken);
-
-        var categories = await _mediator.Send(new GetCatetoriesRequest { UserId = userId }, cancellationToken);
-
-        var viewModel = new WalletCategoryTransactionViewModel
-        {
-            Wallets = new SelectList(wallets, "Id", "Name"),
-            Wallet = wallet,
-            WalletId = walletId.Value,
-            CategoriesSelectList = new SelectList(categories, "Id", "Name"),
-            Transactions = transactions
-        };
-
-        return viewModel;
-    }
-
-    /// <summary>
-    /// Adds a new wallet for the current user and redirects to the Index view.
-    /// </summary>
-    /// <param name="wallet">The wallet to add.</param>
-    /// <param name="cancellationToken"></param>
-    /// <returns>A redirect to the Index view on success, or the Index view with an error message on failure.</returns>
-    [HttpPost]
-    public async Task<IActionResult> AddWallet(WalletCreateDto? wallet, CancellationToken cancellationToken)
-    {
         try
         {
+            if (walletId is null)
+            {
+                return View(IndexPage);
+            }
+
+            var userId = _userManager.GetUserId(User);
+
+            var wallet = await _mediator.Send(new GetWalletRequest
+            {
+                UserId = userId, WalletId = walletId.Value
+            }, cancellationToken);
+
             if (wallet is null)
             {
                 return View(IndexPage);
             }
 
-            var userId = new Guid(_userManager.GetUserId(User));
-
-            await _mediator.Send(new WalletCreateRequest
+            await _mediator.Send(new SetActiveWalletRequest
             {
-                UserId = userId,
-                WalletCreateDto = wallet
+                UserId = userId, WalletId = walletId.Value
             }, cancellationToken);
 
-            return RedirectToAction(IndexPage);
+            var wallets = await _mediator.Send(new GetInactiveWalletsRequest { UserId = userId }, cancellationToken);
+
+            var categories = await _mediator.Send(new GetCatetoriesRequest { UserId = userId }, cancellationToken);
+
+            var viewModel = new BudgetViewModel
+            {
+                WalletsSelectList = new SelectList(wallets, "Id", "Name"),
+                Wallet = wallet,
+                CategoriesSelectList = new SelectList(categories, "Id", "Name"),
+                Transactions = await _mediator.Send(new GetTransactionsRequest { UserId = userId }, cancellationToken)
+            };
+
+            return View(viewModel);
         }
         catch (Exception)
         {
-            return View(IndexPage);
+            return View(new BudgetViewModel());
         }
     }
 
-    /// <summary>
-    /// Updates an existing wallet's details for the current user and redirects to the Index view.
-    /// </summary>
-    /// <param name="wallet">The wallet with updated details.</param>
-    /// <param name="cancellationToken"></param>
-    /// <returns>A redirect to the Index view on success, or the Index view with an error message on failure.</returns>
-    [HttpPost]
-    public async Task<IActionResult> UpdateWallet(WalletUpdateDto wallet,
-        CancellationToken cancellationToken)
+    private async Task<BudgetViewModel> GetViewModelFromId(Guid? walletId, string? searchString,
+        Guid? categoryId, DateTime? date, CancellationToken cancellationToken)
     {
         try
         {
-            var userId = new Guid(_userManager.GetUserId(User));
-
-            await _mediator.Send(new UpdateWalletRequest
+            if (walletId is null)
             {
-                UserId = userId,
-                WalletId = wallet.Id,
-                WalletUpdateDto = wallet
-            }, cancellationToken);
-
-            return RedirectToAction("Index");
-        }
-        catch (Exception)
-        {
-            return View(IndexPage);
-        }
-    }
-
-    /// <summary>
-    /// Deletes a wallet for the current user and redirects to the Index view.
-    /// </summary>
-    /// <param name="wallet">The wallet to delete.</param>
-    /// <param name="cancellationToken"></param>
-    /// <returns>A redirect to the Index view.</returns>
-    [HttpPost]
-    public async Task<IActionResult> DeleteWallet(WalletDto wallet, CancellationToken cancellationToken)
-    {
-        var userId = new Guid(_userManager.GetUserId(User));
-
-        await _mediator.Send(new DeleteWalletRequest
-        {
-            UserId = userId,
-            WalletId = wallet.Id
-        }, cancellationToken);
-
-        return RedirectToAction("Index");
-    }
-
-    /// <summary>
-    /// Adds a new transaction for the current user and redirects to the Index view.
-    /// </summary>
-    /// <param name="transaction">The transaction to add.</param>
-    /// <param name="cancellationToken"></param>
-    /// <returns>A redirect to the Index view on success, or the Index view with an error message on failure.</returns>
-    [HttpPost]
-    public async Task<IActionResult> AddTransaction(CreateTransactionDto? transaction,
-        CancellationToken cancellationToken)
-    {
-        try
-        {
-            if (transaction is null)
-            {
-                return View(IndexPage);
+                return new BudgetViewModel();
             }
 
-            var userId = new Guid(_userManager.GetUserId(User));
+            var userId = _userManager.GetUserId(User);
 
-            await _mediator.Send(new CreateTransactionRequest
+            var wallets = await _mediator.Send(new GetInactiveWalletsRequest
             {
-                TransactionDto = transaction,
                 UserId = userId
             }, cancellationToken);
 
-            return RedirectToAction(IndexPage);
-        }
-        catch (Exception)
-        {
-            return View(IndexPage);
-        }
-    }
-
-    /// <summary>
-    /// Updates an existing transaction for the current user and redirects to the Index view.
-    /// </summary>
-    /// <param name="transaction">The DTO containing transaction updates.</param>
-    /// <param name="cancellationToken"></param>
-    /// <returns>A redirect to the Index view on success, or the Index view with an error message on failure.</returns>
-    [HttpPost]
-    public async Task<IActionResult> UpdateTransaction(GetTransactionDto transaction,
-        CancellationToken cancellationToken)
-    {
-        try
-        {
-            var userId = new Guid(_userManager.GetUserId(User));
-
-            await _mediator.Send(new UpdateTransactionRequest
+            var wallet = await _mediator.Send(new GetWalletRequest
             {
-                TransactionDto = transaction,
-                UserId = userId
+                UserId = userId,
+                WalletId = walletId.Value
             }, cancellationToken);
 
-            return RedirectToAction(IndexPage);
+            if (wallet is null)
+            {
+                return new BudgetViewModel();
+            }
+
+            var transactions =
+                await _mediator.Send(new SearchAndFilterTransactionsRequest
+                {
+                    CategoryId = categoryId,
+                    Date = date,
+                    SearchString = searchString,
+                    UserId = userId,
+                    WalletId = walletId
+                }, cancellationToken);
+
+            var categories = await _mediator.Send(new GetCatetoriesRequest { UserId = userId }, cancellationToken);
+
+            var viewModel = new BudgetViewModel
+            {
+                WalletsSelectList = new SelectList(wallets, "Id", "Name"),
+                Wallet = wallet,
+                WalletId = walletId.Value,
+                CategoriesSelectList = new SelectList(categories, "Id", "Name"),
+                Transactions = transactions
+            };
+
+            return viewModel;
         }
         catch (Exception)
         {
-            return View(IndexPage);
+            return new BudgetViewModel();
         }
-    }
-
-    /// <summary>
-    /// Deletes a transaction for the current user and redirects to the Index view.
-    /// </summary>
-    /// <param name="transaction">The transaction to delete.</param>
-    /// <param name="cancellationToken"></param>
-    /// <returns>A redirect to the Index view.</returns>
-    [HttpPost]
-    public async Task<IActionResult> DeleteTransaction(GetTransactionDto transaction,
-        CancellationToken cancellationToken)
-    {
-        var userId = new Guid(_userManager.GetUserId(User));
-
-        await _mediator.Send(new DeleteTransactionRequest
-            {
-                TransactionDto = transaction,
-                UserId = userId
-            },
-            cancellationToken);
-
-        return RedirectToAction(IndexPage);
     }
 }

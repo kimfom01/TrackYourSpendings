@@ -27,7 +27,7 @@ public class GetCategoriesRequestHandler : IRequestHandler<GetCatetoriesRequest,
     public async Task<List<CategoryDto>> Handle(GetCatetoriesRequest request, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Getting categories for user={userId}", request.UserId);
-        var categories = await _unitOfWork.Categories.GetEntities(cat => cat.UserId == request.UserId);
+        var categories = await _unitOfWork.Categories.GetEntities(cat => true);
 
         if (categories is null)
         {

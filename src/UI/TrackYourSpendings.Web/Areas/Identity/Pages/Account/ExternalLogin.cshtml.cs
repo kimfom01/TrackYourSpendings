@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
-using TrackYourSpendings.Infrastructure.Identity;
+using TrackYourSpendings.Infrastructure.Database.Identity;
 
 namespace TrackYourSpendings.Web.Areas.Identity.Pages.Account;
 
@@ -166,7 +166,7 @@ public class ExternalLoginModel : PageModel
                     var callbackUrl = Url.Page(
                         "/Account/ConfirmEmail",
                         pageHandler: null,
-                        values: new { area = "Identity", userId = userId, code = code },
+                        values: new { area = "Identity", userId, code },
                         protocol: Request.Scheme);
 
                     await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
@@ -175,7 +175,7 @@ public class ExternalLoginModel : PageModel
                     // If account confirmation is required, we need to show the link if we don't have a real email sender
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
-                        return RedirectToPage("./RegisterConfirmation", new { Email = Input.Email });
+                        return RedirectToPage("./RegisterConfirmation", new { Input.Email });
                     }
 
                     await _signInManager.SignInAsync(user, isPersistent: false, info.LoginProvider);

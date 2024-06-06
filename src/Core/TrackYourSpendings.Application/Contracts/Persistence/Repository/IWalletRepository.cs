@@ -11,7 +11,7 @@ namespace TrackYourSpendings.Application.Contracts.Persistence.Repository;
 /// </remarks>
 public interface IWalletRepository : IRepository<Wallet>
 {
-    Task<Wallet?> GetWalletDetails(Guid walletId, Guid userId);
-    Task<Wallet?> GetActiveWallet(Guid userId);
-    Task<Wallet?> GetActiveWalletDetails(Guid userId);
+    Task<Wallet?> GetWalletDetails(Guid walletId, string userId);
+    Task<Wallet?> GetActiveWallet(string userId);
+    Task<Wallet?> GetActiveWalletDetails(string userId);
 }

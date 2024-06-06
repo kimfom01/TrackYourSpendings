@@ -26,10 +26,12 @@ public class WalletCreateRequestHandler : IRequestHandler<WalletCreateRequest, W
 
     public async Task<WalletDto> Handle(WalletCreateRequest request, CancellationToken cancellationToken)
     {
+        // validate request before processing
+        
         _logger.LogInformation("Creating new wallet for user={userId}", request.UserId);
         var wallet = _mapper.Map<Wallet>(request.WalletCreateDto);
-        wallet.Balance = request.WalletCreateDto.Income;
-        wallet.UserId = request.UserId;
+        wallet.Balance = request.WalletCreateDto!.Income;
+        wallet.UserId = request.UserId!;
 
         wallet = await _unitOfWork.Wallets.AddEntity(wallet);
         await _unitOfWork.SaveChanges(cancellationToken);

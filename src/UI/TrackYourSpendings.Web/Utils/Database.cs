@@ -1,27 +1,21 @@
 using Microsoft.EntityFrameworkCore;
 using TrackYourSpendings.Infrastructure.Database;
-using TrackYourSpendings.Infrastructure.Identity;
+using TrackYourSpendings.Infrastructure.Database.Identity;
 
 namespace TrackYourSpendings.Web.Utils;
 
 public static class Database
 {
-    public static async Task SetupDatabase(IServiceScope scope, IWebHostEnvironment environment)
+    public static WebApplication ApplyMigrations(this WebApplication app)
     {
+        var scope = app.Services.CreateScope();
+
         var appDataContext = scope.ServiceProvider.GetRequiredService<AppDataContext>();
         var appIdentityDbContext = scope.ServiceProvider.GetRequiredService<AppIdentityDbContext>();
 
-        if (environment.IsDevelopment())
-        {
-            await appDataContext.Database.EnsureDeletedAsync();
-            await appDataContext.Database.EnsureCreatedAsync();
-            await appIdentityDbContext.Database.EnsureDeletedAsync();
-            await appIdentityDbContext.Database.EnsureCreatedAsync();
-        }
-        else
-        {
-            await appDataContext.Database.MigrateAsync();
-            await appIdentityDbContext.Database.MigrateAsync();
-        }
+        appDataContext.Database.Migrate();
+        appIdentityDbContext.Database.Migrate();
+
+        return app;
     }
 }

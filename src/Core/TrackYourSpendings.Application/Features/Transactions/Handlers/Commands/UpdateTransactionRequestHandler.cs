@@ -2,7 +2,6 @@ using AutoMapper;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using TrackYourSpendings.Application.Contracts.Persistence;
-using TrackYourSpendings.Application.Exceptions;
 using TrackYourSpendings.Application.Features.Transactions.Requests.Commands;
 
 namespace TrackYourSpendings.Application.Features.Transactions.Handlers.Commands;
@@ -25,7 +24,7 @@ public class UpdateTransactionRequestHandler : IRequestHandler<UpdateTransaction
 
     public async Task<Unit> Handle(UpdateTransactionRequest request, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Updating transaction with id={transactionId}", request.TransactionDto.Id);
+        _logger.LogInformation("Updating transaction with id={transactionId}", request.TransactionDto!.Id);
 
         var transaction = await _unitOfWork.Transactions.GetEntity(tr =>
             tr.Id == request.TransactionDto.Id && tr.UserId == request.UserId);
@@ -33,7 +32,7 @@ public class UpdateTransactionRequestHandler : IRequestHandler<UpdateTransaction
         if (transaction is null)
         {
             _logger.LogError("Transaction with id={transactionId} does not exist", request.TransactionDto.Id);
-            throw new NotFoundException("Transaction does not exist");
+            return Unit.Value;
         }
 
         var wallet = await _unitOfWork.Wallets.GetEntity(wal =>
@@ -42,7 +41,7 @@ public class UpdateTransactionRequestHandler : IRequestHandler<UpdateTransaction
         if (wallet is null)
         {
             _logger.LogError("Wallet with id={walletId} does not exist", request.TransactionDto.WalletId);
-            throw new NotFoundException("Wallet does not exist");
+            return Unit.Value;
         }
 
         if (request.TransactionDto.Cost >= 0)

@@ -5,5 +5,5 @@ namespace TrackYourSpendings.Application.Features.Transactions.Requests.Queries;
 
 public class GetTransactionsRequest : IRequest<List<GetTransactionDto>>
 {
-    public Guid UserId { get; set; }
+    public string? UserId { get; set; }
 }

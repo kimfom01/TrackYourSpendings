@@ -3,12 +3,11 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using TrackYourSpendings.Application.Contracts.Persistence;
 using TrackYourSpendings.Application.Dtos.Wallets;
-using TrackYourSpendings.Application.Exceptions;
 using TrackYourSpendings.Application.Features.Wallets.Requests.Queries;
 
 namespace TrackYourSpendings.Application.Features.Wallets.Handlers.Queries;
 
-public class GetWalletRequestHandler : IRequestHandler<GetWalletRequest, WalletDto>
+public class GetWalletRequestHandler : IRequestHandler<GetWalletRequest, WalletDto?>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<GetWalletRequestHandler> _logger;
@@ -24,7 +23,7 @@ public class GetWalletRequestHandler : IRequestHandler<GetWalletRequest, WalletD
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<WalletDto> Handle(GetWalletRequest request, CancellationToken cancellationToken)
+    public async Task<WalletDto?> Handle(GetWalletRequest request, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Getting wallet details for user={userId}", request.UserId);
         var wallet =
@@ -34,7 +33,7 @@ public class GetWalletRequestHandler : IRequestHandler<GetWalletRequest, WalletD
         {
             _logger.LogError("Wallet with id={walletId} does not exist for user={userId}", request.WalletId,
                 request.UserId);
-            throw new NotFoundException($"Wallet with id={request.WalletId} does not exist for user={request.UserId}");
+            // throw new NotFoundException($"Wallet with id={request.WalletId} does not exist for user={request.UserId}");
         }
 
         return _mapper.Map<WalletDto>(wallet);

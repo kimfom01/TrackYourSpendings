@@ -1,7 +1,6 @@
 using MediatR;
 using Microsoft.Extensions.Logging;
 using TrackYourSpendings.Application.Contracts.Persistence;
-using TrackYourSpendings.Application.Exceptions;
 using TrackYourSpendings.Application.Features.Wallets.Requests.Commands;
 
 namespace TrackYourSpendings.Application.Features.Wallets.Handlers.Commands;
@@ -21,9 +20,11 @@ public class SetActiveWalletRequestHandler : IRequestHandler<SetActiveWalletRequ
 
     public async Task<Unit> Handle(SetActiveWalletRequest request, CancellationToken cancellationToken)
     {
+        // validate request before processing
+
         _logger.LogInformation("Setting wallet={walletId} active", request.WalletId);
         var currentActiveWallet =
-            await _unitOfWork.Wallets.GetActiveWallet(request.UserId);
+            await _unitOfWork.Wallets.GetActiveWallet(request.UserId!);
 
         var wallet = await _unitOfWork.Wallets
             .GetEntity(wal => wal.UserId == request.UserId && wal.Id == request.WalletId);
@@ -33,13 +34,17 @@ public class SetActiveWalletRequestHandler : IRequestHandler<SetActiveWalletRequ
             currentActiveWallet.Active = false;
         }
 
-        if (wallet is null)
+        if (wallet is not null)
         {
-            throw new NotFoundException($"Wallet with id={request.WalletId} does not exist for user={request.UserId}");
+            wallet.Active = true;
+            await _unitOfWork.SaveChanges(cancellationToken);
         }
-
-        wallet.Active = true;
-        await _unitOfWork.SaveChanges(cancellationToken);
+        else
+        {
+            _logger.LogError("Wallet with id={walletId} does not exist for user={userId}", request.WalletId,
+                request.UserId);
+            // throw new NotFoundException($"Wallet with id={request.WalletId} does not exist for user={request.UserId}");
+        }
 
         return Unit.Value;
     }

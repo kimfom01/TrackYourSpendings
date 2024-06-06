@@ -5,5 +5,5 @@ namespace TrackYourSpendings.Application.Features.Wallets.Requests.Queries;
 
 public class GetActiveWalletDetailRequest : IRequest<WalletDetailDto>
 {
-    public Guid UserId { get; set; }
+    public string? UserId { get; set; }
 }

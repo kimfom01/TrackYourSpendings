@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using TrackYourSpendings.Infrastructure.Database;
+using TrackYourSpendings.Infrastructure.Database.Identity;
 
 namespace TrackYourSpendings.IntegrationTests.Utils;
 
@@ -17,8 +18,14 @@ public class CustomWebApplicationFactory<TProgram>
             var dbContextDescriptor = services.SingleOrDefault(
                 d => d.ServiceType ==
                      typeof(DbContextOptions<AppDataContext>));
+            
+            var identityDbContextDescriptor = services.SingleOrDefault(
+                d => d.ServiceType ==
+                     typeof(DbContextOptions<AppIdentityDbContext>));
 
             if (dbContextDescriptor != null) services.Remove(dbContextDescriptor);
+            
+            if (identityDbContextDescriptor != null) services.Remove(identityDbContextDescriptor);
 
             var dbConnectionDescriptor = services.SingleOrDefault(
                 d => d.ServiceType ==
@@ -27,6 +34,7 @@ public class CustomWebApplicationFactory<TProgram>
             if (dbConnectionDescriptor != null) services.Remove(dbConnectionDescriptor);
 
             services.AddDbContext<AppDataContext>(options => { options.UseInMemoryDatabase("testdb"); });
+            services.AddDbContext<AppIdentityDbContext>(options => { options.UseInMemoryDatabase("testidentitydb"); });
         });
 
         builder.UseEnvironment("Development");

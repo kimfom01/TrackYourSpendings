@@ -30,8 +30,8 @@ public class SearchAndFilterTransactionsRequestHandler
     {
         _logger.LogInformation("Applying search and filter from request");
 
-        var transactions = await _unitOfWork.Transactions.GetTransactionsWithCategories(tr =>
-            tr.WalletId == request.WalletId && tr.UserId == request.UserId);
+        var transactions =
+            await _unitOfWork.Transactions.GetTransactionsWithCategories(request.WalletId, request.UserId);
 
         if (transactions is null)
         {

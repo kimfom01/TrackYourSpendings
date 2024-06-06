@@ -1,6 +1,5 @@
 @using Microsoft.AspNetCore.Mvc.TagHelpers
-@using TrackYourSpendings.Domain.Enums
-@model TrackYourSpendings.Web.ViewModels.WalletCategoryTransactionViewModel
+@model TrackYourSpendings.Web.ViewModels.BudgetViewModel
 @{
     ViewData["Title"] = "Budget";
 }
@@ -9,8 +8,8 @@
     <div class="col-md-5">
         <form method="post">
             <div class="form-label mb-3">
-                <label for="selectWalletId" class="form-label">Select a Wallet</label>
-                <select id="selectWalletId" name="walletId" required asp-items="Model.Wallets" class="form-select">
+                <label class="form-label" for="selectWalletId">Select a Wallet</label>
+                <select asp-items="@Model.WalletsSelectList" class="form-select" id="selectWalletId" name="walletId" required>
                     <option value="">-- Choose a Wallet --</option>
                     @if (Model.Wallet is not null)
                     {
@@ -70,7 +69,7 @@
                         <input hidden required name="id" value="@Model.Wallet.Id"/>
                         <input id="searchString" name="searchString" class="form-control me-2" type="search"
                                placeholder="Search by Name"/>
-                        <select asp-for="Transaction!.CategoryId" name="category" asp-items="Model.CategoriesSelectList"
+                        <select asp-for="Transaction.CategoryId" name="category" asp-items="Model.CategoriesSelectList"
                                 class="form-select me-2">
                             <option value="">-- Choose a Category --</option>
                         </select>
@@ -108,7 +107,6 @@
                             @* <td class="card-text tbl-date">@transaction.Date.Humanize(utcDate: false)</td> *@
                             <td class="card-text tbl-category">@transaction.Category?.Name</td>
                             <td class="card-text tbl-cost">@transaction.Cost</td>
-                            <td class="card-text" hidden>@transaction.Month</td>
                             <td class="card-text" hidden>@transaction.CategoryId</td>
                             <td>
                                 <form>
@@ -149,7 +147,7 @@ else
                 <h4 class="modal-title fs-5" id="addWalletModalLabel">Add a Wallet</h4>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form id="addWalletForm" method="post" asp-controller="Budget" asp-action="AddWallet">
+            <form id="addWalletForm" method="post" asp-controller="Wallet" asp-action="AddWallet">
                 <div class="modal-body">
                     <div class="mb-3">
                         <label asp-for="Wallet!.Name" for="addWalletName" class="form-label">Wallet</label>
@@ -186,29 +184,26 @@ else
                 <h4 class="modal-title fs-5" id="updateWalletModalLabel">Update Wallet</h4>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form id="updateWalletForm" method="post" asp-controller="Budget" asp-action="UpdateWallet">
+            <form id="updateWalletForm" method="post" asp-controller="Wallet" asp-action="UpdateWallet">
                 <div class="modal-body">
-                    <input hidden id="updateWalletId" asp-for="Wallet!.Id"/>
+                    <input asp-for="Wallet!.Id" hidden id="updateWalletId" />
                     <div class="mb-3">
-                        <label asp-for="Wallet!.Name" for="updateWalletName" class="form-label">Wallet</label>
-                        <input asp-for="Wallet!.Name" required type="text" class="form-control"
-                               id="updateWalletName" placeholder="Enter Name of Wallet">
+                        <label asp-for="Wallet!.Name" class="form-label" for="updateWalletName">Wallet</label>
+                        <input asp-for="Wallet!.Name" class="form-control" id="updateWalletName" placeholder="Enter Name of Wallet" required type="text">
                     </div>
                     <div class="mb-3">
-                        <label asp-for="Wallet!.Currency" for="updateWalletCurrency" class="form-label">Enter New Currency (e.g. USD)</label>
-                        <input asp-for="Wallet!.Currency" required type="text" class="form-control"
-                               id="updateWalletCurrency" placeholder="Enter Currency">
+                        <label asp-for="Wallet!.Currency" class="form-label" for="updateWalletCurrency">Enter New Currency (e.g. USD)</label>
+                        <input asp-for="Wallet!.Currency" class="form-control" id="updateWalletCurrency" placeholder="Enter Currency" required type="text">
                     </div>
                     <div class="mb-3">
-                        <label asp-for="Wallet!.Income" for="updateWalletIncome" class="form-label">Income</label>
+                        <label asp-for="Wallet!.Income" class="form-label" for="updateWalletIncome">Income</label>
                         (@Model.Wallet?.Currency)
-                        <input asp-for="Wallet!.Income" required min="0" type="number"
-                               id="updateWalletIncome" step="0.001" class="form-control" placeholder="0.00">
+                        <input asp-for="Wallet!.Income" class="form-control" id="updateWalletIncome" min="0" placeholder="0.00" required step="0.001" type="number">
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-outline-success">Update</button>
-                    <button type="button" class="btn btn-success" data-bs-dismiss="modal">Cancel</button>
+                    <button class="btn btn-outline-success" type="submit">Update</button>
+                    <button class="btn btn-success" data-bs-dismiss="modal" type="button">Cancel</button>
                 </div>
             </form>
         </div>
@@ -223,27 +218,26 @@ else
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title fs-5" id="deleteWalletModalLabel">Delete Wallet</h4>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
             </div>
             <div class="modal-body">
                 <p class="text-danger fw-bold">Are you sure you want to delete <span class="fs-5">'@Model.Wallet?.Name' Wallet?</span></p>
             </div>
-            <form id="deleteWalletForm" method="post" asp-controller="Budget" asp-action="DeleteWallet">
+            <form asp-action="DeleteWallet" asp-controller="Wallet" id="deleteWalletForm" method="post">
                 <div class="modal-body">
                     <input hidden id="deleteWalletId" asp-for="Wallet!.Id"/>
                     <div class="mb-3">
-                        <label for="deleteWalletName" hidden asp-for="Wallet!.Name" class="form-label">Wallet</label>
-                        <input id="deleteWalletName" asp-for="Wallet!.Name" required hidden class="form-control"
-                               placeholder="Enter Name of Wallet">
+                        <label asp-for="Wallet!.Name" class="form-label" for="deleteWalletName" hidden>Wallet</label>
+                        <input asp-for="Wallet!.Name" class="form-control" hidden id="deleteWalletName" placeholder="Enter Name of Wallet" required>
                     </div>
                     <div class="mb-3">
-                        <label for="deleteWalletIncome" hidden asp-for="Wallet!.Income" class="form-label">Income</label>
-                        <input id="deleteWalletIncome" asp-for="Wallet!.Income" required hidden class="form-control" placeholder="0.00">
+                        <label asp-for="Wallet!.Income" class="form-label" for="deleteWalletIncome" hidden>Income</label>
+                        <input asp-for="Wallet!.Income" class="form-control" hidden id="deleteWalletIncome" placeholder="0.00" required>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-outline-success">Delete</button>
-                    <button type="button" class="btn btn-success" data-bs-dismiss="modal">Cancel</button>
+                    <button class="btn btn-outline-success" type="submit">Delete</button>
+                    <button class="btn btn-success" data-bs-dismiss="modal" type="button">Cancel</button>
                 </div>
             </form>
         </div>
@@ -260,42 +254,31 @@ else
                 <h4 class="modal-title fs-5" id="addTransactionModalLabel">Add a Transaction</h4>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form id="addTransactionForm" method="post" asp-controller="Budget" asp-action="AddTransaction">
+            <form id="addTransactionForm" method="post" asp-controller="Transaction" asp-action="AddTransaction">
                 <div class="modal-body">
-                    <input hidden value="@Model.WalletId" asp-for="WalletId"/>
+                    <input asp-for="WalletId" hidden value="@Model.WalletId" />
                     <div class="mb-3 form-label">
-                        <label for="addTransactionName" asp-for="Transaction!.Name" class="form-label">Transaction</label>
-                        <input id="addTransactionName" asp-for="Transaction!.Name" required type="text" class="form-control"
-                               placeholder="Enter Name of Transaction">
+                        <label asp-for="CreateTransactionDto.Name" class="form-label" for="addTransactionName">Transaction</label>
+                        <input asp-for="CreateTransactionDto.Name" class="form-control" id="addTransactionName" placeholder="Enter Name of Transaction" required type="text">
                     </div>
                     <div class="mb-3 form-label">
-                        <label for="addTransactionDescription" asp-for="Transaction!.Description" class="form-label">Description</label>
-                        <textarea id="addTransactionDescription" asp-for="Transaction!.Description" type="text" class="form-control"
-                            placeholder="Enter the Description..."></textarea>
+                        <label asp-for="CreateTransactionDto.Description" class="form-label" for="addTransactionDescription">Description</label>
+                        <textarea asp-for="CreateTransactionDto.Description" class="form-control" id="addTransactionDescription" placeholder="Enter the Description..." type="text"></textarea>
                     </div>
                     <div class="mb-3 form-label">
-                        <label for="addTransactionCost" asp-for="Transaction!.Cost" class="form-label">Cost (@Model.Wallet?.Currency)</label>
-                        <input id="addTransactionCost" asp-for="Transaction!.Cost" min="0" step="0.001" type="number" class="form-control"
-                               placeholder="0.00">
+                        <label asp-for="CreateTransactionDto.Cost" class="form-label" for="addTransactionCost">Cost (@Model.Wallet?.Currency)</label>
+                        <input asp-for="CreateTransactionDto.Cost" class="form-control" id="addTransactionCost" min="0" placeholder="0.00" step="0.001" type="number">
                     </div>
                     <div class="form-label">
-                        <label for="addTransactionMonth" asp-for="Transaction!.Month" class="form-label">Select a Month</label>
-                        <select id="addTransactionMonth" asp-for="Transaction!.Month" required asp-items="Html.GetEnumSelectList<Month>()"
-                                class="form-select">
-                            <option value="">-- Choose a Month --</option>
-                        </select>
-                    </div>
-                    <div class="form-label">
-                        <label for="addTransactionCategoryId" asp-for="Transaction!.CategoryId" class="form-label">Select a Category</label>
-                        <select id="addTransactionCategoryId" asp-for="Transaction!.CategoryId" required asp-items="Model.CategoriesSelectList"
-                                class="form-select">
+                        <label asp-for="CreateTransactionDto.CategoryId" class="form-label" for="addTransactionCategoryId">Select a Category</label>
+                        <select asp-for="CreateTransactionDto.CategoryId" asp-items="Model.CategoriesSelectList" class="form-select" id="addTransactionCategoryId" required>
                             <option value="">-- Choose a Category --</option>
                         </select>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-outline-success">Add</button>
-                    <button type="button" class="btn btn-success" data-bs-dismiss="modal">Cancel</button>
+                    <button class="btn btn-outline-success" type="submit">Add</button>
+                    <button class="btn btn-success" data-bs-dismiss="modal" type="button">Cancel</button>
                 </div>
             </form>
         </div>
@@ -314,34 +297,23 @@ else
             </div>
             <form id="viewTransactionForm">
                 <div class="modal-body">
-                    <input id="viewTransactionId" hidden asp-for="Transaction!.Id"/>
-                    <input id="viewTransactionWalletId" hidden asp-for="Transaction!.WalletId"/>
+                    <input asp-for="Transaction.Id" hidden id="viewTransactionId" />
+                    <input asp-for="Transaction.WalletId" hidden id="viewTransactionWalletId" />
                     <div class="mb-3 form-label">
-                        <label for="viewTransactionName" asp-for="Transaction!.Name" class="form-label">Transaction</label>
-                        <input id="viewTransactionName" disabled asp-for="Transaction!.Name" required type="text"
-                               class="form-control">
+                        <label asp-for="Transaction.Name" class="form-label" for="viewTransactionName">Transaction</label>
+                        <input asp-for="Transaction.Name" class="form-control" disabled id="viewTransactionName" required type="text">
                     </div>
                     <div class="mb-3 form-label">
-                        <label for="viewTransactionDescription" asp-for="Transaction!.Description" class="form-label">Description</label>
-                        <textarea id="viewTransactionDescription" disabled asp-for="Transaction!.Description" type="text"
-                            class="form-control"></textarea>
+                        <label asp-for="Transaction.Description" class="form-label" for="viewTransactionDescription">Description</label>
+                        <textarea asp-for="Transaction.Description" class="form-control" disabled id="viewTransactionDescription" type="text"></textarea>
                     </div>
                     <div class="mb-3 form-label">
-                        <label for="viewTransactionCost" asp-for="Transaction!.Cost" class="form-label">Cost (@Model.Wallet?.Currency)</label>
-                        <input id="viewTransactionCost" disabled asp-for="Transaction!.Cost" value="0" min="0" step="0.001" type="number"
-                               class="form-control">
+                        <label asp-for="Transaction.Cost" class="form-label" for="viewTransactionCost">Cost (@Model.Wallet?.Currency)</label>
+                        <input asp-for="Transaction.Cost" class="form-control" disabled id="viewTransactionCost" min="0" step="0.001" type="number" value="0">
                     </div>
                     <div class="form-label">
-                        <label for="viewTransactionMonth" asp-for="Transaction!.Month" class="form-label">Select a Month</label>
-                        <select id="viewTransactionMonth" disabled asp-for="Transaction!.Month" required
-                                asp-items="Html.GetEnumSelectList<Month>()" class="form-select">
-                            <option value="">-- Choose a Month --</option>
-                        </select>
-                    </div>
-                    <div class="form-label">
-                        <label for="viewTransactionCategoryId" asp-for="Transaction!.CategoryId" class="form-label">Select a Category</label>
-                        <select id="viewTransactionCategoryId" disabled asp-for="Transaction!.CategoryId" required
-                                asp-items="Model.CategoriesSelectList" class="form-select">
+                        <label asp-for="Transaction.CategoryId" class="form-label" for="viewTransactionCategoryId">Select a Category</label>
+                        <select asp-for="Transaction.CategoryId" asp-items="Model.CategoriesSelectList" class="form-select" disabled id="viewTransactionCategoryId" required>
                             <option value="">-- Choose a Category --</option>
                         </select>
                     </div>
@@ -365,36 +337,25 @@ else
                 <h4 class="modal-title fs-5" id="updateTransactionModalLabel">Update Transaction</h4>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form id="updateTransactionForm" method="post" asp-controller="Budget" asp-action="UpdateTransaction">
+            <form asp-action="UpdateTransaction" asp-controller="Transaction" id="updateTransactionForm" method="post">
                 <div class="modal-body">
-                    <input hidden id="updateTransactionId" asp-for="Transaction!.Id"/>
-                    <input hidden id="updateTransactionWalletId" asp-for="Transaction!.WalletId"/>
+                    <input asp-for="Transaction.Id" hidden id="updateTransactionId" />
+                    <input asp-for="Transaction.WalletId" hidden id="updateTransactionWalletId" />
                     <div class="mb-3 form-label">
-                        <label for="updateTransactionName" asp-for="Transaction!.Name" class="form-label">Transaction</label>
-                        <input asp-for="Transaction!.Name" id="updateTransactionName" required type="text"
-                               class="form-control" placeholder="Enter Name of Transaction">
+                        <label asp-for="Transaction.Name" class="form-label" for="updateTransactionName">Transaction</label>
+                        <input asp-for="Transaction.Name" class="form-control" id="updateTransactionName" placeholder="Enter Name of Transaction" required type="text">
                     </div>
                     <div class="mb-3 form-label">
-                        <label for="updateTransactionDescription" asp-for="Transaction!.Description" class="form-label">Description</label>
-                        <input asp-for="Transaction!.Description" id="updateTransactionDescription" type="text"
-                               class="form-control" placeholder="Enter the Description">
+                        <label asp-for="Transaction.Description" class="form-label" for="updateTransactionDescription">Description</label>
+                        <input asp-for="Transaction.Description" class="form-control" id="updateTransactionDescription" placeholder="Enter the Description" type="text">
                     </div>
                     <div class="mb-3 form-label">
-                        <label for="updateTransactionCost" asp-for="Transaction!.Cost" class="form-label">Cost (@Model.Wallet?.Currency)</label>
-                        <input asp-for="Transaction!.Cost" id="updateTransactionCost" value="0" min="0" step="0.001" type="number"
-                               class="form-control" placeholder="0.00">
+                        <label asp-for="Transaction.Cost" class="form-label" for="updateTransactionCost">Cost (@Model.Wallet?.Currency)</label>
+                        <input asp-for="Transaction.Cost" class="form-control" id="updateTransactionCost" min="0" placeholder="0.00" step="0.001" type="number" value="0">
                     </div>
                     <div class="form-label">
-                        <label for="updateTransactionMonth" asp-for="Transaction!.Month" class="form-label">Select a Month</label>
-                        <select asp-for="Transaction!.Month" id="updateTransactionMonth" required
-                                asp-items="Html.GetEnumSelectList<Month>()" class="form-select">
-                            <option value="">-- Choose a Month --</option>
-                        </select>
-                    </div>
-                    <div class="form-label">
-                        <label for="updateTransactionCategoryId" asp-for="Transaction!.CategoryId" class="form-label">Select a Category</label>
-                        <select asp-for="Transaction!.CategoryId" id="updateTransactionCategoryId" required
-                                asp-items="Model.CategoriesSelectList" class="form-select">
+                        <label asp-for="Transaction.CategoryId" class="form-label" for="updateTransactionCategoryId">Select a Category</label>
+                        <select asp-for="Transaction.CategoryId" asp-items="Model.CategoriesSelectList" class="form-select" id="updateTransactionCategoryId" required>
                             <option value="">-- Choose a Category --</option>
                         </select>
                     </div>
@@ -409,54 +370,42 @@ else
 </div>
 
 <!-- Delete Transaction Modal -->
-<div class="modal fade" id="deleteTransactionModal" tabindex="-1" aria-labelledby="deleteTransactionModalLabel"
-     aria-hidden="true">
+<div aria-hidden="true" aria-labelledby="deleteTransactionModalLabel" class="modal fade" id="deleteTransactionModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title fs-5" id="deleteTransactionModalLabel">Update Transaction</h4>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
             </div>
             <div class="modal-body">
                 <p class="text-danger fw-bold">Are you sure you want to delete this transaction?</p>
             </div>
-            <form id="deleteTransactionForm" method="post" asp-controller="Budget" asp-action="DeleteTransaction">
+            <form asp-action="DeleteTransaction" asp-controller="Transaction" id="deleteTransactionForm" method="post">
                 <div class="modal-body">
-                    <input hidden id="deleteTransactionId" asp-for="Transaction!.Id"/>
-                    <input hidden id="deleteTransactionWalletId" asp-for="Transaction!.WalletId"/>
+                    <input asp-for="Transaction.Id" hidden id="deleteTransactionId" />
+                    <input asp-for="Transaction.WalletId" hidden id="deleteTransactionWalletId" />
                     <div class="mb-3 form-label">
-                        <label hidden for="deleteTransactionName" asp-for="Transaction!.Name" class="form-label">Transaction</label>
-                        <input hidden asp-for="Transaction!.Name" id="deleteTransactionName" required
-                               class="form-control" placeholder="Enter Name of Transaction">
+                        <label asp-for="Transaction.Name" class="form-label" for="deleteTransactionName" hidden>Transaction</label>
+                        <input asp-for="Transaction.Name" class="form-control" hidden id="deleteTransactionName" placeholder="Enter Name of Transaction" required>
                     </div>
                     <div class="mb-3 form-label">
-                        <label hidden for="deleteTransactionDescription" asp-for="Transaction!.Description" class="form-label">Description</label>
-                        <input hidden asp-for="Transaction!.Description" id="deleteTransactionDescription"
-                               class="form-control" placeholder="Enter the Description">
+                        <label asp-for="Transaction.Description" class="form-label" for="deleteTransactionDescription" hidden>Description</label>
+                        <input asp-for="Transaction.Description" class="form-control" hidden id="deleteTransactionDescription" placeholder="Enter the Description">
                     </div>
                     <div class="mb-3 form-label">
-                        <label hidden for="deleteTransactionCost" asp-for="Transaction!.Cost" class="form-label">Cost</label>
-                        <input hidden asp-for="Transaction!.Cost" id="deleteTransactionCost" value="0" min="0"
-                               class="form-control" placeholder="0.00">
+                        <label asp-for="Transaction.Cost" class="form-label" for="deleteTransactionCost" hidden>Cost</label>
+                        <input asp-for="Transaction.Cost" class="form-control" hidden id="deleteTransactionCost" min="0" placeholder="0.00" value="0">
                     </div>
                     <div class="form-label">
-                        <label hidden for="deleteTransactionMonth" asp-for="Transaction!.Month" class="form-label">Select a Month</label>
-                        <select hidden asp-for="Transaction!.Month" id="deleteTransactionMonth" required
-                                asp-items="Html.GetEnumSelectList<Month>()" class="form-select">
-                            <option value="">-- Choose a Month --</option>
-                        </select>
-                    </div>
-                    <div class="form-label">
-                        <label hidden for="deleteTransactionCategoryId" asp-for="Transaction!.CategoryId" class="form-label">Select a Category</label>
-                        <select hidden asp-for="Transaction!.CategoryId" id="deleteTransactionCategoryId" required
-                                asp-items="Model.CategoriesSelectList" class="form-select">
+                        <label asp-for="Transaction.CategoryId" class="form-label" for="deleteTransactionCategoryId" hidden>Select a Category</label>
+                        <select asp-for="Transaction.CategoryId" asp-items="Model.CategoriesSelectList" class="form-select" hidden id="deleteTransactionCategoryId" required>
                             <option value="">-- Choose a Category --</option>
                         </select>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-outline-success">Delete</button>
-                    <button type="button" class="btn btn-success" data-bs-dismiss="modal">Cancel</button>
+                    <button class="btn btn-outline-success" type="submit">Delete</button>
+                    <button class="btn btn-success" data-bs-dismiss="modal" type="button">Cancel</button>
                 </div>
             </form>
         </div>
