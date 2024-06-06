@@ -13,8 +13,15 @@ public static class Database
         var appDataContext = scope.ServiceProvider.GetRequiredService<AppDataContext>();
         var appIdentityDbContext = scope.ServiceProvider.GetRequiredService<AppIdentityDbContext>();
 
-        appDataContext.Database.Migrate();
-        appIdentityDbContext.Database.Migrate();
+        if (appDataContext.Database.IsRelational())
+        {
+            appDataContext.Database.Migrate();
+        }
+
+        if (appIdentityDbContext.Database.IsRelational())
+        {
+            appIdentityDbContext.Database.Migrate();
+        }
 
         return app;
     }

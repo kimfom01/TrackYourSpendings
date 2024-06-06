@@ -1,4 +1,3 @@
-using System.Linq.Expressions;
 using TrackYourSpendings.Domain.Entities;
 
 namespace TrackYourSpendings.Application.Contracts.Persistence.Repository;

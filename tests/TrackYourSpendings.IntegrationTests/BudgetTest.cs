@@ -31,7 +31,7 @@ public class BudgetTest : BaseAuth
         [Fact]
         public async Task Post_AddNewWallet_RedirectToBudget()
         {
-            var response = await Client.PostAsync("/Budget/AddWallet",
+            var response = await Client.PostAsync("/Wallet/AddWallet",
                 new FormUrlEncodedContent([
                     new KeyValuePair<string, string>("Name", "Test Wallet"),
                     new KeyValuePair<string, string>("Currency", "RUB"),
