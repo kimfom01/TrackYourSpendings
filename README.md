@@ -1,5 +1,5 @@
 # Track Your Spendings
-
+ 
 <div align="center">
     <img src="image.png" alt="icon">
 </div>
