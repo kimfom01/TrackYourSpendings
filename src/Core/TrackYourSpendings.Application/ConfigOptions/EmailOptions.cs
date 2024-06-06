@@ -1,6 +1,6 @@
 namespace TrackYourSpendings.Application.ConfigOptions;
 
-public class EmailOption
+public class EmailOptions
 {
     public string Host { get; set; } = string.Empty;
     public int Port { get; set; }

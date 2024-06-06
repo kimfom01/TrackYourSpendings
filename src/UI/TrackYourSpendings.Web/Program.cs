@@ -5,7 +5,7 @@ using TrackYourSpendings.Web.Utils;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.ConfigureApplicationServices(builder.Configuration);
+builder.Services.ConfigureApplicationServices();
 builder.Services.ConfigureInfrastructureServices(builder.Configuration, builder.Environment.IsDevelopment());
 builder.Services.ConfigureWebProjectServices(builder.Configuration, builder.Environment);
 builder.Configuration.AddEnvironmentVariables();

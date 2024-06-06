@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using TrackYourSpendings.Application.ConfigOptions;
 using TrackYourSpendings.Application.Contracts.Persistence;
 using TrackYourSpendings.Infrastructure.Database;
@@ -19,26 +20,27 @@ public static class RegisterServices
     public static IServiceCollection ConfigureInfrastructureServices(this IServiceCollection services,
         IConfiguration config, bool isDevelopment)
     {
-        var emailOption = new EmailOption();
+        services.ConfigureOptions<EmailOptionsSetup>();
 
-        config.GetSection(nameof(emailOption)).Bind(emailOption);
+        var emailOptions = services.BuildServiceProvider()
+            .GetRequiredService<IOptions<EmailOptions>>().Value;
 
         if (isDevelopment)
         {
             services
-                .AddFluentEmail(emailOption.SenderEmail)
+                .AddFluentEmail(emailOptions.SenderEmail)
                 .AddRazorRenderer()
                 .AddSmtpSender("localhost", 1025);
         }
         else
         {
             services
-                .AddFluentEmail(emailOption.SenderEmail)
+                .AddFluentEmail(emailOptions.SenderEmail)
                 .AddRazorRenderer()
-                .AddSmtpSender(new SmtpClient(emailOption.Host, emailOption.Port)
+                .AddSmtpSender(new SmtpClient(emailOptions.Host, emailOptions.Port)
                 {
-                    Credentials = new NetworkCredential(emailOption.SenderEmail,
-                        GetSecurePassword(emailOption.Password)),
+                    Credentials = new NetworkCredential(emailOptions.SenderEmail,
+                        GetSecurePassword(emailOptions.Password)),
                     EnableSsl = true,
                     DeliveryMethod = SmtpDeliveryMethod.Network
                 });
