@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using TrackYourSpendings.Application.Contracts.Persistence.Repository;
+using TrackYourSpendings.Application.Contracts.Database.Repository;
 using TrackYourSpendings.Domain.Entities;
 
 namespace TrackYourSpendings.Infrastructure.Database.Repositories;

@@ -1,6 +1,6 @@
-using TrackYourSpendings.Application.Contracts.Persistence.Repository;
+using TrackYourSpendings.Application.Contracts.Database.Repository;
 
-namespace TrackYourSpendings.Application.Contracts.Persistence;
+namespace TrackYourSpendings.Application.Contracts.Database;
 
 /// <summary>
 /// Defines the contract for a UnitOfWork, grouping all changes to be committed to the database in a single transaction.

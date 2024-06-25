@@ -1,6 +1,6 @@
 using System.Linq.Expressions;
 
-namespace TrackYourSpendings.Application.Contracts.Persistence.Repository;
+namespace TrackYourSpendings.Application.Contracts.Database.Repository;
 
 /// <summary>
 /// Defines a generic repository interface for managing entities of type <typeparamref name="TEntity"/>.

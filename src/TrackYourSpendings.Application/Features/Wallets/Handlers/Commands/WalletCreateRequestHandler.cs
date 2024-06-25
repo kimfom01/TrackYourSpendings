@@ -1,7 +1,7 @@
 using AutoMapper;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using TrackYourSpendings.Application.Contracts.Persistence;
+using TrackYourSpendings.Application.Contracts.Database;
 using TrackYourSpendings.Application.Dtos.Wallets;
 using TrackYourSpendings.Application.Features.Wallets.Requests.Commands;
 using TrackYourSpendings.Domain.Entities;

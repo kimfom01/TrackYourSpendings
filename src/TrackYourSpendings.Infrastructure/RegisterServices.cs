@@ -8,7 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using TrackYourSpendings.Application.ConfigOptions;
-using TrackYourSpendings.Application.Contracts.Persistence;
+using TrackYourSpendings.Application.Contracts.Database;
 using TrackYourSpendings.Infrastructure.Database;
 using TrackYourSpendings.Infrastructure.Database.Identity;
 using TrackYourSpendings.Infrastructure.EmailProvider;

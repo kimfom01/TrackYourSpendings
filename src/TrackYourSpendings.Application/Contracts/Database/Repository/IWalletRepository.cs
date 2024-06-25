@@ -1,6 +1,6 @@
 using TrackYourSpendings.Domain.Entities;
 
-namespace TrackYourSpendings.Application.Contracts.Persistence.Repository;
+namespace TrackYourSpendings.Application.Contracts.Database.Repository;
 
 /// <summary>
 /// Defines the contract for a repository specifically managing <see cref="Wallet"/> entities, extending the common operations provided by the <see cref="IRepository{TEntity}"/>.

@@ -1,7 +1,7 @@
 using AutoMapper;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using TrackYourSpendings.Application.Contracts.Persistence;
+using TrackYourSpendings.Application.Contracts.Database;
 using TrackYourSpendings.Application.Features.Transactions.Requests.Commands;
 
 namespace TrackYourSpendings.Application.Features.Transactions.Handlers.Commands;

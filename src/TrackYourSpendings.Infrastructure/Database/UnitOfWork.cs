@@ -1,5 +1,5 @@
-using TrackYourSpendings.Application.Contracts.Persistence;
-using TrackYourSpendings.Application.Contracts.Persistence.Repository;
+using TrackYourSpendings.Application.Contracts.Database;
+using TrackYourSpendings.Application.Contracts.Database.Repository;
 using TrackYourSpendings.Infrastructure.Database.Repositories;
 
 namespace TrackYourSpendings.Infrastructure.Database;

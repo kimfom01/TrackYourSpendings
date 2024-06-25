@@ -1,6 +1,6 @@
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
-using TrackYourSpendings.Application.Contracts.Persistence.Repository;
+using TrackYourSpendings.Application.Contracts.Database.Repository;
 
 namespace TrackYourSpendings.Infrastructure.Database.Repositories;
 
