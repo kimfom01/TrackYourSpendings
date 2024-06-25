@@ -24,7 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\UI\TrackYourSpendings.Web\TrackYourSpendings.Web.csproj" />
+    <ProjectReference Include="..\..\src\TrackYourSpendings.Web\TrackYourSpendings.Web.csproj" />
   </ItemGroup>
 
 </Project>
