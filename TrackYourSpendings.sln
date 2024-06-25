@@ -4,6 +4,12 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{867CAFF6-A97A-4543-AA2E-79EA40AC7FE7}"
+	ProjectSection(SolutionItems) = preProject
+		src\Dockerfile = src\Dockerfile
+		docker-compose-local.yml = docker-compose-local.yml
+		docker-compose.yml = docker-compose.yml
+		.env = .env
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrackYourSpendings.Api", "src\TrackYourSpendings.Api\TrackYourSpendings.Api.csproj", "{03CB1856-BD12-44B3-83E9-E291A99B2DD2}"
 EndProject
