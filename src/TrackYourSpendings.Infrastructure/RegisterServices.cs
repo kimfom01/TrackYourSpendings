@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using TrackYourSpendings.Application.ConfigOptions;
 using TrackYourSpendings.Application.Contracts.Database;
+using TrackYourSpendings.Infrastructure.BackgroundServices;
 using TrackYourSpendings.Infrastructure.Database;
 using TrackYourSpendings.Infrastructure.Database.Identity;
 using TrackYourSpendings.Infrastructure.EmailProvider;
@@ -58,6 +59,9 @@ public static class RegisterServices
             options.UseNpgsql(config.GetConnectionString("DefaultConnection"),
                 opt => opt.MigrationsHistoryTable(HistoryRepository.DefaultTableName, "identity"));
         });
+        
+        services.AddHostedService<NewMonthJob>();
+
         return services;
     }
 
