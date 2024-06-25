@@ -1,5 +1,7 @@
+@using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @using TrackYourSpendings.Infrastructure.Database.Identity
+@using TrackYourSpendings.Web.Areas.Identity.Pages.Account.Manage
 @inject SignInManager<ApplicationUser> SignInManager
 @{
     var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
